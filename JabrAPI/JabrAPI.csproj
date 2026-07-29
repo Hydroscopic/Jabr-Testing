@@ -8,7 +8,7 @@
     <PublishAot>False</PublishAot>
     <SignAssembly>True</SignAssembly>
     <Title>JabrAPI</Title>
-    <Version>5.5.2</Version>
+    <Version>5.5.3</Version>
     <Authors>Gyroscopic</Authors>
     <Description>Cryptography API for RE ciphers from the Jabr family</Description>
     <PackageProjectUrl>https://github.com/Gyroscopic-why/Jabr</PackageProjectUrl>
