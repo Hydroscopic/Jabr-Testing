@@ -1,14 +1,18 @@
-﻿using AVcontrol;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using static System.Console;
 
 
+using AVcontrol;
+using JabrAPI;
 
-namespace JabrAPI
+
+
+namespace JabrTestField
 {
     internal class Program
     {
@@ -22,6 +26,10 @@ namespace JabrAPI
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
+            
+
+
+
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)
             {
@@ -34,7 +42,7 @@ namespace JabrAPI
                 Write("\n\tAdding noise to data..");
 
                 List<Byte> binoised = RE5.EncryptWithNoise(lolinit, binKey, true);
-                List<Byte> bindenoised = Noise.Remove.Binary(binoised, binKey, true);
+                List<Byte> bindenoised = Noise.Remove(binoised, binKey, true);
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
@@ -84,7 +92,7 @@ namespace JabrAPI
                 for (var j = 0; j < Math.Min(bindenoised.Count, bincrypted.Count); j++)
                 {
                     if (bindenoised[j] == bincrypted[j])
-                         ForegroundColor = ConsoleColor.Green;
+                        ForegroundColor = ConsoleColor.Green;
                     else ForegroundColor = ConsoleColor.DarkGray;
 
                     Write(bindenoised[j] + " ");
@@ -125,7 +133,7 @@ namespace JabrAPI
                 List<Byte> safeBytes = RE5.Encrypt(lolinit, binKey, true);
                 Write("\n\tSAFEENC: ");
                 for (var ij = 0; ij < safeBytes.Count; ij++) Write(safeBytes[ij] + " ");
-                List<Byte> safeByteDec = RE5.Decrypt(safeBytes, binKey, true);
+                List<Byte> safeByteDec = RE5.Decrypt.Safe.Data(safeBytes, binKey, true);
                 Write("\n\tSAFEDEC: ");
                 for (var ij = 0; ij < safeByteDec.Count; ij++) Write(safeByteDec[ij] + " ");
 

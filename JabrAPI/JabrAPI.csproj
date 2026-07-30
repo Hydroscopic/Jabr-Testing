@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PublishAot>False</PublishAot>
     <SignAssembly>True</SignAssembly>
     <Title>JabrAPI</Title>
-    <Version>5.5.4</Version>
+    <Version>5.5.5.0</Version>
     <Authors>Gyroscopic</Authors>
     <Description>Cryptography API for RE ciphers from the Jabr family</Description>
     <PackageProjectUrl>https://github.com/Gyroscopic-why/Jabr</PackageProjectUrl>
@@ -17,11 +18,6 @@
     <PackageTags>jabr;jabrapi;cryptography;ciphers;encryptor;encryption;decryption;re;re5;re4;noise;noisification;noisify;denoisify;noised</PackageTags>
     <DelaySign>False</DelaySign>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Source\Program.cs" />
-    <None Include="Source\Program.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="AVcontrol">

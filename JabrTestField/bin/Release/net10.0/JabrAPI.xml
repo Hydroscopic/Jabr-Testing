@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JabrAPI</name>
+    </assembly>
+    <members>
+        <member name="M:JabrAPI.RE5.FastDecryptFileWithNoiseRemoval(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey)">
+            <summary>
+            
+            </summary>
+            <param name="absoluteInputDirectory"></param>
+            <param name="fileName"></param>
+            <param name="absoluteOutputDirectory"></param>
+            <param name="reKey"></param>
+            <returns>The name of the new created file</returns>
+        </member>
+    </members>
+</doc>

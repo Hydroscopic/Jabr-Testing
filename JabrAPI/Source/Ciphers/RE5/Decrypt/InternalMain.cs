@@ -12,152 +12,174 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        static public List<Byte> FastDecrypt(List<Byte> encrypted, BinaryKey reKey)
+        /// <summary>
+        /// Decrypting <b>DATA</b> <i>or</i> <b>FILES</b> with <see cref="RE5"/> algorithm
+        /// </summary>
+        static public partial class Decrypt
         {
-            Int32 exLength = reKey.ExLength, shCount = reKey.ShCount, encLength = encrypted.Count;
-            List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
-
-
-            Int32 helper = (Int32)Math.Ceiling
-                (
-                    (double)
-                    (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
-                        reKey.PrLength * 2 + allShifts.Max() - 4
-                    ) / exLength
-                );
-            Int32 maxEncodingLength = exLength == 10 ?
-                Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
-                : Numsys.AsList128<Int32>
-                (
-                    helper.ToString(),
-                    10,
-                    exLength
-                ).Count + 1;  //  + 1 is to account for EncodingLength and the character it belongs to
-
-
-            Int32 chunkSize = (Int32)reKey.ChunkSize / maxEncodingLength * maxEncodingLength;
-            if   (chunkSize < maxEncodingLength) chunkSize = maxEncodingLength;
-
-            Int32 chunkCount = (Int32)Math.Ceiling((double)encLength / chunkSize);
-            Int32 shiftStartId = 0, decodedId = 0;
-            Int32 realMessageLength, thisRoundLength, shDelta;
-
-
-            List<Byte> result = new(encLength / maxEncodingLength);  //  Real message length
-
-
-            for (var chunk = 0; chunk < chunkCount; chunk++)
+            /// <summary>
+            /// These variants <b>DO NOT validate the parameters!</b> (Fast variants)<br/>
+            /// </summary>
+            static public class Fast
             {
-                thisRoundLength =
-                    Math.Min
-                    (
-                        encLength - chunk * chunkSize,
-                        chunkSize
-                    );
-
-                realMessageLength = thisRoundLength / maxEncodingLength;
-                shDelta = shiftStartId + realMessageLength;
-
-                shifts  = shDelta > shCount ?
-                    [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
-                        .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
-                        : allShifts.GetRange(shiftStartId, realMessageLength);
-                shiftStartId = shDelta % shCount;
+                /// <summary>
+                /// Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
+                /// </summary>
+                /// <returns><b>Decrypted</b> data of <paramref name="encrypted"/></returns>
+                /// 
+                /// <param name="encrypted">Obfuscated data</param>
+                /// <param name="reKey">RE5 Encryption key for deciphering</param>
+                static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey)
+                {
+                    Int32 exLength = reKey.ExLength, shCount = reKey.ShCount, encLength = encrypted.Count;
+                    List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
 
 
-                result.AddRange
-                (
-                    DecryptionRound
-                    (
-                        encrypted.GetRange
+                    Int32 helper = (Int32)Math.Ceiling
                         (
-                            chunk * chunkSize,
-                            thisRoundLength
-                        ),
-                        prAlphabet,
-                        exAlphabet,
-                        shifts,
-                        exLength,
-                        maxEncodingLength,
-                        realMessageLength,
-                        ref decodedId
-                    )
-                );
-            }
-
-            return result;
-        }
-
-        static public List<Byte> FastDecryptWithNoise(List<Byte> encrypted, BinaryKey reKey)
-        {
-            List<Byte> denoised = Noise.Remove.FastBinary(encrypted, reKey.Noisifier);
-            return denoised == null || denoised.Count < 1 ? []
-                    : FastEncrypt(denoised, reKey);
-        }
-
-        static public void FastDecryptFile(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, BinaryKey reKey)
-        {
-            Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
-            List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+                            (double)
+                            (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
+                                reKey.PrLength * 2 + allShifts.Max() - 4
+                            ) / exLength
+                        );
+                    Int32 maxEncodingLength = exLength == 10 ?
+                        Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
+                        : Numsys.AsList128<Int32>
+                        (
+                            helper.ToString(),
+                            10,
+                            exLength
+                        ).Count + 1;  //  + 1 is to account for EncodingLength and the character it belongs to
 
 
-            Int32 helper = (Int32)Math.Ceiling
-                (
-                    (double)
-                    (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
-                        reKey.PrLength * 2 + allShifts.Max() - 4
-                    ) / exLength
-                );
-            Int32 maxEncodingLength = exLength == 10 ?
-                Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
-                : Numsys.AsList128<Int32>
-                (
-                    helper.ToString(),
-                    10,
-                    exLength
-                ).Count + 1;  //  + 1 is to account for EncodingLength and the character it belongs to
+                    Int32 chunkSize = (Int32)reKey.ChunkSize / maxEncodingLength * maxEncodingLength;
+                    if (chunkSize < maxEncodingLength) chunkSize = maxEncodingLength;
+
+                    Int32 chunkCount = (Int32)Math.Ceiling((double)encLength / chunkSize);
+                    Int32 shiftStartId = 0, decodedId = 0;
+                    Int32 realMessageLength, thisRoundLength, shDelta;
 
 
-            Int32 chunkSize = (Int32)reKey.ChunkSize / maxEncodingLength * maxEncodingLength;
-            if   (chunkSize < maxEncodingLength) chunkSize = maxEncodingLength;
+                    List<Byte> result = new(encLength / maxEncodingLength);  //  Real message length
 
 
-            string finalFileName;
-            if (!reKey.KeepOriginalFileExtension)
-            {
-                finalFileName = Path.ChangeExtension(fileName, "dec-re5");
-                for (var i = 1; File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
-                    finalFileName = Path.ChangeExtension(fileName, $"dec{i}-re5");
-            }
-            else finalFileName = Path.ChangeExtension(fileName, null);
+                    for (var chunk = 0; chunk < chunkCount; chunk++)
+                    {
+                        thisRoundLength =
+                            Math.Min
+                            (
+                                encLength - chunk * chunkSize,
+                                chunkSize
+                            );
 
-            using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
-            using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
+                        realMessageLength = thisRoundLength / maxEncodingLength;
+                        shDelta = shiftStartId + realMessageLength;
 
-            using BinaryReader reader = new(inputStream);
-            using BinaryWriter writer = new(outputStream);
-
-
-            Byte[] messageChunk = new Byte[chunkSize];
-            Int32 offset = 0, decodedId = 0, shiftStartId = 0;
-            Int32 realMessageLength, shDelta, bytesRead;
-
-            while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
-            {
-                realMessageLength = bytesRead / maxEncodingLength;
-                shDelta = shiftStartId + realMessageLength;
-
-                shifts  = shDelta > shCount ?
-                    [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
+                        shifts = shDelta > shCount ?
+                            [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
                         .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
-                        : allShifts.GetRange(shiftStartId, realMessageLength);
-                shiftStartId = shDelta % shCount;
+                                : allShifts.GetRange(shiftStartId, realMessageLength);
+                        shiftStartId = shDelta % shCount;
 
 
-                writer.Write
-                (
-                    [..
+                        result.AddRange
+                        (
+                            DecryptionRound
+                            (
+                                encrypted.GetRange
+                                (
+                                    chunk * chunkSize,
+                                    thisRoundLength
+                                ),
+                                prAlphabet,
+                                exAlphabet,
+                                shifts,
+                                exLength,
+                                maxEncodingLength,
+                                realMessageLength,
+                                ref decodedId
+                            )
+                        );
+                    }
+
+                    return result;
+                }
+
+
+
+                /// <summary>
+                /// Creates a FILE containing the Decrypted content<br/>
+                /// Returns the NAME of the new FILE with the decrypted content
+                /// </summary>
+                /// <returns>The NAME of the new created file</returns>
+                /// 
+                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
+                /// <param name="fileName">Original FILE NAME</param>
+                /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+                /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+                static public string File(string absoluteInputDirectory, string fileName,
+                    string absoluteOutputDirectory, BinaryKey reKey)
+                {
+                    Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
+                    List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+
+
+                    Int32 helper = (Int32)Math.Ceiling
+                        (
+                            (double)
+                            (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
+                                reKey.PrLength * 2 + allShifts.Max() - 4
+                            ) / exLength
+                        );
+                    Int32 maxEncodingLength = exLength == 10 ?
+                        Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
+                        : Numsys.AsList128<Int32>
+                        (
+                            helper.ToString(),
+                            10,
+                            exLength
+                        ).Count + 1;  //  + 1 is to account for EncodingLength and the character it belongs to
+
+
+                    Int32 chunkSize = (Int32)reKey.ChunkSize / maxEncodingLength * maxEncodingLength;
+                    if (chunkSize < maxEncodingLength) chunkSize = maxEncodingLength;
+
+
+                    string finalFileName;
+                    if (!reKey.KeepOriginalFileExtension)
+                    {
+                        finalFileName = Path.ChangeExtension(fileName, "dec-re5");
+                        for (var i = 1; System.IO.File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
+                            finalFileName = Path.ChangeExtension(fileName, $"dec{i}-re5");
+                    }
+                    else finalFileName = Path.ChangeExtension(fileName, null);
+
+                    using FileStream inputStream = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
+                    using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
+
+                    using BinaryReader reader = new(inputStream);
+                    using BinaryWriter writer = new(outputStream);
+
+
+                    Byte[] messageChunk = new Byte[chunkSize];
+                    Int32 offset = 0, decodedId = 0, shiftStartId = 0;
+                    Int32 realMessageLength, shDelta, bytesRead;
+
+                    while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
+                    {
+                        realMessageLength = bytesRead / maxEncodingLength;
+                        shDelta = shiftStartId + realMessageLength;
+
+                        shifts = shDelta > shCount ?
+                            [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
+                     .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
+                             : allShifts.GetRange(shiftStartId, realMessageLength);
+                        shiftStartId = shDelta % shCount;
+
+
+                        writer.Write
+                        (
+                            [..
                         DecryptionRound
                         (
                             new List<Byte>(messageChunk).GetRange(0, bytesRead),
@@ -169,10 +191,60 @@ namespace JabrAPI
                             realMessageLength,
                             ref decodedId
                         )
-                    ]
-                );
+                            ]
+                        );
 
-                offset += bytesRead;
+                        offset += bytesRead;
+                    }
+                    return finalFileName;
+                }
+
+
+
+                /// <summary>
+                /// Denoising <see cref="Noise"/> information before Decrypting <see cref="RE5.Decrypt"/> it
+                /// </summary>
+                static public class WithNoiseRemoval
+                {
+                    /// <summary>
+                    /// Returns the <b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/>
+                    /// </summary>
+                    /// <returns><b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/></returns>
+                    /// 
+                    /// <param name="encrypted">Obfuscated data</param>
+                    /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+                    static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey)
+                    {
+                        List<Byte> denoised = Noise.FastRemove(encrypted, reKey.Noisifier);
+                        return denoised == null || denoised.Count < 1 ? []
+                            : RE5.Decrypt.Fast.Data(denoised, reKey);
+                    }
+
+
+                    /// <summary>
+                    /// Creates a FILE containing the Denoised and Decrypted content<br/><br/>
+                    ///   
+                    /// A temporary FILE is used for storing the denoised content<br/>
+                    /// It will be deleted in the end based on <paramref name="deleteTempFileAfterUse"/><br/><br/>
+                    /// 
+                    /// Returns the NAME of the new FILE with the denoised and decrypted content
+                    /// </summary>
+                    /// <returns>The NAME of the new created file</returns>
+                    /// 
+                    /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
+                    /// <param name="fileName">Original FILE NAME</param>
+                    /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+                    /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+                    /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
+                    static public string File(string absoluteInputDirectory, string fileName,
+                        string absoluteOutputDirectory, BinaryKey reKey, bool deleteTempFileAfterUse = true)
+                    {
+                        string denoisedFileName = Noise.FastRemoveFromFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier);
+                        string resultFileName = RE5.Decrypt.Fast.File(absoluteOutputDirectory, denoisedFileName, absoluteOutputDirectory, reKey);
+                        if (deleteTempFileAfterUse) System.IO.File.Delete(Path.Combine(absoluteOutputDirectory, denoisedFileName));
+                        return resultFileName;
+                    }
+                }
             }
         }
     }

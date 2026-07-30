@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <StartupObject>JabrTestField.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AVcontrol">
+      <HintPath>..\JabrAPI\bin\Release\net10.0\publish\AVcontrol.dll</HintPath>
+    </Reference>
+    <Reference Include="JabrAPI">
+      <HintPath>..\JabrAPI\bin\Release\net10.0\publish\JabrAPI.dll</HintPath>
+    </Reference>
+	<Reference Include="JabrAPI">
+	  <HintPath>..\JabrAPI\bin\Release\net10.0\publish\JabrAPI.xml</HintPath>
+	</Reference>
+  </ItemGroup>
+
+</Project>

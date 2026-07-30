@@ -6,12 +6,13 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "JabrAPI/5.5.5": {
+      "JabrTestField/1.0.0": {
         "dependencies": {
-          "AVcontrol": "2.9.0.0"
+          "AVcontrol": "2.9.0.0",
+          "JabrAPI": "5.5.5.0"
         },
         "runtime": {
-          "JabrAPI.dll": {}
+          "JabrTestField.dll": {}
         }
       },
       "AVcontrol/2.9.0.0": {
@@ -21,16 +22,29 @@
             "fileVersion": "2.9.0.0"
           }
         }
+      },
+      "JabrAPI/5.5.5.0": {
+        "runtime": {
+          "JabrAPI.dll": {
+            "assemblyVersion": "5.5.5.0",
+            "fileVersion": "5.5.5.0"
+          }
+        }
       }
     }
   },
   "libraries": {
-    "JabrAPI/5.5.5": {
+    "JabrTestField/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "AVcontrol/2.9.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "JabrAPI/5.5.5.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
