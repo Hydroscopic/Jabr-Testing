@@ -87,7 +87,7 @@ namespace JabrAPI
         {
             List<Byte> result = FastEncrypt(message, reKey);
             return result == null || result.Count < 1 ? []
-                    : Noise.Add.FastBinary(result, reKey.Noisifier);
+                    : Noise.FastAdd(result, reKey.Noisifier, [.. message.Distinct()]);
         }
 
         static public void FastEncryptFile(string absoluteInputDirectory, string fileName,

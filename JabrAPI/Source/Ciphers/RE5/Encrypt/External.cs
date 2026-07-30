@@ -61,13 +61,13 @@ namespace JabrAPI
         {
             List<Byte> result = Encrypt(message, reKey, out exception);
             return result == null || result.Count < 1 ? []
-                    : Noise.Add.Binary(result, reKey, out exception);
+                    : Noise.Add(result, reKey, out exception);
         }
         static public List<Byte> EncryptWithNoise(List<Byte> message, BinaryKey reKey, bool throwExceptions = false)
         {
             List<Byte> result = Encrypt(message, reKey, throwExceptions);
             return result == null || result.Count < 1 ? []
-                    : Noise.Add.Binary(result, reKey, throwExceptions);
+                    : Noise.Add(result, reKey, throwExceptions);
         }
     }
 }

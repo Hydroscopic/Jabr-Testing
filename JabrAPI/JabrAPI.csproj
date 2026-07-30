@@ -8,7 +8,7 @@
     <PublishAot>False</PublishAot>
     <SignAssembly>True</SignAssembly>
     <Title>JabrAPI</Title>
-    <Version>5.5.3</Version>
+    <Version>5.5.4</Version>
     <Authors>Gyroscopic</Authors>
     <Description>Cryptography API for RE ciphers from the Jabr family</Description>
     <PackageProjectUrl>https://github.com/Gyroscopic-why/Jabr</PackageProjectUrl>
@@ -19,11 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Source\Demo\Program.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Source\Demo\Program.cs" />
+    <Compile Remove="Source\Program.cs" />
+    <None Include="Source\Program.cs" />
   </ItemGroup>
 
   <ItemGroup>
