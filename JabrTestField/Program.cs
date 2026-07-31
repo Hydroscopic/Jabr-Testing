@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 using static System.Console;
@@ -26,22 +25,21 @@ namespace JabrTestField
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
+
             
-
-
 
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)
             {
                 Write("\n\tAttempt: " + ++attemptCount);
-                List<Byte> bincrypted = RE5.Encrypt(lolinit, binKey, true);
+                List<Byte> bincrypted = RE5.Encrypt.Data(lolinit, binKey, true);
 
                 Write("\n\tInitial: ");
                 for (var j = 0; j < bincrypted.Count; j++)
                     Write(bincrypted[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                List<Byte> binoised = RE5.EncryptWithNoise(lolinit, binKey, true);
+                List<Byte> binoised = RE5.Encrypt.WithNoiseAddition.Data(lolinit, binKey, true);
                 List<Byte> bindenoised = Noise.Remove(binoised, binKey, true);
 
                 Write("\n\tNoised:  ");
@@ -128,14 +126,6 @@ namespace JabrTestField
                 Write("\n\tInitial: ");
                 for (var j = 0; j < bincrypted.Count; j++)
                     Write(bincrypted[j] + " ");
-
-                binKey.ChunkSize = ChunkSize.Byte512;
-                List<Byte> safeBytes = RE5.Encrypt(lolinit, binKey, true);
-                Write("\n\tSAFEENC: ");
-                for (var ij = 0; ij < safeBytes.Count; ij++) Write(safeBytes[ij] + " ");
-                List<Byte> safeByteDec = RE5.Decrypt.Safe.Data(safeBytes, binKey, true);
-                Write("\n\tSAFEDEC: ");
-                for (var ij = 0; ij < safeByteDec.Count; ij++) Write(safeByteDec[ij] + " ");
 
 
                 Write($"\n\tNonEntropy: {thisMaxNonEntropy}(" +

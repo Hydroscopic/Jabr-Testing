@@ -9,119 +9,9 @@
             Decrypting <b>DATA</b> <i>or</i> <b>FILES</b> with <see cref="T:JabrAPI.RE5"/> algorithm
             </summary>
         </member>
-        <member name="T:JabrAPI.RE5.Decrypt.Safe">
-            <summary>
-            These variants <b>DO validate</b> the parameters and are surrounded in <i>try/catch</i><br/>
-            </summary>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
-            <summary>
-            Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
-            </summary>
-            <returns><b>Decrypted</b> data of <paramref name="encrypted"/></returns>
-            
-            <param name="encrypted">Obfuscated data</param>
-            <param name="reKey">RE5 Encryption key for deciphering</param>
-            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
-            <summary>
-            Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
-            </summary>
-            <returns><b>Decrypted</b> data of <paramref name="encrypted"/></returns>
-            
-            <param name="encrypted">Obfuscated data</param>
-            <param name="reKey">RE5 Encryption key for deciphering</param>
-            <param name="throwExceptions"></param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@)">
-            <summary>
-            Creates a FILE containing the Decrypted content<br/>
-            Returns the NAME of the new FILE with the decrypted content
-            </summary>
-            <returns>The NAME of the new created file</returns>
-            
-            <param name="absoluteInputDirectory">PATH to the original FILE</param>
-            <param name="fileName">Original FILE NAME</param>
-            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
-            <summary>
-            Creates a FILE containing the Decrypted content<br/>
-            Returns the NAME of the new FILE with the decrypted content
-            </summary>
-            <returns>The NAME of the new created file</returns>
-            
-            <param name="absoluteInputDirectory">PATH to the original FILE</param>
-            <param name="fileName">Original FILE NAME</param>
-            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-            <param name="throwExceptions"></param>
-        </member>
-        <member name="T:JabrAPI.RE5.Decrypt.Safe.WithNoiseRemoval">
-            <summary>
-            Denoising <see cref="T:JabrAPI.Noise"/> information before Decrypting <see cref="T:JabrAPI.RE5.Decrypt"/> it
-            </summary>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
-            <summary>
-            Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
-            </summary>
-            <returns><b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/></returns>
-            
-            <param name="encrypted">Obfuscated data</param>
-            <param name="reKey">RE5 Encryption key for deciphering</param>
-            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
-            <summary>
-            Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
-            </summary>
-            <returns><b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/></returns>
-            
-            <param name="encrypted">Obfuscated data</param>
-            <param name="reKey">RE5 Encryption key for deciphering</param>
-            <param name="throwExceptions"></param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@,System.Boolean)">
-            <summary>
-            Creates a FILE containing the Denoised and Decrypted content<br/><br/>
-              
-            A temporary FILE is used for storing the denoised content<br/>
-            It will be deleted in the end based on <paramref name="deleteTempFileAfterUse"/><br/><br/>
-            
-            Returns the NAME of the new FILE with the denoised and decrypted content
-            </summary>
-            <returns>The NAME of the new created file</returns>
-            
-            <param name="absoluteInputDirectory">PATH to the original FILE</param>
-            <param name="fileName">Original FILE NAME</param>
-            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-            <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
-        </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Safe.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean,System.Boolean)">
-            <summary>
-            Creates a FILE containing the Denoised and Decrypted content<br/><br/>
-              
-            A temporary FILE is used for storing the denoised content<br/>
-            It will be deleted in the end based on <paramref name="deleteTempFileAfterUse"/><br/><br/>
-            
-            Returns the NAME of the new FILE with the denoised and decrypted content
-            </summary>
-            <returns>The NAME of the new created file</returns>
-            
-            <param name="absoluteInputDirectory">PATH to the original FILE</param>
-            <param name="fileName">Original FILE NAME</param>
-            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-            <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
-        </member>
         <member name="T:JabrAPI.RE5.Decrypt.Fast">
             <summary>
-            These variants <b>DO NOT validate the parameters!</b> (Fast variants)<br/>
+            These variants <b>DO NOT validate the parameters!</b> (Fast variants)
             </summary>
         </member>
         <member name="M:JabrAPI.RE5.Decrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
@@ -135,22 +25,23 @@
         </member>
         <member name="M:JabrAPI.RE5.Decrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey)">
             <summary>
-            Creates a FILE containing the Decrypted content<br/>
-            Returns the NAME of the new FILE with the decrypted content
+            Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
             </summary>
-            <returns>The NAME of the new created file</returns>
+            <returns>The <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b></returns>
             
             <param name="absoluteInputDirectory">PATH to the original FILE</param>
             <param name="fileName">Original FILE NAME</param>
-            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+            <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for deciphering</param>
         </member>
-        <member name="T:JabrAPI.RE5.Decrypt.Fast.WithNoiseRemoval">
+        <member name="T:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval">
             <summary>
+            These variants <b>DO NOT validate the parameters!</b> (Fast variants)<br/>
             Denoising <see cref="T:JabrAPI.Noise"/> information before Decrypting <see cref="T:JabrAPI.RE5.Decrypt"/> it
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Fast.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
             <summary>
             Returns the <b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -159,22 +50,263 @@
             <param name="encrypted">Obfuscated data</param>
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Fast.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
             <summary>
-            Creates a FILE containing the Denoised and Decrypted content<br/><br/>
+            Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
               
-            A temporary FILE is used for storing the denoised content<br/>
-            It will be deleted in the end based on <paramref name="deleteTempFileAfterUse"/><br/><br/>
+            <i>A temporary FILE is used for storing the Denoised content</i><br/>
+            It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
             
-            Returns the NAME of the new FILE with the denoised and decrypted content
+            Returns the <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b>
             </summary>
-            <returns>The NAME of the new created file</returns>
+            <returns>The <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b></returns>
             
             <param name="absoluteInputDirectory">PATH to the original FILE</param>
             <param name="fileName">Original FILE NAME</param>
             <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
+            </summary>
+            <returns><b>Decrypted</b> data of <paramref name="encrypted"/></returns>
+            
+            <param name="encrypted">Obfuscated data</param>
+            <param name="reKey">RE5 Encryption key for deciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
+            </summary>
+            <returns><b>Decrypted</b> data of <paramref name="encrypted"/></returns>
+            
+            <param name="encrypted">Obfuscated data</param>
+            <param name="reKey">RE5 Encryption key for deciphering</param>
+            <param name="throwExceptions"></param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for deciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for deciphering</param>
+            <param name="throwExceptions"></param>
+        </member>
+        <member name="T:JabrAPI.RE5.Decrypt.WithNoiseRemoval">
+            <summary>
+            Denoising <see cref="T:JabrAPI.Noise"/> information before Decrypting <see cref="T:JabrAPI.RE5.Decrypt"/> it
+            </summary>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
+            </summary>
+            <returns><b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/></returns>
+            
+            <param name="encrypted">Obfuscated data</param>
+            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
+            </summary>
+            <returns><b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/></returns>
+            
+            <param name="encrypted">Obfuscated data</param>
+            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+            <param name="throwExceptions"></param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@,System.Boolean)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
+              
+            <i>A temporary FILE is used for storing the Denoised content</i><br/>
+            It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
+            
+            Returns the <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+            <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
+              
+            <i>A temporary FILE is used for storing the Denoised content</i><br/>
+            It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
+            
+            Returns the <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Denoised and Decrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+            <param name="throwExceptions"></param>
+            <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
+        </member>
+        <member name="T:JabrAPI.RE5.Encrypt">
+            <summary>
+            Encrypting <b>DATA</b> <i>or</i> <b>FILES</b> with <see cref="T:JabrAPI.RE5"/> algorithm
+            </summary>
+        </member>
+        <member name="T:JabrAPI.RE5.Encrypt.Fast">
+            <summary>
+            These variants <b>DO NOT validate the parameters!</b> (Fast variants)
+            </summary>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+            <summary>
+            Returns the <b>Encrypted</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Encrypted</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+        </member>
+        <member name="T:JabrAPI.RE5.Encrypt.FastWithNoiseAddition">
+            <summary>
+            These variants <b>DO NOT validate the parameters!</b> (Fast variants)<br/>
+            Noising <see cref="T:JabrAPI.Noise"/> information before Encrypting <see cref="T:JabrAPI.RE5.Encrypt"/> it
+            </summary>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+            <summary>
+            Returns the <b>Noised</b> and <b>Encrypted</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Noised</b> and <b>Encrypted</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for noising and enciphering</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Noised</b> and <b>Encrypted</b> content<br/><br/>
+              
+            <i>A temporary FILE is used for storing the Denoised content</i><br/>
+            It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
+            
+            Returns the <i>NAME</i> of the new <b>Noised and Encrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Noised and Encrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for noising and enciphering</param>
+            <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Returns the <b>Encrypted</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Encrypted</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Returns the <b>Encrypted</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Encrypted</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+            <param name="throwExceptions"></param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
+            Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
+            </summary>
+            <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
+            
+            <param name="absoluteInputDirectory">PATH to the original FILE</param>
+            <param name="fileName">Original FILE NAME</param>
+            <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
+            <param name="reKey">RE5 Encryption key for enciphering</param>
+            <param name="throwExceptions"></param>
+        </member>
+        <member name="T:JabrAPI.RE5.Encrypt.WithNoiseAddition">
+            <summary>
+            Noising <see cref="T:JabrAPI.Noise"/> information before Encrypting <see cref="T:JabrAPI.RE5.Encrypt"/> it
+            </summary>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+            <summary>
+            Returns the <b>Encrypted</b> and <b>Noised</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Encrypted</b> and <b>Noised</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for noising and enciphering</param>
+            <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
+        </member>
+        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+            <summary>
+            Returns the <b>Encrypted</b> and <b>Noised</b> <paramref name="message"/>
+            </summary>
+            <returns><b>Encrypted</b> and <b>Noised</b> <paramref name="message"/></returns>
+            
+            <param name="message">secret data</param>
+            <param name="reKey">RE5 Encryption key for noising and enciphering</param>
+            <param name="throwExceptions"></param>
         </member>
     </members>
 </doc>

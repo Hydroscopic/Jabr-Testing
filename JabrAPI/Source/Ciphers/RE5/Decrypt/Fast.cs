@@ -18,7 +18,7 @@ namespace JabrAPI
         static public partial class Decrypt
         {
             /// <summary>
-            /// These variants <b>DO NOT validate the parameters!</b> (Fast variants)<br/>
+            /// These variants <b>DO NOT validate the parameters!</b> (Fast variants)
             /// </summary>
             static public class Fast
             {
@@ -108,15 +108,15 @@ namespace JabrAPI
 
 
                 /// <summary>
-                /// Creates a FILE containing the Decrypted content<br/>
-                /// Returns the NAME of the new FILE with the decrypted content
+                /// Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
+                /// Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
                 /// </summary>
-                /// <returns>The NAME of the new created file</returns>
+                /// <returns>The <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b></returns>
                 /// 
                 /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
                 /// <param name="fileName">Original FILE NAME</param>
-                /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-                /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
+                /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
+                /// <param name="reKey">RE5 Encryption key for deciphering</param>
                 static public string File(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, BinaryKey reKey)
                 {
@@ -197,53 +197,6 @@ namespace JabrAPI
                         offset += bytesRead;
                     }
                     return finalFileName;
-                }
-
-
-
-                /// <summary>
-                /// Denoising <see cref="Noise"/> information before Decrypting <see cref="RE5.Decrypt"/> it
-                /// </summary>
-                static public class WithNoiseRemoval
-                {
-                    /// <summary>
-                    /// Returns the <b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/>
-                    /// </summary>
-                    /// <returns><b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/></returns>
-                    /// 
-                    /// <param name="encrypted">Obfuscated data</param>
-                    /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-                    static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey)
-                    {
-                        List<Byte> denoised = Noise.FastRemove(encrypted, reKey.Noisifier);
-                        return denoised == null || denoised.Count < 1 ? []
-                            : RE5.Decrypt.Fast.Data(denoised, reKey);
-                    }
-
-
-                    /// <summary>
-                    /// Creates a FILE containing the Denoised and Decrypted content<br/><br/>
-                    ///   
-                    /// A temporary FILE is used for storing the denoised content<br/>
-                    /// It will be deleted in the end based on <paramref name="deleteTempFileAfterUse"/><br/><br/>
-                    /// 
-                    /// Returns the NAME of the new FILE with the denoised and decrypted content
-                    /// </summary>
-                    /// <returns>The NAME of the new created file</returns>
-                    /// 
-                    /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
-                    /// <param name="fileName">Original FILE NAME</param>
-                    /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-                    /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-                    /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
-                    static public string File(string absoluteInputDirectory, string fileName,
-                        string absoluteOutputDirectory, BinaryKey reKey, bool deleteTempFileAfterUse = true)
-                    {
-                        string denoisedFileName = Noise.FastRemoveFromFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier);
-                        string resultFileName = RE5.Decrypt.Fast.File(absoluteOutputDirectory, denoisedFileName, absoluteOutputDirectory, reKey);
-                        if (deleteTempFileAfterUse) System.IO.File.Delete(Path.Combine(absoluteOutputDirectory, denoisedFileName));
-                        return resultFileName;
-                    }
                 }
             }
         }

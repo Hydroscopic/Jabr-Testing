@@ -15,9 +15,6 @@
     <Reference Include="JabrAPI">
       <HintPath>..\JabrAPI\bin\Release\net10.0\publish\JabrAPI.dll</HintPath>
     </Reference>
-	<Reference Include="JabrAPI">
-	  <HintPath>..\JabrAPI\bin\Release\net10.0\publish\JabrAPI.xml</HintPath>
-	</Reference>
   </ItemGroup>
 
 </Project>
