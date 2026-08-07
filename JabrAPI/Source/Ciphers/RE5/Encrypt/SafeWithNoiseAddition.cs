@@ -29,7 +29,7 @@ namespace JabrAPI
                 {
                     List<Byte> result = Encrypt.Data(message, reKey, out exception);
                     return result == null || result.Count < 1 ? []
-                            : Noise.Add(result, reKey, out exception);
+                            : Noise.AddTo.Data(result, reKey, out exception);
                 }
 
 
@@ -46,7 +46,7 @@ namespace JabrAPI
                 {
                     List<Byte> result = Encrypt.Data(message, reKey, throwExceptions);
                     return result == null || result.Count < 1 ? []
-                            : Noise.Add(result, reKey, throwExceptions);
+                            : Noise.AddTo.Data(result, reKey, throwExceptions);
                 }
             }
         }

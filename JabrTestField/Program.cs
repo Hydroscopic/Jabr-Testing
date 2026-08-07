@@ -25,7 +25,7 @@ namespace JabrTestField
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
-
+            
 
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)

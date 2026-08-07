@@ -476,5 +476,11 @@
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
             <param name="throwExceptions"></param>
         </member>
+        <member name="T:JabrAPI.Noise.AddTo">
+            <summary>
+            <b>Mixes useful data or file content with soffisticated noise</b><br/>
+            All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="T:JabrAPI.BinaryNoisifier"/> class</b>
+            </summary>
+        </member>
     </members>
 </doc>

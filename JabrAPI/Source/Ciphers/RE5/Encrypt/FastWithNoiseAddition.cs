@@ -27,7 +27,7 @@ namespace JabrAPI
                 {
                     List<Byte> result = RE5.Encrypt.Fast.Data(message, reKey);
                     return result == null || result.Count < 1 ? []
-                            : Noise.FastAdd(result, reKey.Noisifier, [.. message.Distinct()]);
+                            : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
                 }
 
 
