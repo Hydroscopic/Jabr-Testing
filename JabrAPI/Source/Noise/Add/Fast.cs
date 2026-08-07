@@ -13,11 +13,11 @@ namespace JabrAPI
     {
         /// <summary>
         /// <b>Mixes useful data or file content with soffisticated noise</b><br/>
-        /// All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="BinaryNoisifier"/> class</b>
+        /// All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="Noisifier"/> class</b>
         /// </summary>
         static public partial class AddTo
         {
-            static public List<Byte> FastData(List<Byte> message, BinaryNoisifier noisifier, List<Byte> fakeSelection)
+            static public List<Byte> FastData(List<Byte> message, Noisifier noisifier, List<Byte> fakeSelection)
             {
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = message.Count,
@@ -104,7 +104,7 @@ namespace JabrAPI
             }
 
             static public void FastFile(string absoluteInputDirectory,
-                string fileName, string absoluteOutputDirectory, BinaryNoisifier noisifier)
+                string fileName, string absoluteOutputDirectory, Noisifier noisifier)
             {
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = 0,

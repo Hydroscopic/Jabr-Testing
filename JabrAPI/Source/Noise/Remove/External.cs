@@ -11,7 +11,7 @@ namespace JabrAPI
 {
     static public partial class Noise
     {
-        static public List<Byte> Remove(List<Byte> noised, IBinaryKey reKey,
+        static public List<Byte> Remove(List<Byte> noised, IReKey reKey,
             out Exception? exception)
         {
             if (IsMessageAndReKeyAndNoisifierValid(noised, reKey, out exception) &&
@@ -25,7 +25,7 @@ namespace JabrAPI
             }
             return [];
         }
-        static public List<Byte> Remove(List<Byte> noised, IBinaryKey reKey,
+        static public List<Byte> Remove(List<Byte> noised, IReKey reKey,
             bool throwExceptions = false)
         {
             List<Byte> result = Remove(noised, reKey, out Exception? exception);
@@ -33,7 +33,7 @@ namespace JabrAPI
             return result;
         }
 
-        static public List<Byte> Remove(List<Byte> noised, BinaryNoisifier noisifier,
+        static public List<Byte> Remove(List<Byte> noised, Noisifier noisifier,
             out Exception? exception)
         {
             if (IsMessageAndNoisifierValid(noised, noisifier, out exception))
@@ -46,7 +46,7 @@ namespace JabrAPI
             }
             return [];
         }
-        static public List<Byte> Remove(List<Byte> noised, BinaryNoisifier noisifier,
+        static public List<Byte> Remove(List<Byte> noised, Noisifier noisifier,
             bool throwExceptions = false)
         {
             List<Byte> result = Remove(noised, noisifier, out Exception? exception);
@@ -56,7 +56,7 @@ namespace JabrAPI
 
 
         static public bool RemoveFromFile(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, IBinaryKey reKey,
+            string absoluteOutputDirectory, IReKey reKey,
                 out Exception? exception)
         {
             if (IsReKeyValid(reKey, out exception) &&
@@ -72,7 +72,7 @@ namespace JabrAPI
             return false;
         }
         static public bool RemoveFromFile(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, IBinaryKey reKey,
+            string absoluteOutputDirectory, IReKey reKey,
             bool throwExceptions = false)
         {
             bool result = RemoveFromFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, out Exception? exception);
@@ -80,7 +80,7 @@ namespace JabrAPI
             return result;
         }
         static public bool RemoveFromFile(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, BinaryNoisifier noisifier,
+            string absoluteOutputDirectory, Noisifier noisifier,
                 out Exception? exception)
         {
             if (IsNoisifierValid(noisifier, out exception))
@@ -95,7 +95,7 @@ namespace JabrAPI
             return false;
         }
         static public bool RemoveFromFile(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, BinaryNoisifier noisifier,
+            string absoluteOutputDirectory, Noisifier noisifier,
             bool throwExceptions = false)
         {
             bool result = RemoveFromFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, noisifier, out Exception? exception);

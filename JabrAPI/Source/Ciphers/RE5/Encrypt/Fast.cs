@@ -29,7 +29,7 @@ namespace JabrAPI
                 /// 
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for enciphering</param>
-                static public List<Byte> Data(List<Byte> message, BinaryKey reKey)
+                static public List<Byte> Data(List<Byte> message, ReKey reKey)
                 {
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
                     Int32 exLength = reKey.ExLength, messageLength = message.Count, shCount = reKey.ShCount;
@@ -113,7 +113,7 @@ namespace JabrAPI
                 /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
                 /// <param name="reKey">RE5 Encryption key for enciphering</param>
                 static public string File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey)
+                    string absoluteOutputDirectory, ReKey reKey)
                 {
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
                     Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;

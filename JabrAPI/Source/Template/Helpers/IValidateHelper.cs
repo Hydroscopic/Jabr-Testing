@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JabrAPI.Template
 {
-    abstract public class IBinaryValidateHelper()
+    abstract public class IValidateHelper()
     {
         abstract public bool ForEncryption(List<Byte> message, out Exception? exception);
         abstract public bool ForDecryption(List<Byte> message, out Exception? exception);

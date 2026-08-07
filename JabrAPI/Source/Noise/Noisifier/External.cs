@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace JabrAPI
 {
-    public partial class BinaryNoisifier
+    public partial class Noisifier
     {
         public Int32 PrimaryNoiseCount => _primaryNoise.Count;
         public Int32 ComplexNoiseCount => _complexNoise.Count;

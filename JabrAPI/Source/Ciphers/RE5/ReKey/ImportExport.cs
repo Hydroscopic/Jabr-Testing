@@ -11,7 +11,7 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
             public bool ImportFromBinary(List<Byte> exportData, bool throwExceptions = false)
                 => ImportFromBinary(exportData.ToArray(), throwExceptions);

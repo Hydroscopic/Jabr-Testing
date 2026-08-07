@@ -14,7 +14,7 @@ namespace JabrAPI
     {
         static public partial class AddTo
         {
-            static public List<Byte> Data(List<Byte> message, IBinaryKey reKey,
+            static public List<Byte> Data(List<Byte> message, IReKey reKey,
                 out Exception? exception)
             {
                 if (IsMessageAndReKeyAndNoisifierValid(message, reKey, out exception) &&
@@ -28,7 +28,7 @@ namespace JabrAPI
                 }
                 return [];
             }
-            static public List<Byte> Data(List<Byte> message, IBinaryKey reKey,
+            static public List<Byte> Data(List<Byte> message, IReKey reKey,
                 bool throwExceptions = false)
             {
                 List<Byte> result = Noise.AddTo.Data(message, reKey, out Exception? exception);
@@ -36,7 +36,7 @@ namespace JabrAPI
                 return result;
             }
 
-            static public List<Byte> Data(List<Byte> message, BinaryNoisifier noisifier,
+            static public List<Byte> Data(List<Byte> message, Noisifier noisifier,
                 out Exception? exception)
             {
                 if (IsMessageAndNoisifierValid(message, noisifier, out exception) &&
@@ -50,7 +50,7 @@ namespace JabrAPI
                 }
                 return [];
             }
-            static public List<Byte> Data(List<Byte> message, BinaryNoisifier noisifier,
+            static public List<Byte> Data(List<Byte> message, Noisifier noisifier,
                 bool throwExceptions = false)
             {
                 List<Byte> result = Noise.AddTo.Data(message, noisifier, out Exception? exception);
@@ -61,7 +61,7 @@ namespace JabrAPI
 
 
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, IBinaryKey reKey,
+                string absoluteOutputDirectory, IReKey reKey,
                     out Exception? exception)
             {
                 if (IsReKeyValid(reKey, out exception) &&
@@ -77,7 +77,7 @@ namespace JabrAPI
                 return false;
             }
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, IBinaryKey reKey,
+                string absoluteOutputDirectory, IReKey reKey,
                 bool throwExceptions = false)
             {
                 bool result = Noise.AddTo.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, out Exception? exception);
@@ -86,7 +86,7 @@ namespace JabrAPI
             }
 
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, BinaryNoisifier noisifier,
+                string absoluteOutputDirectory, Noisifier noisifier,
                     out Exception? exception)
             {
                 if (IsNoisifierValid(noisifier, out exception))
@@ -101,7 +101,7 @@ namespace JabrAPI
                 return false;
             }
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, BinaryNoisifier noisifier,
+                string absoluteOutputDirectory, Noisifier noisifier,
                 bool throwExceptions = false)
             {
                 bool result = Noise.AddTo.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, noisifier, out Exception? exception);

@@ -29,7 +29,7 @@ namespace JabrAPI
                 /// 
                 /// <param name="encrypted">Obfuscated data</param>
                 /// <param name="reKey">RE5 Encryption key for deciphering</param>
-                static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey)
+                static public List<Byte> Data(List<Byte> encrypted, ReKey reKey)
                 {
                     Int32 exLength = reKey.ExLength, shCount = reKey.ShCount, encLength = encrypted.Count;
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
@@ -118,7 +118,7 @@ namespace JabrAPI
                 /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
                 /// <param name="reKey">RE5 Encryption key for deciphering</param>
                 static public string File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey)
+                    string absoluteOutputDirectory, ReKey reKey)
                 {
                     Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;

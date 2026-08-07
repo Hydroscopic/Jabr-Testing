@@ -33,7 +33,7 @@
             <summary><i>Data will be denoised before decryption</i><b><br/>
             WITHOUT</b> parameter validation</summary>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Auto.Data(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Decrypt.Auto.Data(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -44,7 +44,7 @@
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Auto.Data(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.Auto.Data(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -55,7 +55,7 @@
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="throwExceptions"></param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Auto.File(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.Auto.File(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Exception@,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/><br/>
               
@@ -74,7 +74,7 @@
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Auto.File(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.Auto.File(JabrAPI.RE5.Decrypt.Auto.DataDecryptionMode,System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/><br/>
               
@@ -98,7 +98,7 @@
             These variants <b>DO NOT validate the parameters!</b> (Fast variants)
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Decrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey)">
             <summary>
             Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -107,7 +107,7 @@
             <param name="encrypted">Obfuscated data</param>
             <param name="reKey">RE5 Encryption key for deciphering</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Decrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
@@ -125,7 +125,7 @@
             Denoising <see cref="T:JabrAPI.Noise"/> information before Decrypting <see cref="T:JabrAPI.RE5.Decrypt"/> it
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey)">
             <summary>
             Returns the <b>Denoised</b> and <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -134,7 +134,7 @@
             <param name="encrypted">Obfuscated data</param>
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.FastWithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
               
@@ -151,7 +151,7 @@
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -161,7 +161,7 @@
             <param name="reKey">RE5 Encryption key for deciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Decrypted</b> data of <paramref name="encrypted"/>
             </summary>
@@ -171,7 +171,7 @@
             <param name="reKey">RE5 Encryption key for deciphering</param>
             <param name="throwExceptions"></param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
@@ -184,7 +184,7 @@
             <param name="reKey">RE5 Encryption key for deciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Decrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Decrypted <i>FILE</i></b>
@@ -202,7 +202,7 @@
             Denoising <see cref="T:JabrAPI.Noise"/> information before Decrypting <see cref="T:JabrAPI.RE5.Decrypt"/> it
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
             </summary>
@@ -212,7 +212,7 @@
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Decrypted</b> and <b>Denoised</b> data of <paramref name="encrypted"/>
             </summary>
@@ -222,7 +222,7 @@
             <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
             <param name="throwExceptions"></param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Exception@,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
               
@@ -240,7 +240,7 @@
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
         </member>
-        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Decrypt.WithNoiseRemoval.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Denoised</b> and <b>Decrypted</b> content<br/><br/>
               
@@ -287,7 +287,7 @@
             <summary><i>Data will be noised anfter encryption</i><b><br/>
             WITHOUT</b> parameter validation</summary>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Auto.Data(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Encrypt.Auto.Data(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -298,7 +298,7 @@
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Auto.Data(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.Auto.Data(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -309,7 +309,7 @@
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
             <param name="throwExceptions"></param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Auto.File(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.Auto.File(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Exception@,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/><br/>
               
@@ -328,7 +328,7 @@
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Auto.File(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.Auto.File(JabrAPI.RE5.Encrypt.Auto.DataEncryptionMode,System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/><br/>
               
@@ -352,7 +352,7 @@
             These variants <b>DO NOT validate the parameters!</b> (Fast variants)
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Encrypt.Fast.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey)">
             <summary>
             Returns the <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -361,7 +361,7 @@
             <param name="message">secret data</param>
             <param name="reKey">RE5 Encryption key for enciphering</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Encrypt.Fast.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
@@ -379,7 +379,7 @@
             Noising <see cref="T:JabrAPI.Noise"/> information before Encrypting <see cref="T:JabrAPI.RE5.Encrypt"/> it
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey)">
+        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey)">
             <summary>
             Returns the <b>Noised</b> and <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -388,7 +388,7 @@
             <param name="message">secret data</param>
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.FastWithNoiseAddition.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Noised</b> and <b>Encrypted</b> content<br/><br/>
               
@@ -405,7 +405,7 @@
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
             <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -415,7 +415,7 @@
             <param name="reKey">RE5 Encryption key for enciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Encrypted</b> <paramref name="message"/>
             </summary>
@@ -425,7 +425,7 @@
             <param name="reKey">RE5 Encryption key for enciphering</param>
             <param name="throwExceptions"></param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
@@ -438,7 +438,7 @@
             <param name="reKey">RE5 Encryption key for enciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.File(System.String,System.String,System.String,JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
             Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
@@ -456,7 +456,7 @@
             Noising <see cref="T:JabrAPI.Noise"/> information before Encrypting <see cref="T:JabrAPI.RE5.Encrypt"/> it
             </summary>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Exception@)">
+        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Exception@)">
             <summary>
             Returns the <b>Encrypted</b> and <b>Noised</b> <paramref name="message"/>
             </summary>
@@ -466,7 +466,7 @@
             <param name="reKey">RE5 Encryption key for noising and enciphering</param>
             <param name="exception"><see cref="T:System.Exception"/> if something fails</param>
         </member>
-        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.BinaryKey,System.Boolean)">
+        <member name="M:JabrAPI.RE5.Encrypt.WithNoiseAddition.Data(System.Collections.Generic.List{System.Byte},JabrAPI.RE5.ReKey,System.Boolean)">
             <summary>
             Returns the <b>Encrypted</b> and <b>Noised</b> <paramref name="message"/>
             </summary>
@@ -479,7 +479,7 @@
         <member name="T:JabrAPI.Noise.AddTo">
             <summary>
             <b>Mixes useful data or file content with soffisticated noise</b><br/>
-            All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="T:JabrAPI.BinaryNoisifier"/> class</b>
+            All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="T:JabrAPI.Noisifier"/> class</b>
             </summary>
         </member>
     </members>

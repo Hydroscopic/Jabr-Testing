@@ -45,7 +45,7 @@ namespace JabrAPI
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
-                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, BinaryKey reKey, out Exception? exception)
+                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, out Exception? exception)
                 {
                     exception = null;
                     return mode switch
@@ -70,7 +70,7 @@ namespace JabrAPI
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
                 /// <param name="throwExceptions"></param>
-                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, BinaryKey reKey, bool throwExceptions = false)
+                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
                 {
                     return mode switch
                     {
@@ -107,7 +107,7 @@ namespace JabrAPI
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey, out Exception? exception, bool deleteTempFileAfterUse = true)
+                    string absoluteOutputDirectory, ReKey reKey, out Exception? exception, bool deleteTempFileAfterUse = true)
                 {
                     exception = null;
                     switch (mode)
@@ -145,7 +145,7 @@ namespace JabrAPI
                 /// <param name="throwExceptions"></param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
+                    string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
                 {
                     switch (mode)
                     {

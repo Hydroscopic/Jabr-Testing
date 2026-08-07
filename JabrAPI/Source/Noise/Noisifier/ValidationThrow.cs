@@ -8,23 +8,23 @@ using JabrAPI.Template;
 
 namespace JabrAPI
 {
-    public partial class BinaryNoisifier
+    public partial class Noisifier
     {
         public partial class ValidateHelper
         {
             public bool ForMessage(List<Byte> message, bool throwExceptions = false)
                      => ComplexForMessage(message, throwExceptions)
                      && PrimaryForMessage(message, throwExceptions);
-            public bool ForReKey(IBinaryKey reKey, bool throwExceptions = false)
+            public bool ForReKey(IReKey reKey, bool throwExceptions = false)
                      => ComplexForReKey(reKey, throwExceptions)
                      && PrimaryForReKey(reKey, throwExceptions);
-            public bool ForMessageAndReKey(IBinaryKey reKey, List<Byte> message, bool throwExceptions = false)
+            public bool ForMessageAndReKey(IReKey reKey, List<Byte> message, bool throwExceptions = false)
                      => ForMessage(message, throwExceptions)
                      && ForReKey(reKey, throwExceptions);
 
 
 
-            static public bool PrimaryForReKey(IBinaryKey reKey, List<Byte> primaryNoise, bool throwExceptions = false)
+            static public bool PrimaryForReKey(IReKey reKey, List<Byte> primaryNoise, bool throwExceptions = false)
                 => PrimaryForReKey(reKey.FinalAlphabet, primaryNoise, throwExceptions);
             static public bool PrimaryForReKey(List<Byte> exAlphabet, List<Byte> primaryNoise, bool throwExceptions = false)
             {
@@ -56,7 +56,7 @@ namespace JabrAPI
             }
 
 
-            public bool PrimaryForReKey(IBinaryKey reKey, bool throwExceptions = false)
+            public bool PrimaryForReKey(IReKey reKey, bool throwExceptions = false)
                 => PrimaryForReKey(reKey.FinalAlphabet, _noisifier._primaryNoise, throwExceptions);
             public bool PrimaryForReKey(List<Byte> exAlphabet, bool throwExceptions = false)
                 => PrimaryForReKey(exAlphabet, _noisifier._primaryNoise, throwExceptions);
@@ -65,7 +65,7 @@ namespace JabrAPI
 
 
 
-            static public bool ComplexForReKey(IBinaryKey reKey, List<Byte> complexNoise, bool throwExceptions = false)
+            static public bool ComplexForReKey(IReKey reKey, List<Byte> complexNoise, bool throwExceptions = false)
                 => ComplexForReKey(reKey.FinalAlphabet, complexNoise, throwExceptions);
             static public bool ComplexForReKey(List<Byte> exAlphabet, List<Byte> complexNoise, bool throwExceptions = false)
             {
@@ -97,7 +97,7 @@ namespace JabrAPI
             }
 
 
-            public bool ComplexForReKey(IBinaryKey reKey, bool throwExceptions = false)
+            public bool ComplexForReKey(IReKey reKey, bool throwExceptions = false)
                 => ComplexForReKey(reKey.FinalAlphabet, _noisifier._complexNoise, throwExceptions);
             public bool ComplexForReKey(List<Byte> exAlphabet, bool throwExceptions = false)
                 => ComplexForReKey(exAlphabet, _noisifier._complexNoise, throwExceptions);

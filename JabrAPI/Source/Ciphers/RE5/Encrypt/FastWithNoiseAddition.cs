@@ -23,7 +23,7 @@ namespace JabrAPI
                 /// 
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
-                static public List<Byte> Data(List<Byte> message, BinaryKey reKey)
+                static public List<Byte> Data(List<Byte> message, ReKey reKey)
                 {
                     List<Byte> result = RE5.Encrypt.Fast.Data(message, reKey);
                     return result == null || result.Count < 1 ? []
@@ -48,7 +48,7 @@ namespace JabrAPI
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public string File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey, bool deleteTempFileAfterUse = true)
+                    string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true)
                 {
                     //Noise.FastAddToFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier);
                     //string resultFileName = RE5.Encrypt.Fast.File(absoluteOutputDirectory, denoisedFileName, absoluteOutputDirectory, reKey);

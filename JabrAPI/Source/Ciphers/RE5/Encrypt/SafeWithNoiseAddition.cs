@@ -25,7 +25,7 @@ namespace JabrAPI
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
-                static public List<Byte> Data(List<Byte> message, BinaryKey reKey, out Exception? exception)
+                static public List<Byte> Data(List<Byte> message, ReKey reKey, out Exception? exception)
                 {
                     List<Byte> result = Encrypt.Data(message, reKey, out exception);
                     return result == null || result.Count < 1 ? []
@@ -42,7 +42,7 @@ namespace JabrAPI
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
                 /// <param name="throwExceptions"></param>
-                static public List<Byte> Data(List<Byte> message, BinaryKey reKey, bool throwExceptions = false)
+                static public List<Byte> Data(List<Byte> message, ReKey reKey, bool throwExceptions = false)
                 {
                     List<Byte> result = Encrypt.Data(message, reKey, throwExceptions);
                     return result == null || result.Count < 1 ? []

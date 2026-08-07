@@ -22,7 +22,7 @@ namespace JabrAPI
                 /// <param name="encrypted">Obfuscated data</param>
                 /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
-                static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey, out Exception? exception)
+                static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, out Exception? exception)
                 {
                     List<Byte> denoised = Noise.Remove(encrypted, reKey, out exception);
                     return denoised == null || denoised.Count < 1 ? []
@@ -37,7 +37,7 @@ namespace JabrAPI
                 /// <param name="encrypted">Obfuscated data</param>
                 /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
                 /// <param name="throwExceptions"></param>
-                static public List<Byte> Data(List<Byte> encrypted, BinaryKey reKey, bool throwExceptions = false)
+                static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
                 {
                     List<Byte> denoised = Noise.Remove(encrypted, reKey, throwExceptions);
                     return denoised == null || denoised.Count < 1 ? []
@@ -63,7 +63,7 @@ namespace JabrAPI
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey, out Exception? exception, bool deleteTempFileAfterUse = true)
+                    string absoluteOutputDirectory, ReKey reKey, out Exception? exception, bool deleteTempFileAfterUse = true)
                 {
                     bool didSucceed = Noise.RemoveFromFile(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, out exception);
@@ -90,7 +90,7 @@ namespace JabrAPI
                 /// <param name="throwExceptions"></param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, BinaryKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
+                    string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
                 {
                     bool didSucceed = Noise.RemoveFromFile(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, out Exception? exception);

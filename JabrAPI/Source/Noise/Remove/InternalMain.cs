@@ -9,7 +9,7 @@ namespace JabrAPI
 {
     static public partial class Noise
     {
-        static public List<Byte> FastRemove(List<Byte> message, BinaryNoisifier noisifier)
+        static public List<Byte> FastRemove(List<Byte> message, Noisifier noisifier)
         {
             Int32 chunkSize  = (Int32)noisifier.settings.ChunkSize,
                     chunkCount = (Int32)Math.Ceiling((double)message.Count / chunkSize);
@@ -51,7 +51,7 @@ namespace JabrAPI
 
 
         static public string FastRemoveFromFile(string absoluteInputDirectory,
-            string fileName, string absoluteOutputDirectory, BinaryNoisifier noisifier)
+            string fileName, string absoluteOutputDirectory, Noisifier noisifier)
         {
             List<Byte> primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
             string finalFileName;

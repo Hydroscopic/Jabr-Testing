@@ -10,9 +10,9 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
-            public void CopyFrom(BinaryKey otherKey, bool fullCopy = true)
+            public void CopyFrom(ReKey otherKey, bool fullCopy = true)
             {
                 _noisifier.CopyFrom(otherKey.Noisifier, fullCopy);
 

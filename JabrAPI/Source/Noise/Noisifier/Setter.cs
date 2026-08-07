@@ -8,17 +8,17 @@ using JabrAPI.Template;
 
 namespace JabrAPI
 {
-    public partial class BinaryNoisifier
+    public partial class Noisifier
     {
         public SetHelper Set => _setHelper;
 
 
         public class SetHelper
         {
-            private readonly BinaryNoisifier _noisifier;
+            private readonly Noisifier _noisifier;
             private readonly SensetiveSetHelper _sensitiveSetHelper;
 
-            internal SetHelper(BinaryNoisifier noisifier)
+            internal SetHelper(Noisifier noisifier)
             {
                 _noisifier = noisifier;
                 _sensitiveSetHelper = new(_noisifier);
@@ -30,9 +30,9 @@ namespace JabrAPI
 
             public class SensetiveSetHelper
             {
-                private readonly BinaryNoisifier _noisifier;
+                private readonly Noisifier _noisifier;
 
-                internal SensetiveSetHelper(BinaryNoisifier noisifier)
+                internal SensetiveSetHelper(Noisifier noisifier)
                 {
                     _noisifier = noisifier;
                 }
@@ -46,9 +46,9 @@ namespace JabrAPI
                     _noisifier._primaryNoise.Clear();
                     _noisifier._primaryNoise.AddRange(primaryNoise);
                 }
-                public bool SafePrNoise(IBinaryKey reKey, List<Byte> prNoise)
+                public bool SafePrNoise(IReKey reKey, List<Byte> prNoise)
                          => SafePrimaryNoise(reKey, prNoise);
-                public bool SafePrimaryNoise(IBinaryKey reKey, List<Byte> primaryNoise)
+                public bool SafePrimaryNoise(IReKey reKey, List<Byte> primaryNoise)
                 {
                     if (!ValidateHelper.PrimaryForReKey(reKey, primaryNoise)) return false;
                     _noisifier._primaryNoise.Clear();
@@ -65,9 +65,9 @@ namespace JabrAPI
                     _noisifier._complexNoise.Clear();
                     _noisifier._complexNoise.AddRange(complexNoise);
                 }
-                public bool SafeCplxNoise(IBinaryKey reKey, List<Byte> cplxNoise)
+                public bool SafeCplxNoise(IReKey reKey, List<Byte> cplxNoise)
                          => SafeComplexNoise(reKey, cplxNoise);
-                public bool SafeComplexNoise(IBinaryKey reKey, List<Byte> complexNoise)
+                public bool SafeComplexNoise(IReKey reKey, List<Byte> complexNoise)
                 {
                     if (!ValidateHelper.ComplexForReKey(reKey, complexNoise)) return false;
                     _noisifier._complexNoise.Clear();

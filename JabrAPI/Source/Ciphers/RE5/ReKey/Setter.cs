@@ -11,17 +11,17 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
             override public SetHelper Set => _setHelper;
 
 
             public class SetHelper : ISetHelper
             {
-                private readonly BinaryKey _binKey;
+                private readonly ReKey _binKey;
                 private readonly SensitiveSetHelper _sensitiveSetHelper;
 
-                internal SetHelper(BinaryKey binKey)
+                internal SetHelper(ReKey binKey)
                 {
                     _binKey = binKey;
                     _sensitiveSetHelper = new(_binKey);
@@ -32,9 +32,9 @@ namespace JabrAPI
                 public SensitiveSetHelper Sensitive => _sensitiveSetHelper;
                 public class SensitiveSetHelper
                 {
-                    private readonly BinaryKey _binKey;
+                    private readonly ReKey _binKey;
 
-                    internal SensitiveSetHelper(BinaryKey binKey)
+                    internal SensitiveSetHelper(ReKey binKey)
                     {
                         _binKey = binKey;
                     }

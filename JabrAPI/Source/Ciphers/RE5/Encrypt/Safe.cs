@@ -20,7 +20,7 @@ namespace JabrAPI
             /// <param name="message">secret data</param>
             /// <param name="reKey">RE5 Encryption key for enciphering</param>
             /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
-            static public List<Byte> Data(List<Byte> message, BinaryKey reKey, out Exception? exception)
+            static public List<Byte> Data(List<Byte> message, ReKey reKey, out Exception? exception)
             {
                 if (IsMessageAndReKeyValid(message, reKey, out exception) &&
                     reKey.IsValid.ForEncryption(message, out exception))
@@ -42,7 +42,7 @@ namespace JabrAPI
             /// <param name="message">secret data</param>
             /// <param name="reKey">RE5 Encryption key for enciphering</param>
             /// <param name="throwExceptions"></param>
-            static public List<Byte> Data(List<Byte> message, BinaryKey reKey, bool throwExceptions = false)
+            static public List<Byte> Data(List<Byte> message, ReKey reKey, bool throwExceptions = false)
             {
                 List<Byte> result = RE5.Encrypt.Data(message, reKey, out Exception? exception);
                 if (exception != null && throwExceptions) throw exception;
@@ -63,7 +63,7 @@ namespace JabrAPI
             /// <param name="reKey">RE5 Encryption key for enciphering</param>
             /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, BinaryKey reKey, out Exception? exception)
+                string absoluteOutputDirectory, ReKey reKey, out Exception? exception)
             {
                 if (IsReKeyValid(reKey, out exception) &&
                     IsNoisifierValid(reKey.Noisifier, out exception))
@@ -90,7 +90,7 @@ namespace JabrAPI
             /// <param name="reKey">RE5 Encryption key for enciphering</param>
             /// <param name="throwExceptions"></param>
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, BinaryKey reKey, bool throwExceptions = false)
+                string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
             {
                 bool result = RE5.Encrypt.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, out Exception? exception);
                 if (exception != null && throwExceptions) throw exception;

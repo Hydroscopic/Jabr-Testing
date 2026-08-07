@@ -10,18 +10,18 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
             override public ValidateHelper IsValid => _validationHelper;
 
-            public class ValidateHelper : IBinaryValidateHelper
+            public class ValidateHelper : IValidateHelper
             {
-                private readonly BinaryKey _binKey;
+                private readonly ReKey _binKey;
                 private readonly PartiallyHelper _partiallyHelper;
 
 
 
-                internal ValidateHelper(BinaryKey reKey)
+                internal ValidateHelper(ReKey reKey)
                 {
                     _binKey = reKey;
                     _partiallyHelper = new(reKey);
@@ -32,9 +32,9 @@ namespace JabrAPI
                 public PartiallyHelper Partially => _partiallyHelper;
                 public class PartiallyHelper
                 {
-                    private readonly BinaryKey _binKey;
+                    private readonly ReKey _binKey;
 
-                    internal PartiallyHelper(BinaryKey reKey)
+                    internal PartiallyHelper(ReKey reKey)
                     {
                         _binKey = reKey;
                     }

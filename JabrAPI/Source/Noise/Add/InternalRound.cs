@@ -14,7 +14,7 @@ namespace JabrAPI
         {
             static private List<Byte> AdditionRound(
                 List<Byte> message, List<Byte> fakeSelection,
-                BinaryNoisifier noisifier, SecureRandom random,
+                Noisifier noisifier, SecureRandom random,
                 Int32 maxRoundLength, Int32 maxSyntropy,
                 double maxAvgNoiseCount,
                 ref Int32 prevFinalUnnoised)

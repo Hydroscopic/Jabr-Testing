@@ -10,7 +10,7 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
             public List<Byte> PrimaryAlphabet => _primaryAlphabet;
             public List<Byte> PrAlphabet => _primaryAlphabet;

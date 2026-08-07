@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JabrAPI
 {
-    public partial class BinaryNoisifier
+    public partial class Noisifier
     {
         public bool ImportFromBinary(List<Byte> exportData, bool throwExceptions = false)
             => ImportFromBinary(exportData.ToArray(), throwExceptions);

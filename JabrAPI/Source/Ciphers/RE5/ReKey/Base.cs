@@ -9,7 +9,7 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class BinaryKey : IBinaryKey
+        public partial class ReKey : IReKey
         {
             private readonly SetHelper _setHelper;
             private readonly ValidateHelper _validationHelper;
@@ -21,7 +21,7 @@ namespace JabrAPI
 
 
 
-            public BinaryKey(List<Byte> primary, List<Byte> external, List<Byte> shifts)
+            public ReKey(List<Byte> primary, List<Byte> external, List<Byte> shifts)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
@@ -30,7 +30,7 @@ namespace JabrAPI
                 Set.Sensitive.ExAlphabet(external);
                 Set.Sensitive.Shifts(shifts);
             }
-            public BinaryKey(List<Byte> primary, List<Byte> external, Byte shift)
+            public ReKey(List<Byte> primary, List<Byte> external, Byte shift)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
@@ -39,21 +39,21 @@ namespace JabrAPI
                 Set.Sensitive.ExAlphabet(external);
                 Set.Sensitive.Shift(shift);
             }
-            public BinaryKey(Int32 shiftCount)
+            public ReKey(Int32 shiftCount)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
 
                 Set.ShiftCount(shiftCount);
             }
-            public BinaryKey(BinaryKey otherKey, bool fullCopy = true)
+            public ReKey(ReKey otherKey, bool fullCopy = true)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
 
                 CopyFrom(otherKey, fullCopy);
             }
-            public BinaryKey(bool autoGenerate = true)
+            public ReKey(bool autoGenerate = true)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
@@ -62,14 +62,14 @@ namespace JabrAPI
                 else Set.Default();
             }
 
-            public BinaryKey(List<Byte> exportData)
+            public ReKey(List<Byte> exportData)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);
 
                 ImportFromBinary(exportData);
             }
-            public BinaryKey(Byte[] exportData)
+            public ReKey(Byte[] exportData)
             {
                 _setHelper = new(this);
                 _validationHelper = new(this);

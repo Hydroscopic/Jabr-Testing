@@ -31,7 +31,7 @@ namespace JabrAPI
             return isValid;
         }
 
-        static internal bool IsNoisifierValid(BinaryNoisifier noisifier, out  Exception? exception)
+        static internal bool IsNoisifierValid(Noisifier noisifier, out  Exception? exception)
         {
             if (noisifier == null)
             {
@@ -45,14 +45,14 @@ namespace JabrAPI
             exception = null;
             return true;
         }
-        static internal bool IsNoisifierValid(BinaryNoisifier noisifier, bool throwExceptions = false)
+        static internal bool IsNoisifierValid(Noisifier noisifier, bool throwExceptions = false)
         {
             bool isValid = IsNoisifierValid(noisifier, out Exception? exception);
             if (!isValid && throwExceptions) throw exception!;
             return isValid;
         }
 
-        static internal bool IsReKeyValid(IBinaryKey reKey, out  Exception? exception)
+        static internal bool IsReKeyValid(IReKey reKey, out  Exception? exception)
         {
             if (reKey == null)
             {
@@ -66,7 +66,7 @@ namespace JabrAPI
             exception = null;
             return true;
         }
-        static internal bool IsReKeyValid(IBinaryKey reKey, bool throwExceptions = false)
+        static internal bool IsReKeyValid(IReKey reKey, bool throwExceptions = false)
         {
             bool isValid = IsReKeyValid(reKey, out Exception? exception);
             if (!isValid && throwExceptions) throw exception!;
@@ -75,14 +75,14 @@ namespace JabrAPI
 
 
         static internal bool IsMessageAndNoisifierValid(
-            List<Byte> message, BinaryNoisifier noisifier, out  Exception? exception)
+            List<Byte> message, Noisifier noisifier, out  Exception? exception)
         {
             bool isValid = IsMessageValid(message, out exception);
             if (isValid) isValid = IsNoisifierValid(noisifier, out exception);
             return isValid;
         }
         static internal bool IsMessageAndNoisifierValid(
-            List<Byte> message, BinaryNoisifier noisifier, bool throwExceptions = false)
+            List<Byte> message, Noisifier noisifier, bool throwExceptions = false)
         {
             bool isValid = IsMessageAndNoisifierValid(message, noisifier, out Exception? exception);
             if (!isValid && throwExceptions) throw exception!;
@@ -91,14 +91,14 @@ namespace JabrAPI
 
 
         static internal bool IsMessageAndReKeyValid(
-            List<Byte> message, IBinaryKey binKey, out Exception? exception)
+            List<Byte> message, IReKey binKey, out Exception? exception)
         {
             bool isValid = IsMessageValid(message, out exception);
             if  (isValid) isValid = IsReKeyValid(binKey, out exception);
             return isValid;
         }
         static internal bool IsMessageAndReKeyValid(
-            List<Byte> message, IBinaryKey binKey, bool throwExceptions = false)
+            List<Byte> message, IReKey binKey, bool throwExceptions = false)
         {
             bool isValid = IsMessageAndReKeyValid(message, binKey, out Exception? exception);
             if (!isValid && throwExceptions) throw exception!;
@@ -107,14 +107,14 @@ namespace JabrAPI
 
 
         static internal bool IsMessageAndReKeyAndNoisifierValid(
-            List<Byte> message, IBinaryKey reKey, out  Exception? exception)
+            List<Byte> message, IReKey reKey, out  Exception? exception)
         {
             bool isValid = IsReKeyValid(reKey, out exception);
             if (isValid) isValid = IsMessageAndNoisifierValid(message, reKey.Noisifier, out exception);
             return isValid;
         }
         static internal bool IsMessageAndReKeyAndNoisifierValid(
-            List<Byte> message, IBinaryKey reKey, bool throwExceptions = false)
+            List<Byte> message, IReKey reKey, bool throwExceptions = false)
         {
             bool isValid = IsMessageAndReKeyAndNoisifierValid(message, reKey, out Exception? exception);
             if (!isValid && throwExceptions) throw exception!;

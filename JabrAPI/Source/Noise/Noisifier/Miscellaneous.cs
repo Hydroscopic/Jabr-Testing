@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace JabrAPI
 {
-    public partial class BinaryNoisifier
+    public partial class Noisifier
     {
-        public  void CopyFrom(BinaryNoisifier otherNoisifier, bool fullCopy = true)
+        public  void CopyFrom(Noisifier otherNoisifier, bool fullCopy = true)
         {
             CopyFrom(otherNoisifier.PrimaryNoise, otherNoisifier.ComplexNoise);
 
