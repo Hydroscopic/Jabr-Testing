@@ -18,7 +18,7 @@ namespace JabrTestField
         static void Main()
         {
             SecureRandom random = new(128);
-            RE5.BinaryKey binKey = new(true);
+            RE5.ReKey binKey = new(true);
             string aboba = "aboba baobab";
             List<Byte> lolinit = [0, 1, 2, 3, 3, 3, 2, 1, 0];
 
@@ -155,8 +155,8 @@ namespace JabrTestField
 
 
 
-            RE5.BinaryKey initial = new(true);
-            RE5.BinaryKey copy = new(false);
+            RE5.ReKey initial = new(true);
+            RE5.ReKey copy = new(false);
             Stopwatch timer = new();
 
             Byte[] exportBuffer = [];

@@ -9,7 +9,7 @@
       "JabrTestField/1.0.0": {
         "dependencies": {
           "AVcontrol": "2.9.0.0",
-          "JabrAPI": "5.5.5.1"
+          "JabrAPI": "5.5.7.1"
         },
         "runtime": {
           "JabrTestField.dll": {}
@@ -23,11 +23,11 @@
           }
         }
       },
-      "JabrAPI/5.5.5.1": {
+      "JabrAPI/5.5.7.1": {
         "runtime": {
           "JabrAPI.dll": {
-            "assemblyVersion": "5.5.5.1",
-            "fileVersion": "5.5.5.1"
+            "assemblyVersion": "5.5.7.1",
+            "fileVersion": "5.5.7.1"
           }
         }
       }
@@ -44,7 +44,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "JabrAPI/5.5.5.1": {
+    "JabrAPI/5.5.7.1": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

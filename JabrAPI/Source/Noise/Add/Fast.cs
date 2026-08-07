@@ -21,8 +21,8 @@ namespace JabrAPI
             {
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = message.Count,
-                    hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
-                if (chunkSize < 2) chunkSize = 2;
+                  hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
+                if (chunkSize < 2)  chunkSize = 2;
                 if (hardChunkSize < chunkSize) hardChunkSize = chunkSize;
 
 
@@ -108,8 +108,8 @@ namespace JabrAPI
             {
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = 0,
-                    hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
-                if (chunkSize < 2) chunkSize = 2;
+                  hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
+                if (chunkSize < 2)  chunkSize = 2;
                 if (hardChunkSize < chunkSize) hardChunkSize = chunkSize;
 
                 string finalFileName;

@@ -24,7 +24,7 @@ namespace JabrAPI
                 /// <param name="exception"><see cref="System.Exception"/> if something fails</param>
                 static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, out Exception? exception)
                 {
-                    List<Byte> denoised = Noise.Remove(encrypted, reKey, out exception);
+                    List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, out exception);
                     return denoised == null || denoised.Count < 1 ? []
                             : RE5.Decrypt.Data(denoised, reKey, out exception);
                 }
@@ -39,7 +39,7 @@ namespace JabrAPI
                 /// <param name="throwExceptions"></param>
                 static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
                 {
-                    List<Byte> denoised = Noise.Remove(encrypted, reKey, throwExceptions);
+                    List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
                     return denoised == null || denoised.Count < 1 ? []
                             : RE5.Decrypt.Data(denoised, reKey, throwExceptions);
                 }
@@ -65,7 +65,7 @@ namespace JabrAPI
                 static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, ReKey reKey, out Exception? exception, bool deleteTempFileAfterUse = true)
                 {
-                    bool didSucceed = Noise.RemoveFromFile(absoluteInputDirectory, fileName,
+                    bool didSucceed = Noise.RemoveFrom.File(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, out exception);
 
                     if (!didSucceed) return (false, "");
@@ -92,7 +92,7 @@ namespace JabrAPI
                 static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
                 {
-                    bool didSucceed = Noise.RemoveFromFile(absoluteInputDirectory, fileName,
+                    bool didSucceed = Noise.RemoveFrom.File(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, out Exception? exception);
 
                     if (!didSucceed)

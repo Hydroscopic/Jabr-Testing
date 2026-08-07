@@ -482,5 +482,10 @@
             All <i>noise generation settings</i> are <b>controlled</b> inside the <b><see cref="T:JabrAPI.Noisifier"/> class</b>
             </summary>
         </member>
+        <member name="T:JabrAPI.Noise.RemoveFrom">
+            <summary>
+            Removes all previously mixed Noise from the content
+            </summary>
+        </member>
     </members>
 </doc>
