@@ -25,7 +25,34 @@ namespace JabrTestField
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
-            
+
+            Stopwatch timer111 = new();
+            Write("\n\tStarting the export & compressed export test...\n");
+            timer111.Start();
+
+            Byte[] byEx = binKey.ExportAsBinary();
+            timer111.Stop();
+
+            Write($"\n\tBytExport time: {timer111.ElapsedMilliseconds} ms, exportL: {byEx.Length}\n\t");
+            foreach (Byte b in byEx) Write($"{b} ");
+            timer111.Restart();
+
+            string ex = binKey.ExportAsString();
+            timer111.Stop();
+
+            Write($"\n\n\tStrExport time: {timer111.ElapsedMilliseconds} ms, exportL: {ex.Length}\n\t{ex}");
+
+            List<Byte> reConverting = Numsys.FromDecimal128<Byte>(
+                Numsys.ToDecimalFromCustom128(ex, DEFAULT.KEY_EXPORT_CHARSET), 256);
+            Write($"\n\n\tReConvertation exportL: {reConverting.Count}\n\t");
+            foreach (Byte b in reConverting) Write($"{b} ");
+
+            ReadKey();
+
+
+
+
+
 
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)
@@ -39,7 +66,7 @@ namespace JabrTestField
                 Write("\n\tAdding noise to data..");
 
                 List<Byte> binoised = RE5.Encrypt.WithNoiseAddition.Data(lolinit, binKey, true);
-                List<Byte> bindenoised = Noise.Remove(binoised, binKey, true);
+                List<Byte> bindenoised = Noise.RemoveFrom.Data(binoised, binKey, true);
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
@@ -146,7 +173,7 @@ namespace JabrTestField
                     $"\n\n\tEnter new EXTEND length: ");
 
 
-                binKey.Next();
+                binKey.GenerateNew();
 
                 ReadKey(true);
                 Clear();
@@ -171,7 +198,7 @@ namespace JabrTestField
             {
                 if (attempt % 2 == 0)
                 {
-                    initial.Next();
+                    initial.GenerateNew();
 
                     Write("\n\t\t\tEXPORT     - ");
                     timer.Start();
