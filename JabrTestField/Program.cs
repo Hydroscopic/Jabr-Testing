@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Text;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 using static System.Console;
 
@@ -27,25 +28,38 @@ namespace JabrTestField
 
 
             Stopwatch timer111 = new();
-            Write("\n\tStarting the export & compressed export test...\n");
-            timer111.Start();
+            Write("\n\t(Base 256) Starting the export & compressed export test...\n");
 
+
+            timer111.Start();
             Byte[] byEx = binKey.ExportAsBinary();
             timer111.Stop();
 
-            Write($"\n\tBytExport time: {timer111.ElapsedMilliseconds} ms, exportL: {byEx.Length}\n\t");
-            foreach (Byte b in byEx) Write($"{b} ");
-            timer111.Restart();
+            string resultExportString = string.Join("_", byEx);
+            Write($"\n\tBytExport time: {timer111.ElapsedMilliseconds} ms, exportL: {resultExportString.Length}\n\t");
+            ForegroundColor = ConsoleColor.DarkRed;
+            Write(resultExportString);
+            ForegroundColor = ConsoleColor.Gray;
 
+
+            timer111.Restart();
             string ex = binKey.ExportAsString();
             timer111.Stop();
 
-            Write($"\n\n\tStrExport time: {timer111.ElapsedMilliseconds} ms, exportL: {ex.Length}\n\t{ex}");
+            Write($"\n\n\t(COMPRESSED) StrExport time: {timer111.ElapsedMilliseconds} ms, exportL: {ex.Length}\n\t");
+            ForegroundColor = ConsoleColor.DarkGreen;
+            Write($"{ex}");
+            ForegroundColor = ConsoleColor.Gray;
 
-            List<Byte> reConverting = Numsys.FromDecimal128<Byte>(
-                Numsys.ToDecimalFromCustom128(ex, DEFAULT.KEY_EXPORT_CHARSET), 256);
-            Write($"\n\n\tReConvertation exportL: {reConverting.Count}\n\t");
-            foreach (Byte b in reConverting) Write($"{b} ");
+
+            List<Byte> reConverting = Numsys.FromDecimalBigInteger<Byte>(
+                Numsys.ToDecimalFromCustomBigInteger(ex, DEFAULT.KEY_EXPORT_CHARSET), 256);
+
+            resultExportString = string.Join("_", reConverting);
+            Write($"\n\n\t(DECOMPRESSED) ReConvertation exportL: {resultExportString.Length}\n\t");
+            ForegroundColor = ConsoleColor.DarkGray;
+            Write(resultExportString);
+            ForegroundColor = ConsoleColor.Gray;
 
             ReadKey();
 
