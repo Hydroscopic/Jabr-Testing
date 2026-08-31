@@ -29,7 +29,8 @@ namespace JabrAPI
                 /// 
                 /// <param name="message">secret data</param>
                 /// <param name="reKey">RE5 Encryption key for enciphering</param>
-                static public List<Byte> Data(List<Byte> message, ReKey reKey)
+                /// <param name="prevId">Shift for continious encryption</param>
+                static public List<Byte> Data(List<Byte> message, ReKey reKey, ref Int32 prevId)
                 {
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
                     Int32 exLength = reKey.ExLength, messageLength = message.Count, shCount = reKey.ShCount;
@@ -55,7 +56,7 @@ namespace JabrAPI
                     if   (chunkSize <= maxEncodingLength) chunkSize = maxEncodingLength + 1;
 
                     Int32 chunkCount = (Int32)Math.Ceiling((double)messageLength / chunkSize);
-                    Int32 thisRoundLength, shDelta, shiftStartId = 0, prevId = 0;
+                    Int32 thisRoundLength, shDelta, shiftStartId = 0;
 
                     List<Byte> result = new(messageLength * (maxEncodingLength + 1));
 
@@ -99,6 +100,18 @@ namespace JabrAPI
 
                     return result;
                 }
+                /// <summary>
+                /// Returns the <b>Encrypted</b> <paramref name="message"/>
+                /// </summary>
+                /// <returns><b>Encrypted</b> <paramref name="message"/></returns>
+                /// 
+                /// <param name="message">secret data</param>
+                /// <param name="reKey">RE5 Encryption key for enciphering</param>
+                static public List<Byte> Data(List<Byte> message, ReKey reKey)
+                {
+                    Int32 prevId = 0;
+                    return Data(message, reKey, ref prevId);
+                }
 
 
 
@@ -112,8 +125,9 @@ namespace JabrAPI
                 /// <param name="fileName">Original FILE NAME</param>
                 /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
                 /// <param name="reKey">RE5 Encryption key for enciphering</param>
+                /// <param name="prevId">Shift for continious encryption</param>
                 static public string File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, ReKey reKey)
+                    string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId)
                 {
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
                     Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
@@ -156,7 +170,7 @@ namespace JabrAPI
 
 
                     Byte[] messageChunk = new Byte[chunkSize];
-                    Int32 offset = 0, prevId = 0, shiftStartId = 0, shDelta, bytesRead;
+                    Int32 offset = 0, shiftStartId = 0, shDelta, bytesRead;
 
                     while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
                     {
@@ -187,6 +201,22 @@ namespace JabrAPI
                         offset += bytesRead;
                     }
                     return finalFileName;
+                }
+                /// <summary>
+                /// Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
+                /// Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
+                /// </summary>
+                /// <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
+                /// 
+                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
+                /// <param name="fileName">Original FILE NAME</param>
+                /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
+                /// <param name="reKey">RE5 Encryption key for enciphering</param>
+                static public string File(string absoluteInputDirectory, string fileName,
+                    string absoluteOutputDirectory, ReKey reKey)
+                {
+                    Int32 prevId = 0;
+                    return File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId);
                 }
             }
         }

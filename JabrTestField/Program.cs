@@ -78,7 +78,6 @@ namespace JabrTestField
 
 
 
-
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)
             {
