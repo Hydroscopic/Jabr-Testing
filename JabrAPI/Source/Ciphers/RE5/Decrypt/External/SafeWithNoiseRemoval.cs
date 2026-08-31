@@ -21,7 +21,7 @@ namespace JabrAPI
                 /// 
                 /// <param name="encrypted">Obfuscated data</param>
                 /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
-                static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = true)
+                static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
                 {
                     List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
                     return denoised == null || denoised.Count < 1 ? []
@@ -46,7 +46,7 @@ namespace JabrAPI
                 /// <param name="reKey">RE5 Encryption key for denoising and deciphering</param>
                 /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
                 static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true, bool throwExceptions = true)
+                    string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true, bool throwExceptions = false)
                 {
                     bool didSucceed = Noise.RemoveFrom.File(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, throwExceptions);

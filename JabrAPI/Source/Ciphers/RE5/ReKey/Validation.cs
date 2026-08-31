@@ -20,13 +20,11 @@ namespace JabrAPI
                 private readonly PartiallyHelper _partiallyHelper;
 
 
-
                 internal ValidateHelper(ReKey reKey)
                 {
                     _binKey = reKey;
                     _partiallyHelper = new(reKey);
                 }
-
 
 
                 public PartiallyHelper Partially => _partiallyHelper;
@@ -40,19 +38,18 @@ namespace JabrAPI
                     }
 
 
-
-                    public bool Primary(out Exception? exception)
-                        => Primary(_binKey.PrAlphabet, out exception);
-                    static public bool Primary(List<Byte> primary, out Exception? exception)
+                    public bool Primary(bool throwExceptions = false)
+                        => Primary(_binKey.PrAlphabet, throwExceptions);
+                    static public bool Primary(List<Byte> primary, bool throwExceptions = false)
                     {
                         if (primary == null || primary.Count < 2 || primary.Count > 256)
                         {
-                            exception = new ArgumentException
+                            if (!throwExceptions) return false;
+                            throw new ArgumentException
                             (
                                 "Primary alphabet is not set, too short or too long",
                                 nameof(primary)
                             );
-                            return false;
                         }
                         for (var curId = 0; curId < primary.Count; curId++)
                         {
@@ -60,44 +57,33 @@ namespace JabrAPI
                             {
                                 if (primary[curId] == primary[id2])
                                 {
-                                    exception = new ArgumentException
+                                    if (!throwExceptions) return false;
+                                    throw new ArgumentException
                                     (
                                         $"Primary alphabet contains duplicates characters" +
                                         $"\nDuplicate byte: {primary[curId]}",
                                         nameof(primary)
                                     );
-                                    return false;
                                 }
                             }
                         }
 
-                        exception = null;
                         return true;
                     }
 
-                    public bool Primary(bool throwExceptions = false)
-                        => Primary(_binKey.PrAlphabet, throwExceptions);
-                    static public bool Primary(List<Byte> primary, bool throwExceptions = false)
-                    {
-                        bool isValid = Primary(primary, out Exception? exception);
-                        if (!isValid && throwExceptions) throw exception!;
-                        return isValid;
-                    }
 
-
-
-                    public bool External(out Exception? exception)
-                        => External(_binKey.ExAlphabet, out exception);
-                    static public bool External(List<Byte> external, out Exception? exception)
+                    public bool External(bool throwExceptions = false)
+                        => External(_binKey.ExAlphabet, throwExceptions);
+                    static public bool External(List<Byte> external, bool throwExceptions = false)
                     {
                         if (external == null || external.Count < 2 || external.Count > 256)
                         {
-                            exception = new ArgumentException
+                            if (!throwExceptions) return false;
+                            throw new ArgumentException
                             (
                                 "External alphabet is not set, too short or too long",
                                 nameof(external)
                             );
-                            return false;
                         }
                         for (var curId = 0; curId < external.Count; curId++)
                         {
@@ -105,43 +91,21 @@ namespace JabrAPI
                             {
                                 if (external[curId] == external[id2])
                                 {
-                                    exception = new ArgumentException
+                                    if (!throwExceptions) return false;
+                                    throw new ArgumentException
                                     (
                                         "External alphabet contains duplicates characters" +
                                         $"Duplicate byte: {external[curId]}",
                                         nameof(external)
                                     );
-                                    return false;
                                 }
                             }
                         }
 
-                        exception = null;
                         return true;
                     }
-
-                    public bool External(bool throwExceptions = false)
-                        => External(_binKey.ExAlphabet, throwExceptions);
-                    static public bool External(List<Byte> external, bool throwExceptions = false)
-                    {
-                        bool isValid = External(external, out Exception? exception);
-                        if (!isValid && throwExceptions) throw exception!;
-                        return isValid;
-                    }
                 }
 
-
-
-                public override bool ForEncryption(List<Byte> message, out Exception? exception)
-                {
-                    return PartiallyHelper.External(_binKey.ExAlphabet, out exception)
-                                && Primary(message, _binKey.PrAlphabet, out exception);
-                }
-                public override bool ForDecryption(List<Byte> message, out Exception? exception)
-                {
-                    return PartiallyHelper.Primary(_binKey.PrAlphabet, out exception)
-                              && External(message, _binKey.ExAlphabet, out exception);
-                }
 
                 public override bool ForEncryption(List<Byte> message, bool throwExceptions = false)
                 {
@@ -155,69 +119,49 @@ namespace JabrAPI
                 }
 
 
-
-                public bool Primary(List<Byte> message, out Exception? exception)
-                    => Primary(message, _binKey.PrAlphabet, out exception);
-                static public bool Primary(List<Byte> message, List<Byte> primary, out Exception? exception)
+                public bool Primary(List<Byte> message, bool throwExceptions = false)
+                    => Primary(message, _binKey.PrAlphabet, throwExceptions);
+                static public bool Primary(List<Byte> message, List<Byte> primary, bool throwExceptions = false)
                 {
-                    if (!PartiallyHelper.Primary(primary, out exception)) return false;
+                    if (!PartiallyHelper.Primary(primary, throwExceptions)) return false;
 
                     foreach (Byte b in message)
                     {
                         if (!primary.Contains(b))
                         {
-                            exception = new ArgumentException
+                            if (!throwExceptions) return false;
+                            throw new ArgumentException
                             (
                                 $"Message contains bytes not present in the primary alphabet" +
                                 $"\nMissing byte: {b}",
                                 nameof(primary)
                             );
-                            return false;
                         }
                     }
                     return true;
                 }
 
-                public bool Primary(List<Byte> message, bool throwExceptions = false)
-                    => Primary(message, _binKey.PrAlphabet, throwExceptions);
-                static public bool Primary(List<Byte> message, List<Byte> primary, bool throwExceptions = false)
-                {
-                    bool isValid = Primary(message, primary, out Exception? exception);
-                    if (!isValid && throwExceptions) throw exception!;
-                    return isValid;
-                }
-
-
-
-                public bool External(List<Byte> encrypted, out Exception? exception)
-                    => External(encrypted, _binKey.ExAlphabet, out exception);
-                static public bool External(List<Byte> encrypted, List<Byte> external, out Exception? exception)
-                {
-                    if (!PartiallyHelper.External(external, out exception)) return false;
-
-                    foreach (Byte b in encrypted)
-                    {
-                        if (!external.Contains(b))
-                        {
-                            exception = new ArgumentException
-                            (
-                                $"Message contains bytes not present in the external alphabet" +
-                                $"\nMissing byte: {b}",
-                                nameof(external)
-                            );
-                            return false;
-                        }
-                    }
-                    return true;
-                }
 
                 public bool External(List<Byte> encrypted, bool throwExceptions = false)
                     => External(encrypted, _binKey.ExAlphabet, throwExceptions);
                 static public bool External(List<Byte> encrypted, List<Byte> external, bool throwExceptions = false)
                 {
-                    bool isValid = External(encrypted, external, out Exception? exception);
-                    if (!isValid && throwExceptions) throw exception!;
-                    return isValid;
+                    if (!PartiallyHelper.External(external, throwExceptions)) return false;
+
+                    foreach (Byte b in encrypted)
+                    {
+                        if (!external.Contains(b))
+                        {
+                            if (throwExceptions) return false;
+                            throw new ArgumentException
+                            (
+                                $"Message contains bytes not present in the external alphabet" +
+                                $"\nMissing byte: {b}",
+                                nameof(external)
+                            );
+                        }
+                    }
+                    return true;
                 }
             }
         }

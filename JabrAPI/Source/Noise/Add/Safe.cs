@@ -14,99 +14,63 @@ namespace JabrAPI
     {
         static public partial class AddTo
         {
-            static public List<Byte> Data(List<Byte> message, IReKey reKey,
-                out Exception? exception)
+            static public List<Byte> Data(List<Byte> message, IReKey reKey, bool throwExceptions = true)
             {
-                if (IsMessageAndReKeyAndNoisifierValid(message, reKey, out exception) &&
-                    reKey.Noisifier.IsValid.ForMessageAndReKey(reKey, message, out exception))
+                if (IsMessageAndReKeyAndNoisifierValid(message, reKey, throwExceptions) &&
+                    reKey.Noisifier.IsValid.ForMessageAndReKey(reKey, message, throwExceptions))
                 {
                     try
                     {
                         return Noise.AddTo.FastData(message, reKey.Noisifier, [.. message.Distinct()]);
                     }
-                    catch (Exception innerException) { exception = innerException; }
+                    catch { throw; }
                 }
                 return [];
             }
-            static public List<Byte> Data(List<Byte> message, IReKey reKey,
-                bool throwExceptions = false)
+            static public List<Byte> Data(List<Byte> message, Noisifier noisifier, bool throwExceptions = true)
             {
-                List<Byte> result = Noise.AddTo.Data(message, reKey, out Exception? exception);
-                if (exception != null && throwExceptions) throw exception;
-                return result;
-            }
-
-            static public List<Byte> Data(List<Byte> message, Noisifier noisifier,
-                out Exception? exception)
-            {
-                if (IsMessageAndNoisifierValid(message, noisifier, out exception) &&
-                        noisifier.IsValid.ForMessage(message, out exception))
+                if (IsMessageAndNoisifierValid(message, noisifier, throwExceptions) &&
+                        noisifier.IsValid.ForMessage(message, throwExceptions))
                 {
                     try
                     {
                         return Noise.AddTo.FastData(message, noisifier, [.. message.Distinct()]);
                     }
-                    catch (Exception innerException) { exception = innerException; }
+                    catch { throw; }
                 }
                 return [];
-            }
-            static public List<Byte> Data(List<Byte> message, Noisifier noisifier,
-                bool throwExceptions = false)
-            {
-                List<Byte> result = Noise.AddTo.Data(message, noisifier, out Exception? exception);
-                if (exception != null && throwExceptions) throw exception;
-                return result;
             }
 
 
 
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, IReKey reKey,
-                    out Exception? exception)
+                string absoluteOutputDirectory, IReKey reKey, bool throwExceptions = true)
             {
-                if (IsReKeyValid(reKey, out exception) &&
-                    IsNoisifierValid(reKey.Noisifier, out exception))
+                if (IsReKeyValid(reKey, throwExceptions) &&
+                    IsNoisifierValid(reKey.Noisifier, throwExceptions))
                 {
                     try
                     {
                         Noise.AddTo.FastFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier);
                         return true;
                     }
-                    catch (Exception innerException) { exception = innerException; }
+                    catch { throw; }
                 }
                 return false;
             }
             static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, IReKey reKey,
-                bool throwExceptions = false)
+                string absoluteOutputDirectory, Noisifier noisifier, bool throwExceptions = true)
             {
-                bool result = Noise.AddTo.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, out Exception? exception);
-                if (!result && throwExceptions) throw exception!;
-                return result;
-            }
-
-            static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, Noisifier noisifier,
-                    out Exception? exception)
-            {
-                if (IsNoisifierValid(noisifier, out exception))
+                if (IsNoisifierValid(noisifier, throwExceptions))
                 {
                     try
                     {
                         Noise.AddTo.FastFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, noisifier);
                         return true;
                     }
-                    catch (Exception innerException) { exception = innerException; }
+                    catch { throw; }
                 }
                 return false;
-            }
-            static public bool File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, Noisifier noisifier,
-                bool throwExceptions = false)
-            {
-                bool result = Noise.AddTo.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, noisifier, out Exception? exception);
-                if (!result && throwExceptions) throw exception!;
-                return result;
             }
         }
     }
