@@ -58,8 +58,19 @@ namespace JabrTestField
             resultExportString = string.Join("_", reConverting);
             Write($"\n\n\t(DECOMPRESSED) ReConvertation exportL: {resultExportString.Length}\n\t");
             ForegroundColor = ConsoleColor.DarkGray;
-            Write(resultExportString);
+            Write(resultExportString + "\n\n\n");
             ForegroundColor = ConsoleColor.Gray;
+
+            RE5.ReKey binKeyab = new(false);
+            binKeyab.ImportFromString(binKey.ExportAsString());
+
+            resultExportString = string.Join("_", byEx);
+            Write($"\n\tOriginalEX: {resultExportString}\n");
+
+
+            resultExportString = string.Join("_", binKeyab.ExportAsBinary());
+            Write($"\n\tNew Import: {resultExportString}");
+
 
             ReadKey();
 

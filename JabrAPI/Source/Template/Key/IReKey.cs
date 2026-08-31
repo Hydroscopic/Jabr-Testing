@@ -67,6 +67,24 @@ namespace JabrAPI.Template
 
         abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false);
         abstract public Byte[] ExportAsBinary();
+        public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false)
+        {
+            try
+            {
+                Byte[] bytes = [..
+                    Numsys.FromDecimalBigInteger<Byte>
+                    (
+                        Numsys.ToDecimalFromCustomBigInteger(data, charsetForImport),
+                        256
+                    )   ];
+                return ImportFromBinary(bytes);
+            }
+            catch
+            {
+                if (throwExceptions) throw;
+                return false;
+            }
+        }
         public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET)
             => Numsys.FromDecimalToCustomBigInteger(
                     Numsys.ToDecimalBigInteger([.. ExportAsBinary()], 256),
