@@ -3,143 +3,72 @@ using System.Collections.Generic;
 
 
 
-namespace JabrAPI
+namespace JabrAPI.RE5
 {
-    static public partial class RE5
+    static public partial class Encrypt
     {
-        static public partial class Encrypt
+        static public class Auto
         {
-            /// <summary>
-            /// Provides an <b>Alias</b> for choosing an <see cref="RE5.Encrypt"/> <i>encryption overload</i>
-            /// </summary>
-            static public class Auto
+            public enum DataEncryptionMode
             {
-                /// <summary>
-                /// <i>Alias</i> for selecting an <b>Encryption overload</b>
-                /// </summary>
-                public enum DataEncryptionMode
+                SAFE,
+                FAST,
+                SAFE_WITH_NOISE_ADDITION,
+                FAST_WITH_NOISE_ADDITION,
+            }
+
+
+
+            static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message,
+                ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
+            {
+                return mode switch
                 {
-                    /// <summary><b>WITH</b> parameter validation</summary>
-                    SAFE,
+                    DataEncryptionMode.SAFE => RE5.EncryptData.Safe(message, reKey, ref prevId, throwExceptions),
+                    DataEncryptionMode.FAST => RE5.EncryptData.Fast(message, reKey, ref prevId),
 
-                    /// <summary><b>WITHOUT</b> parameter validation</summary>
-                    FAST,
+                    DataEncryptionMode.SAFE_WITH_NOISE_ADDITION
+                        => RE5.EncryptData.SafePlusNoise(message, reKey, ref prevId, throwExceptions),
+                    DataEncryptionMode.FAST_WITH_NOISE_ADDITION
+                        => RE5.EncryptData.FastPlusNoise(message, reKey, ref prevId),
+                        _ => []
+                };
+            }
+            static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
+            {
+                Int32 prevId = 0;
+                return Data(mode, message, reKey, ref prevId, throwExceptions);
+            }
 
-                    /// <summary><i>Data will be noised anfter encryption</i><b><br/>
-                    /// WITH</b> parameter validation</summary>
-                    SAFE_WITH_NOISE_ADDITION,
-
-                    /// <summary><i>Data will be noised anfter encryption</i><b><br/>
-                    /// WITHOUT</b> parameter validation</summary>
-                    FAST_WITH_NOISE_ADDITION,
-                }
 
 
-
-                /// <summary>
-                /// Returns the <b>Encrypted</b> <paramref name="message"/>
-                /// </summary>
-                /// <returns><b>Encrypted</b> <paramref name="message"/></returns>
-                /// 
-                /// <param name="mode">Alias to chosen overload</param>
-                /// <param name="message">secret data</param>
-                /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
-                /// <param name="prevId">Shift for continious encryption</param>
-                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message,
-                    ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
+            static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
+                string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
+            {
+                switch (mode)
                 {
-                    return mode switch
-                    {
-                        DataEncryptionMode.SAFE => RE5.Encrypt.Data(message, reKey, ref prevId, throwExceptions),
-                        DataEncryptionMode.FAST => RE5.Encrypt.Fast.Data(message, reKey, ref prevId),
+                    case DataEncryptionMode.SAFE:
+                        RE5.EncryptFile.Safe(absoluteInputDirectory, fileName,
+                        absoluteOutputDirectory, reKey, ref prevId, throwExceptions); break;
+                    case DataEncryptionMode.FAST:
+                        RE5.EncryptFile.Fast(absoluteInputDirectory, fileName,
+                        absoluteOutputDirectory, reKey, ref prevId); break;
 
-                        DataEncryptionMode.SAFE_WITH_NOISE_ADDITION
-                            => RE5.Encrypt.WithNoiseAddition.Data(message, reKey, ref prevId, throwExceptions),
-                        DataEncryptionMode.FAST_WITH_NOISE_ADDITION
-                            => RE5.Encrypt.FastWithNoiseAddition.Data(message, reKey, ref prevId),
-                          _ => []
-                    };
-                }
-                /// <summary>
-                /// Returns the <b>Encrypted</b> <paramref name="message"/>
-                /// </summary>
-                /// <returns><b>Encrypted</b> <paramref name="message"/></returns>
-                /// 
-                /// <param name="mode">Alias to chosen overload</param>
-                /// <param name="message">secret data</param>
-                /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
-                /// <param name="throwExceptions"></param>
-                static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
-                {
-                    Int32 prevId = 0;
-                    return Data(mode, message, reKey, ref prevId, throwExceptions);
-                }
-
-
-
-                /// <summary>
-                /// Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/><br/>
-                ///   
-                /// <i>A temporary FILE is used for storing the Encrypted content (if Noising is selected)</i><br/>
-                /// It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
-                /// 
-                /// Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
-                /// </summary>
-                /// <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
-                /// 
-                /// <param name="mode">Alias to chosen overload</param>
-                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
-                /// <param name="fileName">Original FILE NAME</param>
-                /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-                /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
-                /// <param name="prevId">Shift for continious encryption</param>
-                /// <param name="throwExceptions"></param>
-                /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
-                static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
-                {
-                    switch (mode)
-                    {
-                        case DataEncryptionMode.SAFE:
-                            RE5.Encrypt.File(absoluteInputDirectory, fileName,
-                            absoluteOutputDirectory, reKey, ref prevId, throwExceptions); break;
-                        case DataEncryptionMode.FAST:
-                            RE5.Encrypt.Fast.File(absoluteInputDirectory, fileName,
-                            absoluteOutputDirectory, reKey, ref prevId); break;
-
-                        case DataEncryptionMode.SAFE_WITH_NOISE_ADDITION:
-                            //RE5.Encrypt.WithNoiseAddition.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
-                            break;
-                        case DataEncryptionMode.FAST_WITH_NOISE_ADDITION:
-                            RE5.Encrypt.FastWithNoiseAddition.File(absoluteInputDirectory, fileName,
-                            absoluteOutputDirectory, reKey, ref prevId); break;
-                        default: break;
-                    };
-                }
-                /// <summary>
-                /// Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/><br/>
-                ///   
-                /// <i>A temporary FILE is used for storing the Encrypted content (if Noising is selected)</i><br/>
-                /// It will be <b>deleted</b> in the end <b>based on <paramref name="deleteTempFileAfterUse"/></b><br/><br/>
-                /// 
-                /// Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
-                /// </summary>
-                /// <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
-                /// 
-                /// <param name="mode">Alias to chosen overload</param>
-                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
-                /// <param name="fileName">Original FILE NAME</param>
-                /// <param name="absoluteOutputDirectory">Path where the temporary and output FILE will be stored</param>
-                /// <param name="reKey">RE5 Encryption key for noising and enciphering</param>
-                /// <param name="throwExceptions"></param>
-                /// <param name="deleteTempFileAfterUse">Whether the Temporary FILE will be deleted at the end</param>
-                static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
-                    string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
-                {
-                    Int32 prevId = 0;
-                    File(mode, absoluteInputDirectory, fileName, absoluteOutputDirectory,
-                        reKey, ref prevId, throwExceptions, deleteTempFileAfterUse);
-                }
+                    case DataEncryptionMode.SAFE_WITH_NOISE_ADDITION:
+                        //RE5.Encrypt.WithNoiseAddition.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
+                        break;
+                    case DataEncryptionMode.FAST_WITH_NOISE_ADDITION:
+                        RE5.EncryptFile.FastPlusNoise(absoluteInputDirectory, fileName,
+                        absoluteOutputDirectory, reKey, ref prevId); break;
+                    default: break;
+                };
+            }
+            static public void File(DataEncryptionMode mode, string absoluteInputDirectory, string fileName,
+                string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false, bool deleteTempFileAfterUse = true)
+            {
+                Int32 prevId = 0;
+                File(mode, absoluteInputDirectory, fileName, absoluteOutputDirectory,
+                    reKey, ref prevId, throwExceptions, deleteTempFileAfterUse);
             }
         }
     }

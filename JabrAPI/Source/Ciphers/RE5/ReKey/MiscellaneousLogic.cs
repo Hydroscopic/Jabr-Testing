@@ -6,39 +6,36 @@ using JabrAPI.Template;
 
 
 
-namespace JabrAPI
+namespace JabrAPI.RE5
 {
-    static public partial class RE5
+    public partial class ReKey : IReKey
     {
-        public partial class ReKey : IReKey
+        public void CopyFrom(ReKey otherKey, bool fullCopy = true)
         {
-            public void CopyFrom(ReKey otherKey, bool fullCopy = true)
-            {
-                _noisifier.CopyFrom(otherKey.Noisifier, fullCopy);
+            _noisifier.CopyFrom(otherKey.Noisifier, fullCopy);
 
-                CopyFrom(otherKey.Primary, otherKey.External, otherKey.Shifts);
+            CopyFrom(otherKey.Primary, otherKey.External, otherKey.Shifts);
 
-                if (fullCopy)
-                    Set.Default
-                    (
-                        otherKey._compactedPrMaxLength,
-                        otherKey._compactedExMaxLength
-                    );
-            }
+            if (fullCopy)
+                Set.Default
+                (
+                    otherKey._compactedPrMaxLength,
+                    otherKey._compactedExMaxLength
+                );
+        }
 
 
-            private void CopyFrom(List<Byte> primary, List<Byte> external, List<Byte> shifts)
-            {
-                _primaryAlphabet.Clear();
-                _primaryAlphabet.AddRange(primary);
+        private void CopyFrom(List<Byte> primary, List<Byte> external, List<Byte> shifts)
+        {
+            _primaryAlphabet.Clear();
+            _primaryAlphabet.AddRange(primary);
 
-                _externalAlphabet.Clear();
-                _externalAlphabet.AddRange(external);
+            _externalAlphabet.Clear();
+            _externalAlphabet.AddRange(external);
 
-                _shifts.Clear();
-                if (shifts == null || shifts.Count == 0) _shifts.Add(0);
-                else _shifts.AddRange(shifts.GetRange(0, Math.Max(shifts.Count, 255)));
-            }
+            _shifts.Clear();
+            if (shifts == null || shifts.Count == 0) _shifts.Add(0);
+            else _shifts.AddRange(shifts.GetRange(0, Math.Max(shifts.Count, 255)));
         }
     }
 }

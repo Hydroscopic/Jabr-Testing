@@ -6,42 +6,39 @@ using static JabrAPI.Miscellaneous;
 
 
 
-namespace JabrAPI
+namespace JabrAPI.RE5
 {
-    static public partial class RE5
+    static public partial class Decrypt
     {
-        static public partial class Decrypt
+        static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
         {
-            static public List<Byte> Data(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+            if (IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
+                reKey.IsValid.ForDecryption(encrypted, throwExceptions))
             {
-                if (IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
-                    reKey.IsValid.ForDecryption(encrypted, throwExceptions))
+                try
                 {
-                    try
-                    {
-                        return RE5.Decrypt.Fast.Data(encrypted, reKey);
-                    }
-                    catch { throw; }
+                    return RE5.Decrypt.Fast.Data(encrypted, reKey);
                 }
-                return [];
+                catch { throw; }
             }
+            return [];
+        }
 
 
 
-            static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
+        static public (bool didSucceed, string resultFileName) File(string absoluteInputDirectory, string fileName,
+            string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
+        {
+            if (IsReKeyValid(reKey, throwExceptions) &&
+                IsNoisifierValid(reKey.Noisifier, throwExceptions))
             {
-                if (IsReKeyValid(reKey, throwExceptions) &&
-                    IsNoisifierValid(reKey.Noisifier, throwExceptions))
+                try
                 {
-                    try
-                    {
-                        return (true, RE5.Decrypt.Fast.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey));
-                    }
-                    catch { throw; }
+                    return (true, RE5.Decrypt.Fast.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey));
                 }
-                return (false, "");
+                catch { throw; }
             }
+            return (false, "");
         }
     }
 }

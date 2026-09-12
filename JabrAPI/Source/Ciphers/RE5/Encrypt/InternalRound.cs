@@ -6,11 +6,11 @@ using AVcontrol;
 
 
 
-namespace JabrAPI
+namespace JabrAPI.RE5
 {
-    static public partial class RE5
+    static internal partial class Internal
     {
-        static private List<Byte> EncryptionRound(
+        static internal List<Byte> EncryptionRound(
             List<Byte> messageChunk,
             List<Byte> prAlphabet, List<Byte> exAlphabet,
             List<Byte> shifts,
