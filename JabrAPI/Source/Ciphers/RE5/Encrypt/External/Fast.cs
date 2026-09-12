@@ -12,24 +12,10 @@ namespace JabrAPI
 {
     static public partial class RE5
     {
-        /// <summary>
-        /// Encrypting <b>DATA</b> <i>or</i> <b>FILES</b> with <see cref="RE5"/> algorithm
-        /// </summary>
         static public partial class Encrypt
         {
-            /// <summary>
-            /// These variants <b>DO NOT validate the parameters!</b> (Fast variants)
-            /// </summary>
             static public class Fast
             {
-                /// <summary>
-                /// Returns the <b>Encrypted</b> <paramref name="message"/>
-                /// </summary>
-                /// <returns><b>Encrypted</b> <paramref name="message"/></returns>
-                /// 
-                /// <param name="message">secret data</param>
-                /// <param name="reKey">RE5 Encryption key for enciphering</param>
-                /// <param name="prevId">Shift for continious encryption</param>
                 static public List<Byte> Data(List<Byte> message, ReKey reKey, ref Int32 prevId)
                 {
                     List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
@@ -100,13 +86,6 @@ namespace JabrAPI
 
                     return result;
                 }
-                /// <summary>
-                /// Returns the <b>Encrypted</b> <paramref name="message"/>
-                /// </summary>
-                /// <returns><b>Encrypted</b> <paramref name="message"/></returns>
-                /// 
-                /// <param name="message">secret data</param>
-                /// <param name="reKey">RE5 Encryption key for enciphering</param>
                 static public List<Byte> Data(List<Byte> message, ReKey reKey)
                 {
                     Int32 prevId = 0;
@@ -115,17 +94,6 @@ namespace JabrAPI
 
 
 
-                /// <summary>
-                /// Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
-                /// Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
-                /// </summary>
-                /// <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
-                /// 
-                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
-                /// <param name="fileName">Original FILE NAME</param>
-                /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
-                /// <param name="reKey">RE5 Encryption key for enciphering</param>
-                /// <param name="prevId">Shift for continious encryption</param>
                 static public string File(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId)
                 {
@@ -202,16 +170,6 @@ namespace JabrAPI
                     }
                     return finalFileName;
                 }
-                /// <summary>
-                /// Creates a <b>FILE</b> containing the <b>Encrypted</b> content<br/>
-                /// Returns the <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b>
-                /// </summary>
-                /// <returns>The <i>NAME</i> of the new <b>Encrypted <i>FILE</i></b></returns>
-                /// 
-                /// <param name="absoluteInputDirectory">PATH to the original FILE</param>
-                /// <param name="fileName">Original FILE NAME</param>
-                /// <param name="absoluteOutputDirectory">Path where the output FILE will be stored</param>
-                /// <param name="reKey">RE5 Encryption key for enciphering</param>
                 static public string File(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, ReKey reKey)
                 {
