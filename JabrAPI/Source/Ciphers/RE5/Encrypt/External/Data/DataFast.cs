@@ -88,13 +88,13 @@ namespace JabrAPI.RE5
         }
 
 
-        static public List<Byte> FastPlusNoise(List<Byte> message, ReKey reKey, ref Int32 prevId)
+        static public List<Byte> FastWithNoising(List<Byte> message, ReKey reKey, ref Int32 prevId)
         {
             List<Byte> result = RE5.EncryptData.Fast(message, reKey, ref prevId);
             return result == null || result.Count < 1 ? []
                     : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
         }
-        static public List<Byte> FastPlusNoise(List<Byte> message, ReKey reKey)
+        static public List<Byte> FastWithNoising(List<Byte> message, ReKey reKey)
         {
             List<Byte> result = RE5.EncryptData.Fast(message, reKey);
             return result == null || result.Count < 1 ? []

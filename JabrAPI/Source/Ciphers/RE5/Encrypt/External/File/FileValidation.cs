@@ -5,7 +5,7 @@ namespace JabrAPI.RE5
 {
     static public partial class EncryptFile
     {
-        static public bool Safe(string absoluteInputDirectory, string fileName,
+        static public bool WithValidation(string absoluteInputDirectory, string fileName,
             string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
         {
             if (Miscellaneous.IsReKeyValid(reKey, throwExceptions) &&
@@ -21,11 +21,11 @@ namespace JabrAPI.RE5
             return false;
         }
 
-        static public bool Safe(string absoluteInputDirectory, string fileName,
+        static public bool WithValidation(string absoluteInputDirectory, string fileName,
             string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
         {
             Int32 prevId = 0;
-            return Safe(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
+            return WithValidation(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
         }
     }
 }

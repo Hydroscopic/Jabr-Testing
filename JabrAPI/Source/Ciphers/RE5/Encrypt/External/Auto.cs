@@ -11,30 +11,32 @@ namespace JabrAPI.RE5
         {
             public enum DataEncryptionMode
             {
-                SAFE,
                 FAST,
-                SAFE_WITH_NOISE_ADDITION,
-                FAST_WITH_NOISE_ADDITION,
+                WITH_VALIDATION,
+                FAST_WITH_NOISING,
+                WITH_VALIDATION_AND_NOISING,
             }
 
 
 
-            static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message,
+            static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message,
                 ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
             {
                 return mode switch
                 {
-                    DataEncryptionMode.SAFE => RE5.EncryptData.Safe(message, reKey, ref prevId, throwExceptions),
-                    DataEncryptionMode.FAST => RE5.EncryptData.Fast(message, reKey, ref prevId),
-
-                    DataEncryptionMode.SAFE_WITH_NOISE_ADDITION
-                        => RE5.EncryptData.SafePlusNoise(message, reKey, ref prevId, throwExceptions),
-                    DataEncryptionMode.FAST_WITH_NOISE_ADDITION
-                        => RE5.EncryptData.FastPlusNoise(message, reKey, ref prevId),
-                        _ => []
+                    DataEncryptionMode.FAST
+                        => (RE5.EncryptData.Fast(message, reKey, ref prevId), true),
+                    DataEncryptionMode.WITH_VALIDATION
+                        =>  RE5.EncryptData.WithValidation(message, reKey, ref prevId, throwExceptions),
+                    
+                    DataEncryptionMode.FAST_WITH_NOISING
+                        => (RE5.EncryptData.FastWithNoising(message, reKey, ref prevId), true),
+                    DataEncryptionMode.WITH_VALIDATION_AND_NOISING
+                        =>  RE5.EncryptData.WithValidationAndNoising(message, reKey, ref prevId, throwExceptions),
+                    _   => ([], false)
                 };
             }
-            static public List<Byte> Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
+            static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
             {
                 Int32 prevId = 0;
                 return Data(mode, message, reKey, ref prevId, throwExceptions);
@@ -47,18 +49,18 @@ namespace JabrAPI.RE5
             {
                 switch (mode)
                 {
-                    case DataEncryptionMode.SAFE:
-                        RE5.EncryptFile.Safe(absoluteInputDirectory, fileName,
+                    case DataEncryptionMode.WITH_VALIDATION:
+                        RE5.EncryptFile.WithValidation(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, ref prevId, throwExceptions); break;
                     case DataEncryptionMode.FAST:
                         RE5.EncryptFile.Fast(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, ref prevId); break;
 
-                    case DataEncryptionMode.SAFE_WITH_NOISE_ADDITION:
+                    case DataEncryptionMode.WITH_VALIDATION_AND_NOISING:
                         //RE5.Encrypt.WithNoiseAddition.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
                         break;
-                    case DataEncryptionMode.FAST_WITH_NOISE_ADDITION:
-                        RE5.EncryptFile.FastPlusNoise(absoluteInputDirectory, fileName,
+                    case DataEncryptionMode.FAST_WITH_NOISING:
+                        RE5.EncryptFile.FastWithNoising(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey, ref prevId); break;
                     default: break;
                 };

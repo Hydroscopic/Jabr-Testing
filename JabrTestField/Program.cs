@@ -8,6 +8,7 @@ using static System.Console;
 
 
 using AVcontrol;
+using JabrAPI.RE5;
 using JabrAPI;
 
 
@@ -19,13 +20,15 @@ namespace JabrTestField
         static void Main()
         {
             SecureRandom random = new(128);
-            RE5.ReKey binKey = new(true);
+            ReKey binKey = new(true);
             string aboba = "aboba baobab";
             List<Byte> lolinit = [0, 1, 2, 3, 3, 3, 2, 1, 0];
 
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
+            List<Byte> eennenc = EncryptData.WithValidation(
+                lolinit, binKey, ref attemptCount, true).result;
 
             Stopwatch timer111 = new();
             Write("\n\t(Base 256) Starting the export & compressed export test...\n");
@@ -53,7 +56,7 @@ namespace JabrTestField
 
 
             List<Byte> reConverting = Numsys.FromDecimalBigInteger<Byte>(
-                Numsys.ToDecimalFromCustomBigInteger(ex, DEFAULT.KEY_EXPORT_CHARSET), 256);
+                Numsys.ToDecimalFromCustomBigInteger(ex, JabrAPI.DEFAULT.KEY_EXPORT_CHARSET), 256);
 
             resultExportString = string.Join("_", reConverting);
             Write($"\n\n\t(DECOMPRESSED) ReConvertation exportL: {resultExportString.Length}\n\t");
@@ -61,7 +64,7 @@ namespace JabrTestField
             Write(resultExportString + "\n\n\n");
             ForegroundColor = ConsoleColor.Gray;
 
-            RE5.ReKey binKeyab = new(false);
+            ReKey binKeyab = new(false);
             binKeyab.ImportFromString(binKey.ExportAsString());
 
             resultExportString = string.Join("_", byEx);
@@ -72,6 +75,8 @@ namespace JabrTestField
             Write($"\n\tNew Import: {resultExportString}");
 
 
+            binKey.Noisifier.settings.DynamicOutputIntervals
+                = Noise.SettingsAutoPresets.DynamicOutputIntervals(MasqueradePreset.HTTPS_DNS);
             ReadKey();
 
 
@@ -82,15 +87,15 @@ namespace JabrTestField
             for (var i = 0; i < 1_0; i++)
             {
                 Write("\n\tAttempt: " + ++attemptCount);
-                List<Byte> bincrypted = RE5.Encrypt.Data(lolinit, binKey, true);
+                List<Byte> bincrypted = EncryptData.WithValidation(lolinit, binKey, true).result;
 
                 Write("\n\tInitial: ");
                 for (var j = 0; j < bincrypted.Count; j++)
                     Write(bincrypted[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                List<Byte> binoised = RE5.Encrypt.WithNoiseAddition.Data(lolinit, binKey, true);
-                List<Byte> bindenoised = Noise.RemoveFrom.Data(binoised, binKey, true);
+                List<Byte> binoised = JabrAPI.Noise.AddTo.Data(bincrypted, binKey, true);
+                List<Byte> bindenoised = JabrAPI.Noise.RemoveFrom.Data(binoised, binKey, true);
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
@@ -206,8 +211,8 @@ namespace JabrTestField
 
 
 
-            RE5.ReKey initial = new(true);
-            RE5.ReKey copy = new(false);
+            ReKey initial = new(true);
+            ReKey copy = new(false);
             Stopwatch timer = new();
 
             Byte[] exportBuffer = [];
@@ -215,8 +220,8 @@ namespace JabrTestField
 
             #region BENCHMARK: Import & Export
             List<Int64> ms1 = [], ms2 = [];
-            const Int64 totalAttempts = 10, iterationsPerAttempt = 100_000;
-            Write($"\n\n\n\t\t[i]  - Starting benchmark of {totalAttempts * iterationsPerAttempt / 1_000}k Key Export & Import");
+            const Int64 totalAttempts = 10, iterationsPerAttempt = 3_000_000;
+            Write($"\n\n\n\t\t[i]  - Starting benchmark of {totalAttempts * iterationsPerAttempt / 1_000_000}m Key Export & Import");
 
             for (var attempt = 0; attempt < totalAttempts; attempt++)
             {
@@ -246,7 +251,7 @@ namespace JabrTestField
                 }
 
                 string elapsed = ((double)timer.ElapsedMilliseconds / 1000).ToString().Replace(",", ".");
-                Write($"\tAttempt {attempt + 1})\t Exp & Imp     {iterationsPerAttempt / 1_000}k: {elapsed}");
+                Write($"\tAttempt {attempt + 1})\t Exp & Imp     {iterationsPerAttempt / 1_000_000}m: {elapsed}");
                 timer.Reset();
 
 
@@ -321,9 +326,9 @@ namespace JabrTestField
             string s1 = sum1.ToString().Replace(",", "."), s2 = sum2.ToString().Replace(",", "."), s3 = (sum1 + sum2).ToString().Replace(",", ".");
 
             Write("\n\n\t\t\tBenchmark finished");
-            Write($"\n\t\tEXPORT   - {iterationsPerAttempt / 1_000}k operations   interval: {i1}-{a1}, average: {v1}");
-            Write($"\n\t\tIMPORT   - {iterationsPerAttempt / 1_000}k operations   interval: {i2}-{a2}, average: {v2}");
-            Write($"\n\t\tGLOBAL   - {iterationsPerAttempt / 1_000}k operations   interval: ");
+            Write($"\n\t\tEXPORT   - {iterationsPerAttempt / 1_000_000}m operations   interval: {i1}-{a1}, average: {v1}");
+            Write($"\n\t\tIMPORT   - {iterationsPerAttempt / 1_000_000}m operations   interval: {i2}-{a2}, average: {v2}");
+            Write($"\n\t\tGLOBAL   - {iterationsPerAttempt / 1_000_000}m operations   interval: ");
 
             if (isFirst1) Write($"{i1}-");
             else Write($"{i2}-");
@@ -331,9 +336,9 @@ namespace JabrTestField
             else Write($"{a2}, average: {v3}");
 
             Write("\n\n\n\t\t\tTotal time elapsed for");
-            Write($"\n\t\tEXPORT    - {totalAttempts * iterationsPerAttempt / 1_000}k operations: {s1}\t[{(Int32)(sum1 / (sum1 + sum2) * 100)} %]");
-            Write($"\n\t\tIMPORT    - {totalAttempts * iterationsPerAttempt / 1_000}k operations: {s2}\t[{(Int32)(sum2 / (sum1 + sum2) * 100)} %]");
-            Write($"\n\t\tGLOBAL    - {totalAttempts * iterationsPerAttempt / 1_000}k operations: {s3}");
+            Write($"\n\t\tEXPORT    - {totalAttempts * iterationsPerAttempt / 1_000_000}m operations: {s1}\t[{(Int32)(sum1 / (sum1 + sum2) * 100)} %]");
+            Write($"\n\t\tIMPORT    - {totalAttempts * iterationsPerAttempt / 1_000_000}m operations: {s2}\t[{(Int32)(sum2 / (sum1 + sum2) * 100)} %]");
+            Write($"\n\t\tGLOBAL    - {totalAttempts * iterationsPerAttempt / 1_000_000}m operations: {s3}");
 
             ReadKey();
             #endregion

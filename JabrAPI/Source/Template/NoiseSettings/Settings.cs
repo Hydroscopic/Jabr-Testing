@@ -29,7 +29,7 @@ namespace JabrAPI
 
 
             public Settings(MasqueradePreset masqueradePreset)
-                => CopyFrom(masqueradePreset);
+                => InitFromPreset(masqueradePreset);
             public Settings(
                 MasqueradePreset masqueradePreset = MasqueradePreset.CUSTOM,
                 bool keepOriginalFileExtension = true,
@@ -60,30 +60,13 @@ namespace JabrAPI
                         primaryNoiseBiasPercents,
                         complexNoisePairBiasPercents,
                         complexNoiseIntervalBiasPercents);
+            public Settings(Settings initial)
+                => CopyFrom(initial);
 
 
 
             public void InitFromPreset(MasqueradePreset masqueradePreset)
-            {
-                Settings preset = masqueradePreset switch
-                {
-                    MasqueradePreset.DEFAULT => SettingsPresets.DEFAULT,
-
-                    MasqueradePreset.HTTPS_TLS => SettingsPresets.HTTPS_TLS,
-                    MasqueradePreset.HTTPS_DNS => SettingsPresets.HTTPS_DNS,
-
-                    MasqueradePreset.HTTP_3_QUIC => SettingsPresets.HTTP_3_QUIC,
-                    MasqueradePreset.HTTP_2_gRPC => SettingsPresets.HTTP_2_gRPC,
-
-                    MasqueradePreset.WEBSOCKET_WSS => SettingsPresets.WEBSOCKET_WSS,
-                    MasqueradePreset.CUSTOM or _ => this
-                };
-
-                CopyFrom(preset);
-            }
-
-
-
+                => CopyFrom(SettingsAutoPresets.SelectPreset(masqueradePreset));
             public void CopyFrom(Settings initial)
                 => CopyFrom(initial.MasqueradePreset,
                         initial.KeepOriginalFileExtension,
@@ -97,6 +80,7 @@ namespace JabrAPI
                         initial.PrimaryNoiseBiasPercents,
                         initial.ComplexNoisePairBiasPercents,
                         initial.ComplexNoiseIntervalBiasPercents);
+
             public void CopyFrom
             (
                 MasqueradePreset masqueradePreset = MasqueradePreset.CUSTOM,
@@ -134,6 +118,54 @@ namespace JabrAPI
                 ComplexNoisePairBiasPercents = complexNoisePairBiasPercents;
                 ComplexNoiseIntervalBiasPercents = complexNoiseIntervalBiasPercents;
             }
+        }
+
+
+        static public class SettingsAutoPresets
+        {
+            static public bool KeepOriginalFileExtension(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).KeepOriginalFileExtension;
+
+            static public OutputInterval[] DynamicOutputIntervals(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).DynamicOutputIntervals;
+            static public OutputInterval.IntervalFilters IntervalChoiceSetting(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).IntervalChoiceSetting;
+            static public OutputInterval.LengthChoiceSetting LengthChoiceSetting(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).LengthChoiceSetting;
+
+            static public ChunkSize ChunkSize(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).ChunkSize;
+            static public double HardChunkSizeToSoftCoefficient(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).HardChunkSizeToSoftCoefficient;
+
+            static public bool ForceOptimalEntropy(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).ForceOptimalEntropy;
+            static public ExpectedEntropy ExpectedEntropy(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).ExpectedEntropy;
+
+            static public double PrimaryNoiseBiasPercents(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).PrimaryNoiseBiasPercents;
+            static public double ComplexNoisePairBiasPercents(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).ComplexNoisePairBiasPercents;
+            static public double ComplexNoiseIntervalBiasPercents(MasqueradePreset masqueradePreset)
+                => SelectPreset(masqueradePreset).ComplexNoiseIntervalBiasPercents;
+
+
+
+            static public Settings SelectPreset(MasqueradePreset masqueradePreset)
+                => new (masqueradePreset switch
+                    {
+                        MasqueradePreset.DEFAULT => SettingsPresets.DEFAULT,
+
+                        MasqueradePreset.HTTPS_TLS => SettingsPresets.HTTPS_TLS,
+                        MasqueradePreset.HTTPS_DNS => SettingsPresets.HTTPS_DNS,
+
+                        MasqueradePreset.HTTP_3_QUIC => SettingsPresets.HTTP_3_QUIC,
+                        MasqueradePreset.HTTP_2_gRPC => SettingsPresets.HTTP_2_gRPC,
+
+                        MasqueradePreset.WEBSOCKET_WSS => SettingsPresets.WEBSOCKET_WSS,
+                        MasqueradePreset.CUSTOM or _   => new()
+                    });
         }
     }
 }

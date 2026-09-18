@@ -96,7 +96,7 @@ namespace JabrAPI.RE5
         }
 
 
-        static public string FastPlusNoise(string absoluteInputDirectory, string fileName,
+        static public string FastWithNoising(string absoluteInputDirectory, string fileName,
             string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool deleteTempFileAfterUse = true)
         {
             //Noise.FastAddToFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier, prevId);
@@ -104,7 +104,7 @@ namespace JabrAPI.RE5
             //if (deleteTempFileAfterUse) System.IO.File.Delete(System.IO.Path.Combine(absoluteOutputDirectory, denoisedFileName));
             return "";
         }
-        static public string FastPlusNoise(string absoluteInputDirectory, string fileName,
+        static public string FastWithNoising(string absoluteInputDirectory, string fileName,
             string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true)
         {
             //Noise.FastAddToFile(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey.Noisifier);
