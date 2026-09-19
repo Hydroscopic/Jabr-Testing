@@ -11,10 +11,10 @@ namespace JabrAPI.RE5
         {
             public enum DataDecryptionMode
             {
-                SAFE,
                 FAST,
-                SAFE_WITH_NOISE_ADDITION,
-                FAST_WITH_NOISE_ADDITION,
+                WITH_VALIDATION,
+                FAST_WITH_DENOISING,
+                WITH_VALIDATITON_AND_DENOISING,
             }
 
 
@@ -23,14 +23,16 @@ namespace JabrAPI.RE5
             {
                 return mode switch
                 {
-                    DataDecryptionMode.SAFE => RE5.Decrypt.Data(encrypted, reKey, throwExceptions),
-                    DataDecryptionMode.FAST => RE5.Decrypt.Fast.Data(encrypted, reKey),
+                    DataDecryptionMode.FAST
+                        => RE5.DecryptData.Fast(encrypted, reKey),
+                    DataDecryptionMode.WITH_VALIDATION
+                        => RE5.DecryptData.WithValidation(encrypted, reKey, throwExceptions),
 
-                    DataDecryptionMode.SAFE_WITH_NOISE_ADDITION
-                        => RE5.Decrypt.WithNoiseRemoval.Data(encrypted, reKey, throwExceptions),
-                    DataDecryptionMode.FAST_WITH_NOISE_ADDITION
-                        => RE5.Decrypt.FastWithNoiseRemoval.Data(encrypted, reKey),
-                        _ => []
+                    DataDecryptionMode.FAST_WITH_DENOISING
+                        => RE5.DecryptData.FastWithDeNoising(encrypted, reKey),
+                    DataDecryptionMode.WITH_VALIDATITON_AND_DENOISING
+                        => RE5.DecryptData.WithValidationAndDeNoising(encrypted, reKey, throwExceptions),
+                      _ => []
                 };
             }
 
@@ -41,19 +43,19 @@ namespace JabrAPI.RE5
             {
                 switch (mode)
                 {
-                    case DataDecryptionMode.SAFE:
-                        RE5.Decrypt.File(absoluteInputDirectory, fileName,
-                        absoluteOutputDirectory, reKey, throwExceptions); break;
                     case DataDecryptionMode.FAST:
-                        RE5.Decrypt.Fast.File(absoluteInputDirectory, fileName,
+                        RE5.DecryptFile.Fast(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey); break;
+                    case DataDecryptionMode.WITH_VALIDATION:
+                        RE5.DecryptFile.WithValidation(absoluteInputDirectory, fileName,
+                        absoluteOutputDirectory, reKey, throwExceptions); break;
 
-                    case DataDecryptionMode.SAFE_WITH_NOISE_ADDITION:
-                        //RE5.Decrypt.WithNoiseRemoval.File(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, throwExceptions);
-                        break;
-                    case DataDecryptionMode.FAST_WITH_NOISE_ADDITION:
-                        RE5.Decrypt.FastWithNoiseRemoval.File(absoluteInputDirectory, fileName,
+                    case DataDecryptionMode.FAST_WITH_DENOISING:
+                        RE5.DecryptFile.FastWithDeNoising(absoluteInputDirectory, fileName,
                         absoluteOutputDirectory, reKey); break;
+                    case DataDecryptionMode.WITH_VALIDATITON_AND_DENOISING:
+                        //RE5.DecryptFile.WithValidationAndDenoising(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, throwExceptions);
+                        break;
                     default: break;
                 };
             }
