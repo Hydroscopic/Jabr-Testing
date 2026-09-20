@@ -2,36 +2,39 @@
 
 
 
-namespace JabrAPI.RE5
+namespace JabrAPI
 {
-    static public partial class DecryptFile
+    static public partial class RE5
     {
-        static public (bool didSucceed, string resultFileName) WithValidation(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
+        static public partial class DecryptFile
         {
-            if (Miscellaneous.IsReKeyValid(reKey, throwExceptions) &&
-                Miscellaneous.IsNoisifierValid(reKey.Noisifier, throwExceptions))
+            static public (string resultFileName, bool didSucceed) WithValidation(string absoluteInputDirectory, string fileName,
+                string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
             {
-                try
+                if (Miscellaneous.IsReKeyValid(reKey, throwExceptions) &&
+                    Miscellaneous.IsNoisifierValid(reKey.Noisifier, throwExceptions))
                 {
-                    return (true, RE5.DecryptFile.Fast(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey));
+                    try
+                    {
+                        return (DecryptFile.Fast(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey), true);
+                    }
+                    catch { throw; }
                 }
-                catch { throw; }
+                return ("", false);
             }
-            return (false, "");
-        }
 
 
 
-        static public (bool didSucceed, string resultFileName) WithValidationAndDeNoising(string absoluteInputDirectory, string fileName,
-                string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true, bool throwExceptions = false)
-        {
-            bool didSucceed = Noise.RemoveFrom.File(absoluteInputDirectory, fileName,
-                absoluteOutputDirectory, reKey, throwExceptions);
+            static public (string resultFileName, bool didSucceed) WithValidationAndDeNoising(string absoluteInputDirectory, string fileName,
+                    string absoluteOutputDirectory, ReKey reKey, bool deleteTempFileAfterUse = true, bool throwExceptions = false)
+            {
+                bool didSucceed = Noise.RemoveFrom.File(absoluteInputDirectory, fileName,
+                    absoluteOutputDirectory, reKey, throwExceptions);
 
-            if (!didSucceed) return (false, "");
-            return RE5.DecryptFile.WithValidation(absoluteInputDirectory, fileName,
-                        absoluteOutputDirectory, reKey, throwExceptions);
+                if (!didSucceed) return ("", false);
+                return DecryptFile.WithValidation(absoluteInputDirectory, fileName,
+                            absoluteOutputDirectory, reKey, throwExceptions);
+            }
         }
     }
 }

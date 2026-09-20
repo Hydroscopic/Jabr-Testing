@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using static System.Console;
 
 
 using AVcontrol;
-using JabrAPI.RE5;
 using JabrAPI;
 
 
@@ -20,14 +18,14 @@ namespace JabrTestField
         static void Main()
         {
             SecureRandom random = new(128);
-            ReKey binKey = new(true);
+            RE5.ReKey binKey = new(true);
             string aboba = "aboba baobab";
             List<Byte> lolinit = [0, 1, 2, 3, 3, 3, 2, 1, 0];
 
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
-            List<Byte> eennenc = EncryptData.WithValidation(
+            List<Byte> eennenc = RE5.EncryptData.WithValidation(
                 lolinit, binKey, ref attemptCount, true).result;
 
             Stopwatch timer111 = new();
@@ -64,7 +62,7 @@ namespace JabrTestField
             Write(resultExportString + "\n\n\n");
             ForegroundColor = ConsoleColor.Gray;
 
-            ReKey binKeyab = new(false);
+            RE5.ReKey binKeyab = new(false);
             binKeyab.ImportFromString(binKey.ExportAsString());
 
             resultExportString = string.Join("_", byEx);
@@ -80,14 +78,14 @@ namespace JabrTestField
             ReadKey();
 
 
-
+            
 
 
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_0; i++)
             {
                 Write("\n\tAttempt: " + ++attemptCount);
-                List<Byte> bincrypted = EncryptData.WithValidation(lolinit, binKey, true).result;
+                List<Byte> bincrypted = RE5.EncryptData.WithValidation(lolinit, binKey, true).result;
 
                 Write("\n\tInitial: ");
                 for (var j = 0; j < bincrypted.Count; j++)
@@ -211,8 +209,8 @@ namespace JabrTestField
 
 
 
-            ReKey initial = new(true);
-            ReKey copy = new(false);
+            RE5.ReKey initial = new(true);
+            RE5.ReKey copy = new(false);
             Stopwatch timer = new();
 
             Byte[] exportBuffer = [];

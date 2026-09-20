@@ -3,32 +3,34 @@ using System.Collections.Generic;
 
 
 
-namespace JabrAPI.RE5
+namespace JabrAPI
 {
-    static public partial class DecryptData
+    static public partial class RE5
     {
-        static public List<Byte> WithValidation(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+        static public partial class DecryptData
         {
-            if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
-                reKey.IsValid.ForDecryption(encrypted, throwExceptions))
+            static public (List<Byte> result, bool didSucceed) WithValidation(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
             {
-                try
+                if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
+                    reKey.IsValid.ForDecryption(encrypted, throwExceptions))
                 {
-                    return RE5.DecryptData.Fast(encrypted, reKey);
+                    try
+                    {
+                        return (RE5.DecryptData.Fast(encrypted, reKey), true);
+                    }
+                    catch { throw; }
                 }
-                catch { throw; }
+                return ([], false);
             }
-            return [];
+
+
+
+            static public (List<Byte> result, bool didSucceed) WithValidationAndDeNoising(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+            {
+                List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
+                return denoised == null || denoised.Count < 1 ? ([], false)
+                        : RE5.DecryptData.WithValidation(denoised, reKey, throwExceptions);
+            }
         }
-
-
-
-        static public List<Byte> WithValidationAndDeNoising(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
-        {
-            List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
-            return denoised == null || denoised.Count < 1 ? []
-                    : RE5.DecryptData.WithValidation(denoised, reKey, throwExceptions);
-        }
-
     }
 }

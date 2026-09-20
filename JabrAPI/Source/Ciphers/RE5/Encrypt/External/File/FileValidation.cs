@@ -2,31 +2,34 @@
 
 
 
-namespace JabrAPI.RE5
+namespace JabrAPI
 {
-    static public partial class EncryptFile
+    static public partial class RE5
     {
-        static public bool WithValidation(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
+        static public partial class EncryptFile
         {
-            if (Miscellaneous.IsReKeyValid(reKey, throwExceptions) &&
-                Miscellaneous.IsNoisifierValid(reKey.Noisifier, throwExceptions))
+            static public bool WithValidation(string absoluteInputDirectory, string fileName,
+                string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
             {
-                try
+                if (Miscellaneous.IsReKeyValid(reKey, throwExceptions) &&
+                    Miscellaneous.IsNoisifierValid(reKey.Noisifier, throwExceptions))
                 {
-                    RE5.EncryptFile.Fast(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId);
-                    return true;
+                    try
+                    {
+                        RE5.EncryptFile.Fast(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId);
+                        return true;
+                    }
+                    catch { throw; }
                 }
-                catch { throw; }
+                return false;
             }
-            return false;
-        }
 
-        static public bool WithValidation(string absoluteInputDirectory, string fileName,
-            string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
-        {
-            Int32 prevId = 0;
-            return WithValidation(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
+            static public bool WithValidation(string absoluteInputDirectory, string fileName,
+                string absoluteOutputDirectory, ReKey reKey, bool throwExceptions = false)
+            {
+                Int32 prevId = 0;
+                return WithValidation(absoluteInputDirectory, fileName, absoluteOutputDirectory, reKey, ref prevId, throwExceptions);
+            }
         }
     }
 }
