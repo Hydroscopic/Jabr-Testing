@@ -78,7 +78,7 @@ namespace JabrAPI
 
 
 
-            public void Default(List<Byte> banned)
+            public void Banned(List<Byte> banned)
             {
                 _noisifier._banned.Clear();
                 _noisifier._banned.AddRange(banned);
@@ -90,7 +90,7 @@ namespace JabrAPI
             }
             public void Default(List<Byte> banned, Byte primaryCount, Byte complexCount)
             {
-                Default(banned);
+                Banned(banned);
                 Default(primaryCount, complexCount);
             }
 

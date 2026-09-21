@@ -12,14 +12,22 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            private protected override void GenerateAll()
+            public override bool ReGenerate()
             {
-                GenerateRandomPrimary();
-                GenerateRandomExternal();
-                GenerateRandomShifts();
+                try
+                {
+                    ReGeneratePrAlphabet();
+                    ReGenerateExAlphabet();
+                    GenerateRandomShifts();
 
-                _noisifier.Set.Default(External);
-                _noisifier.Next(false);
+                    _noisifier.Set.Banned(ExAlphabet);
+                    _noisifier.Next(false);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
 
 
@@ -42,7 +50,7 @@ namespace JabrAPI
             }
 
 
-            public void GenerateRandomPrimary(Byte compactedLength_willBeIncreasedByOne = 255)
+            public void ReGeneratePrAlphabet(Byte compactedLength_willBeIncreasedByOne = 255)
             {
                 if (compactedLength_willBeIncreasedByOne < 1)
                     throw new ArgumentOutOfRangeException
@@ -52,19 +60,21 @@ namespace JabrAPI
                         nameof(compactedLength_willBeIncreasedByOne)
                     );
 
-                _primaryAlphabet.Clear();
-                _primaryAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
+                _isExportUpToDate = false;
+                _prAlphabet.Clear();
+                _prAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
             }
-            public void GenerateRandomPrimary()
+            public void ReGeneratePrAlphabet()
             {
-                _primaryAlphabet.Clear();
+                _isExportUpToDate = false;
+                _prAlphabet.Clear();
 
-                _primaryAlphabet.AddRange(_compactedPrMaxLength > 0
-                    ? GenerateRandomAlphabet(_compactedPrMaxLength + 1)
+                _prAlphabet.AddRange(_densePrMaxLength > 0
+                    ? GenerateRandomAlphabet(_densePrMaxLength + 1)
                     : GenerateRandomAlphabet(255));
             }
 
-            public void GenerateRandomExternal(Byte compactedLength_willBeIncreasedByOne = 255)
+            public void ReGenerateExAlphabet(Byte compactedLength_willBeIncreasedByOne = 255)
             {
                 if (compactedLength_willBeIncreasedByOne < 1)
                     throw new ArgumentOutOfRangeException
@@ -74,15 +84,17 @@ namespace JabrAPI
                         nameof(compactedLength_willBeIncreasedByOne)
                     );
 
-                _externalAlphabet.Clear();
-                _externalAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
+                _isExportUpToDate = false;
+                _exAlphabet.Clear();
+                _exAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
             }
-            public void GenerateRandomExternal()
+            public void ReGenerateExAlphabet()
             {
-                _externalAlphabet.Clear();
+                _isExportUpToDate = false;
+                _exAlphabet.Clear();
 
-                _externalAlphabet.AddRange(_compactedExMaxLength > 0
-                    ? GenerateRandomAlphabet(_compactedExMaxLength + 1)
+                _exAlphabet.AddRange(_denseExMaxLength > 0
+                    ? GenerateRandomAlphabet(_denseExMaxLength + 1)
                     : GenerateRandomAlphabet(8));
             }
 
@@ -90,18 +102,19 @@ namespace JabrAPI
 
             public void GenerateRandomShifts(Int32 count)
             {
-                if (_externalAlphabet == null || _externalAlphabet.Count < 2)
+                if (_exAlphabet == null || _exAlphabet.Count < 2)
                 {
                     throw new ArgumentException
                     (
                         "Unable to generate shifts, external alphabet is undefined",
-                        nameof(_externalAlphabet)
+                        nameof(_exAlphabet)
                     );
                 }
 
-                GenerateRandomShifts(count, 0, (Byte)(_externalAlphabet.Count - 1));
+                _isExportUpToDate = false;
+                GenerateRandomShifts(count, 0, (Byte)(_exAlphabet.Count - 1));
             }
-            public void GenerateRandomShifts() => GenerateRandomShifts(_shCount);
+            public void GenerateRandomShifts() => GenerateRandomShifts(_targetShCount);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace JabrAPI
         }
         public void DefaultGenerate(List<Byte> banned)
         {
-            Set.Default(banned);
+            Set.Banned(banned);
             GenerateAll();
         }
 

@@ -46,7 +46,7 @@ namespace JabrAPI
             _validateHelper = new(this);
 
             if (autoGenerate) DefaultGenerate(banned);
-            else Set.Default(banned);
+            else Set.Banned(banned);
         }
 
         public Noisifier(List<Byte> binaryExportData, bool throwExceptions = false)

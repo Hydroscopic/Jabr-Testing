@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using AVcontrol;
@@ -13,8 +12,6 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            public bool ImportFromBinary(List<Byte> exportData, bool throwExceptions = false)
-                => ImportFromBinary(exportData.ToArray(), throwExceptions);
             public override bool ImportFromBinary(Byte[] exportData, bool throwExceptions = false)
             {
                 try
@@ -122,8 +119,8 @@ namespace JabrAPI
                         return false;
                     }
 
-                    _primaryAlphabet.Clear();
-                    _primaryAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 5)..(parsedShiftCount + 5 + parsedLengthGuide)]);
+                    _prAlphabet.Clear();
+                    _prAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 5)..(parsedShiftCount + 5 + parsedLengthGuide)]);
 
 
                     //  reusing parsedShiftCount as a offset for what we have already read
@@ -156,8 +153,8 @@ namespace JabrAPI
                         return false;
                     }
 
-                    _externalAlphabet.Clear();
-                    _externalAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 2)..(parsedShiftCount + 2 + parsedLengthGuide)]);
+                    _exAlphabet.Clear();
+                    _exAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 2)..(parsedShiftCount + 2 + parsedLengthGuide)]);
                 }
                 catch (Exception)
                 {
@@ -168,36 +165,25 @@ namespace JabrAPI
             }
 
 
-            public override Byte[] ExportAsBinary()
+            public override Byte[] ExportAsBinary
             {
-                return
-                [
-                    .. _noisifier.ExportAsBinary(),
+                get => _isExportUpToDate ?
+                    field ??= ReCalculateExport()
+                    : ReCalculateExport();
+            } = null;
 
-                .. ToBinary.BigEndian(ShCount),
-                .. _shifts,
-
-                (Byte)(PrLength - 1),
-                .. _primaryAlphabet,
-
-                (Byte)(ExLength - 1),
-                .. _externalAlphabet
-                ];
-            }
-            public List<Byte> ExportAsBinaryList()
+            private Byte[] ReCalculateExport()
             {
-                return
-                [
+                _isExportUpToDate = true;
+                return [
                     .. _noisifier.ExportAsBinary(),
+                    .. ToBinary.BigEndian(ShCount),
+                    .. _shifts,
 
-                .. ToBinary.BigEndian(ShCount),
-                .. _shifts,
-
-                (Byte)(PrLength - 1),
-                .. _primaryAlphabet,
-
-                (Byte)(ExLength - 1),
-                .. _externalAlphabet
+                    (Byte)(PrLength - 1),
+                    .. _prAlphabet,
+                    (Byte)(ExLength - 1),
+                    .. _exAlphabet
                 ];
             }
         }

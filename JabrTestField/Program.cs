@@ -17,6 +17,18 @@ namespace JabrTestField
     {
         static void Main()
         {
+
+            RE5.ReKey anian = new(true);
+
+            Write(anian.IsValid.Partially.Primary(true));
+            ReadKey();
+
+            
+
+
+
+
+
             SecureRandom random = new(128);
             RE5.ReKey binKey = new(true);
             string aboba = "aboba baobab";

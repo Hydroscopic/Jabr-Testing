@@ -2,45 +2,34 @@
 using System.Collections.Generic;
 
 
-using JabrAPI.Template;
-
-
 
 namespace JabrAPI
 {
     static public partial class RE5
     {
-        public partial class ReKey : IReKey
+        public partial class ReKey
         {
-            override public ValidateHelper IsValid => _validationHelper;
-
-            public class ValidateHelper : IValidateHelper
+            public class ReKeyUtil_IsValid
             {
-                private readonly ReKey _binKey;
-                private readonly PartiallyHelper _partiallyHelper;
+                internal ReKeyUtil_IsValid(ReKey thisKey) { _thisKey = thisKey; }
+                private readonly ReKey _thisKey;
 
 
-                internal ValidateHelper(ReKey reKey)
+
+                public ReKeyUtil_PartiallyValid Partially
                 {
-                    _binKey = reKey;
-                    _partiallyHelper = new(reKey);
-                }
+                    get => field ??= new ReKeyUtil_PartiallyValid(_thisKey);
+                    private set;
+                } = null;
 
-
-                public PartiallyHelper Partially => _partiallyHelper;
-                public class PartiallyHelper
+                public class ReKeyUtil_PartiallyValid
                 {
-                    private readonly ReKey _binKey;
+                    internal ReKeyUtil_PartiallyValid(ReKey thisKey) { _thisKey = thisKey; }
+                    private readonly ReKey _thisKey;
 
-                    internal PartiallyHelper(ReKey reKey)
-                    {
-                        _binKey = reKey;
-                    }
-
-
-                    public bool Primary(bool throwExceptions = false)
-                        => Primary(_binKey.PrAlphabet, throwExceptions);
-                    static public bool Primary(List<Byte> primary, bool throwExceptions = false)
+                    public bool PrAlphabet(bool throwExceptions = false)
+                        => PrALphabet(_thisKey.PrAlphabet, throwExceptions);
+                    static public bool PrALphabet(List<Byte> primary, bool throwExceptions = false)
                     {
                         if (primary == null || primary.Count < 2 || primary.Count > 256)
                         {
@@ -72,9 +61,9 @@ namespace JabrAPI
                     }
 
 
-                    public bool External(bool throwExceptions = false)
-                        => External(_binKey.ExAlphabet, throwExceptions);
-                    static public bool External(List<Byte> external, bool throwExceptions = false)
+                    public bool ExAlphabet(bool throwExceptions = false)
+                        => ExAlphabet(_thisKey.ExAlphabet, throwExceptions);
+                    static public bool ExAlphabet(List<Byte> external, bool throwExceptions = false)
                     {
                         if (external == null || external.Count < 2 || external.Count > 256)
                         {
@@ -107,23 +96,24 @@ namespace JabrAPI
                 }
 
 
-                public override bool ForEncryption(List<Byte> message, bool throwExceptions = false)
+
+                public bool ForEncryption(List<Byte> message, bool throwExceptions = false)
                 {
-                    return PartiallyHelper.External(_binKey.ExAlphabet, throwExceptions)
-                                && Primary(message, _binKey.PrAlphabet, throwExceptions);
+                    return ReKeyUtil_PartiallyValid.ExAlphabet(_thisKey.ExAlphabet, throwExceptions)
+                                && PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
                 }
-                public override bool ForDecryption(List<Byte> message, bool throwExceptions = false)
+                public bool ForDecryption(List<Byte> message, bool throwExceptions = false)
                 {
-                    return PartiallyHelper.Primary(_binKey.PrAlphabet, throwExceptions)
-                                && External(message, _binKey.ExAlphabet, throwExceptions);
+                    return ReKeyUtil_PartiallyValid.PrALphabet(_thisKey.PrAlphabet, throwExceptions)
+                                && ExAlphabet(message, _thisKey.ExAlphabet, throwExceptions);
                 }
 
 
-                public bool Primary(List<Byte> message, bool throwExceptions = false)
-                    => Primary(message, _binKey.PrAlphabet, throwExceptions);
-                static public bool Primary(List<Byte> message, List<Byte> primary, bool throwExceptions = false)
+                public bool PrAlphabet(List<Byte> message, bool throwExceptions = false)
+                    => PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
+                static public bool PrAlphabet(List<Byte> message, List<Byte> primary, bool throwExceptions = false)
                 {
-                    if (!PartiallyHelper.Primary(primary, throwExceptions)) return false;
+                    if (!ReKeyUtil_PartiallyValid.PrALphabet(primary, throwExceptions)) return false;
 
                     foreach (Byte b in message)
                     {
@@ -141,12 +131,12 @@ namespace JabrAPI
                     return true;
                 }
 
-
-                public bool External(List<Byte> encrypted, bool throwExceptions = false)
-                    => External(encrypted, _binKey.ExAlphabet, throwExceptions);
-                static public bool External(List<Byte> encrypted, List<Byte> external, bool throwExceptions = false)
+                
+                public bool ExAlphabet(List<Byte> encrypted, bool throwExceptions = false)
+                    => ExAlphabet(encrypted, _thisKey.ExAlphabet, throwExceptions);
+                static public bool ExAlphabet(List<Byte> encrypted, List<Byte> external, bool throwExceptions = false)
                 {
-                    if (!PartiallyHelper.External(external, throwExceptions)) return false;
+                    if (!ReKeyUtil_PartiallyValid.ExAlphabet(external, throwExceptions)) return false;
 
                     foreach (Byte b in encrypted)
                     {

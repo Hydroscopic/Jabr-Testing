@@ -13,83 +13,53 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            override public SetHelper Set => _setHelper;
-
-
-            public class SetHelper : ISetHelper
+            public class ReKeyUtil_Set
             {
-                private readonly ReKey _binKey;
-                private readonly SensitiveSetHelper _sensitiveSetHelper;
+                private readonly ReKey _thisKey;
 
-                internal SetHelper(ReKey binKey)
+                internal ReKeyUtil_Set(ReKey binKey) {_thisKey = binKey; }
+
+
+
+                public ReKeyUtil_SensitiveSet Sensitive
                 {
-                    _binKey = binKey;
-                    _sensitiveSetHelper = new(_binKey);
-                }
-
-
-
-                public SensitiveSetHelper Sensitive => _sensitiveSetHelper;
-                public class SensitiveSetHelper
+                    get => field ??= new ReKeyUtil_SensitiveSet(_thisKey);
+                    private set;
+                } = null;
+                public class ReKeyUtil_SensitiveSet
                 {
-                    private readonly ReKey _binKey;
-
-                    internal SensitiveSetHelper(ReKey binKey)
-                    {
-                        _binKey = binKey;
-                    }
+                    private readonly ReKey _thisKey;
+                    internal ReKeyUtil_SensitiveSet(ReKey binKey) { _thisKey = binKey; }
 
 
 
                     public void PrAlphabet(List<Byte> prAlphabet)
                     {
-                        _binKey._primaryAlphabet.Clear();
-                        _binKey._primaryAlphabet.AddRange(prAlphabet);
-                    }
-                    public void PrimaryAlphabet(List<Byte> primaryAlphabet)
-                    {
-                        _binKey._primaryAlphabet.Clear();
-                        _binKey._primaryAlphabet.AddRange(primaryAlphabet);
+                        _thisKey._prAlphabet.Clear();
+                        _thisKey._prAlphabet.AddRange(prAlphabet);
+                        _thisKey._isExportUpToDate = false;
                     }
                     public bool SafePrAlphabet(List<Byte> prAlphabet)
                     {
-                        if (!_binKey.IsValid.Primary(prAlphabet)) return false;
-                        _binKey._primaryAlphabet.Clear();
-                        _binKey._primaryAlphabet.AddRange(prAlphabet);
+                        if (!_thisKey.IsValid.PrAlphabet(prAlphabet)) return false;
+                        _thisKey._prAlphabet.Clear();
+                        _thisKey._prAlphabet.AddRange(prAlphabet);
+                        _thisKey._isExportUpToDate = false;
                         return true;
                     }
-                    public bool SafePrimaryAlphabet(List<Byte> primaryAlphabet)
-                    {
-                        if (!_binKey.IsValid.Primary(primaryAlphabet)) return false;
-                        _binKey._primaryAlphabet.Clear();
-                        _binKey._primaryAlphabet.AddRange(primaryAlphabet);
-                        return true;
-                    }
-
-
 
                     public void ExAlphabet(List<Byte> exAlphabet)
                     {
-                        _binKey._externalAlphabet.Clear();
-                        _binKey._externalAlphabet.AddRange(exAlphabet);
-                    }
-                    public void ExternalAlphabet(List<Byte> externalAlphabet)
-                    {
-                        _binKey._externalAlphabet.Clear();
-                        _binKey._externalAlphabet.AddRange(externalAlphabet);
+                        _thisKey._exAlphabet.Clear();
+                        _thisKey._exAlphabet.AddRange(exAlphabet);
+                        _thisKey._isExportUpToDate = false;
                     }
                     public bool SafeExAlphabet(List<Byte> exAlphabet)
                     {
-                        if (!_binKey.IsValid.External(exAlphabet)) return false;
-                        _binKey._externalAlphabet.Clear();
-                        _binKey._externalAlphabet.AddRange(exAlphabet);
-                        return true;
-                    }
-                    public bool SafeExternalAlphabet(List<Byte> externalAlphabet)
-                    {
-                        if (!_binKey.IsValid.External(externalAlphabet)) return false;
-                        _binKey._externalAlphabet.Clear();
-                        _binKey._externalAlphabet.AddRange(externalAlphabet);
+                        if (!_thisKey.IsValid.ExAlphabet(exAlphabet)) return false;
+                        _thisKey._exAlphabet.Clear();
+                        _thisKey._exAlphabet.AddRange(exAlphabet);
+                        _thisKey._isExportUpToDate = false;
                         return true;
                     }
 
@@ -97,51 +67,41 @@ namespace JabrAPI
 
                     public void Shifts(List<Byte> shifts)
                     {
-                        _binKey._shifts.Clear();
-                        _binKey._shifts.AddRange(shifts.Count > 0 ? shifts : [0]);
+                        _thisKey._shifts.Clear();
+                        _thisKey._shifts.AddRange(shifts.Count > 0 ? shifts : [0]);
+                        _thisKey._isExportUpToDate = false;
                     }
                     public bool SafeShifts(List<Byte> shifts)
                     {
-                        if (shifts.Max() > _binKey.ExLength) return false;
-                        _binKey._shifts.Clear();
-                        _binKey._shifts.AddRange(shifts.Count > 0 ? shifts : [0]);
-                        return true;
-                    }
-                    public void Shift(Byte shift)
-                    {
-                        _binKey._shifts.Clear();
-                        _binKey._shifts.Add(shift);
-                    }
-                    public bool SafeShifts(Byte shift)
-                    {
-                        if (_binKey.Shifts.Max() > _binKey.ExLength) return false;
-                        _binKey._shifts.Clear();
-                        _binKey._shifts.Add(shift);
+                        if (shifts.Max() > _thisKey.ExLength) return false;
+                        _thisKey._shifts.Clear();
+                        _thisKey._shifts.AddRange(shifts.Count > 0 ? shifts : [0]);
+                        _thisKey._isExportUpToDate = false;
                         return true;
                     }
                 }
 
 
 
-                public override void Default()
+                public void DefaultLengths()
                 {
-                    _binKey._compactedPrMaxLength = 255;
-                    _binKey._compactedExMaxLength = 32;
+                    _thisKey._densePrMaxLength = 255;
+                    _thisKey._denseExMaxLength = 32;
                 }
-                public override void ShiftCount(Int32 count) => _binKey._shCount = count;
+                public void TargetShCount(Int32 count) => _thisKey._targetShCount = count;
 
 
 
-                public void Default(Byte compactedPrMaxLength, Byte compactedExMaxLength)
+                public void DefaultLengths(Byte compactedPrMaxLength, Byte compactedExMaxLength)
                 {
-                    _binKey._compactedPrMaxLength = compactedPrMaxLength;
-                    _binKey._compactedExMaxLength = compactedExMaxLength;
+                    _thisKey._densePrMaxLength = compactedPrMaxLength;
+                    _thisKey._denseExMaxLength = compactedExMaxLength;
                 }
 
-                public void DefaultOnlyEx(Byte compactedExMaxLength)
-                    => _binKey._compactedExMaxLength = compactedExMaxLength;
-                public void DefaultOnlyPr(Byte compactedPrMaxLength)
-                    => _binKey._compactedPrMaxLength = compactedPrMaxLength;
+                public void DefaultExLength(Byte compactedExMaxLength)
+                    => _thisKey._denseExMaxLength = compactedExMaxLength;
+                public void DefaultPrLength(Byte compactedPrMaxLength)
+                    => _thisKey._densePrMaxLength = compactedPrMaxLength;
             }
         }
     }

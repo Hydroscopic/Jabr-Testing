@@ -14,7 +14,8 @@ namespace JabrAPI.Template
         protected readonly Noisifier _noisifier = new();
 
         protected readonly List<Byte> _shifts = [0];
-        protected Int32 _shCount = SecureRandom.LazyInstance.Next(64, 128);
+        protected Int32 _targetShCount = SecureRandom.LazyInstance.Next(64, 128);
+        protected bool _isExportUpToDate = false;
 
 
 
@@ -23,15 +24,9 @@ namespace JabrAPI.Template
 
         public Noisifier Noisifier => _noisifier;
 
-        virtual public ISetHelper? Set => null;
-        virtual public IValidateHelper? IsValid => null;
-
-
 
         public List<Byte> Shifts => _shifts;
-        public Int32 ShAmount => _shifts == null ? -1 : _shifts.Count;
-        public Int32 ShLength => _shifts == null ? -1 : _shifts.Count;
-        public Int32 ShCount  => _shifts == null ? -1 : _shifts.Count;
+        public Int32 ShCount => _shifts == null ? -1 : _shifts.Count;
 
         abstract public List<Byte> FinalAlphabet { get; }
 
@@ -40,33 +35,12 @@ namespace JabrAPI.Template
 
 
 
-        public void GenerateNew(bool resetSettingsToDefaultIfFailed = true, bool throwExceptions = true)
-        {
-            try
-            {
-                GenerateAll();
-            }
-            catch
-            {
-                if (resetSettingsToDefaultIfFailed)
-                {
-                    try
-                    {
-                        DefaultGenerate();
-                    }
-                    catch
-                    {
-                        if (throwExceptions) throw;
-                    }
-                }
-                else if (throwExceptions) throw;
-            }
-        }
+        abstract public bool ReGenerate();
 
 
 
         abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false);
-        abstract public Byte[] ExportAsBinary();
+        virtual public Byte[] ExportAsBinary => [];
         public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false)
         {
             try
@@ -87,18 +61,8 @@ namespace JabrAPI.Template
         }
         public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET)
             => Numsys.FromDecimalToCustomBigInteger(
-                    Numsys.ToDecimalBigInteger([.. ExportAsBinary()], 256),
+                    Numsys.ToDecimalBigInteger([.. ExportAsBinary], 256),
                     charsetForExport);
-
-
-
-        protected void DefaultGenerate()
-        {
-            Set!.Default();
-            GenerateAll();
-        }
-        abstract protected private void GenerateAll();
-
 
 
         public void GenerateRandomShifts(Int32 count, Byte minVal, Byte maxVal)
@@ -128,6 +92,7 @@ namespace JabrAPI.Template
                 );
             }
 
+            _isExportUpToDate = false;
             _shifts.Clear();
             if (count == 0)
             {
@@ -139,6 +104,6 @@ namespace JabrAPI.Template
                 _shifts.Add(_random.Next(minVal, maxVal));
         }
         public void GenerateRandomShifts(Byte minVal, Byte maxVal)
-            => GenerateRandomShifts(_shCount, minVal, maxVal);
+            => GenerateRandomShifts(_targetShCount, minVal, maxVal);
     }
 }
