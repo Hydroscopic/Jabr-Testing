@@ -19,7 +19,7 @@ namespace JabrAPI
                 CopyFrom(otherKey.PrAlphabet, otherKey.ExAlphabet, otherKey.Shifts);
 
                 if (fullCopy)
-                    Set.DefaultLengths
+                    Set.AlphabetLengths
                     (
                         otherKey._densePrMaxLength,
                         otherKey._denseExMaxLength

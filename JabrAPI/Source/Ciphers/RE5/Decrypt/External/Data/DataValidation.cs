@@ -22,6 +22,19 @@ namespace JabrAPI
                 }
                 return ([], false);
             }
+            static public (List<Byte> result, bool didSucceed) WithValidation(List<Byte> encrypted, ReKey reKey, DecryptionLeftover leftover, bool throwExceptions = false)
+            {
+                if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
+                    reKey.IsValid.ForDecryption(encrypted, throwExceptions))
+                {
+                    try
+                    {
+                        return (RE5.DecryptData.Fast(encrypted, reKey, ref leftover), true);
+                    }
+                    catch { throw; }
+                }
+                return ([], false);
+            }
 
 
 

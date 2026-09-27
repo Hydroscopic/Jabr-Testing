@@ -26,22 +26,22 @@ namespace JabrAPI
                             reKey.PrLength * 2 + allShifts.Max() - 4
                         ) / exLength
                     );
-                Int32 maxEncodingLength = exLength == 10 ?
+                Int32 encodingLength = exLength == 10 ?
                     Utils.DigitCount(helper)  //  Optimisation for base 10 encoding
-                  : Numsys.AsList128<Int32>
+                  : Numsys.AsListBigInteger<Int32>
                     (
                         helper.ToString(),
                         10,
                         exLength
                     ).Count;
 
-                Int32 chunkSize = (Int32)reKey.ChunkSize / (maxEncodingLength + 1);
-                if   (chunkSize <= maxEncodingLength) chunkSize = maxEncodingLength + 1;
+                helper = (Int32)reKey.ChunkSize;
+                Int32 chunkSize = encodingLength == 0 || helper < encodingLength ? encodingLength
+                      : (helper / encodingLength) * (encodingLength + 1);
 
                 Int32 chunkCount = (Int32)Math.Ceiling((double)messageLength / chunkSize);
                 Int32 thisRoundLength, shDelta, shiftStartId = 0;
-
-                List<Byte> result = new(messageLength * (maxEncodingLength + 1));
+                List<Byte> result = new(messageLength * (encodingLength + 1));
 
 
                 for (var chunk = 0; chunk < chunkCount; chunk++)
@@ -75,7 +75,7 @@ namespace JabrAPI
                             exAlphabet,
                             shifts,
                             exLength,
-                            maxEncodingLength,
+                            encodingLength,
                             ref prevId
                         )
                     );

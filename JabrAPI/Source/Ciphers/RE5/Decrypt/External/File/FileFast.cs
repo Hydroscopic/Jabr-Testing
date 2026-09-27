@@ -30,17 +30,17 @@ namespace JabrAPI
                     );
                 Int32 maxEncodingLength = exLength == 10 ?
                     Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
-                  : Numsys.AsList128<Int32>
+                  : Numsys.AsListBigInteger<Int32>
                     (
                         helper.ToString(),
                         10,
                         exLength
-                    ).Count + 1;  //  + 1 is to account for EncodingLength and the character it belongs to
+                    ).Count;
 
-
-                Int32 chunkSize = (Int32)reKey.ChunkSize / maxEncodingLength * maxEncodingLength;
-                if   (chunkSize < maxEncodingLength) chunkSize = maxEncodingLength;
-
+                helper = (Int32)reKey.ChunkSize;
+                Int32 chunkSize = maxEncodingLength == 0 || helper < maxEncodingLength ? ++maxEncodingLength
+                      : (helper / maxEncodingLength) * ++maxEncodingLength;
+                //  ++1 is to account for EncodingLength and the character it belongs to
 
                 string finalFileName;
                 if (!reKey.KeepOriginalFileExtension)

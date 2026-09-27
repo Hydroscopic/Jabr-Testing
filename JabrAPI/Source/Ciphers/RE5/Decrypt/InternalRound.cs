@@ -60,6 +60,65 @@ namespace JabrAPI
 
                 return decrypted;
             }
+
+
+
+            static internal List<Byte> UnsanitizedDecryptionRound(
+                List<Byte> encryptedChunk,
+                List<Byte> prAlphabet, List<Byte> exAlphabet,
+                List<Byte> shifts,
+                Int32 exLength,
+                Int32 maxEncodingLength,
+                Int32 realMessageLength,
+                ref Int32 decodedId)
+            {
+                if (encryptedChunk.Count < maxEncodingLength) return [];
+
+                Int32 shCount = shifts.Count, encCurId = 0;
+                Int32 parsedEncoding = (Int32)Numsys.ToDecimalFromCustomBigInteger
+                (
+                    encryptedChunk[1..maxEncodingLength],
+                    exAlphabet,
+                    exLength
+                );
+
+
+                Int32 bufferId = exAlphabet.IndexOf(encryptedChunk[0])
+                    - decodedId
+                    - shifts[0]
+                    + parsedEncoding * exLength;
+
+                if (bufferId >= prAlphabet.Count || bufferId < 0) return [];
+                decodedId = bufferId;
+
+
+                List<Byte> decrypted = new(realMessageLength);
+                decrypted.AddRange(prAlphabet[decodedId]);
+
+
+                for (var curId = 1; curId < realMessageLength; curId++)
+                {
+                    encCurId += maxEncodingLength;
+                    bufferId = exAlphabet.IndexOf(encryptedChunk[encCurId])
+                        - decodedId
+                        - shifts[curId % shCount];
+
+                    parsedEncoding = (Int32)Numsys.ToDecimalFromCustomBigInteger
+                    (
+                        encryptedChunk[(encCurId + 1)..(encCurId + maxEncodingLength)],
+                        exAlphabet,
+                        exLength
+                    );
+
+                    bufferId += parsedEncoding * exLength;
+                    if (bufferId >= prAlphabet.Count || bufferId < 0) return decrypted;
+                    decodedId = bufferId;
+
+                    decrypted.AddRange(prAlphabet[decodedId]);
+                }
+
+                return decrypted;
+            }
         }
     }
 }

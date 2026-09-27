@@ -16,7 +16,7 @@ namespace JabrAPI
                 List<Byte> messageChunk,
                 List<Byte> prAlphabet, List<Byte> exAlphabet,
                 List<Byte> shifts,
-                Int32 exLength, Int32 maxEncodingLength,
+                Int32 exLength, Int32 encodingLength,
                 ref Int32 prevId)
             {
                 Int32 messageLength = messageChunk.Count, shCount = shifts.Count;
@@ -29,10 +29,10 @@ namespace JabrAPI
                     10,
                     exLength,
                     exAlphabet,
-                    maxEncodingLength
+                    encodingLength
                 );
 
-                List<Byte> encrypted = new(messageLength * (maxEncodingLength + 1));
+                List<Byte> encrypted = new(messageLength * (encodingLength + 1));
                 encrypted.AddRange([exAlphabet[curFinal % exLength], .. encoding]);
 
 
@@ -48,7 +48,7 @@ namespace JabrAPI
                         10,
                         exLength,
                         exAlphabet,
-                        maxEncodingLength
+                        encodingLength
                     );
 
                     encrypted.AddRange([exAlphabet[curFinal % exLength], .. encoding]);

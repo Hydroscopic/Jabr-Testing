@@ -17,13 +17,34 @@ namespace JabrTestField
     {
         static void Main()
         {
+            //RE5.ReKey anian = new(false);
+            //anian.Set.ExLength(1);
+            //anian.ReGenerate();
 
-            RE5.ReKey anian = new(true);
+            //List<Byte> test33 = [0, 1, 2];
 
-            Write(anian.IsValid.Partially.Primary(true));
-            ReadKey();
+            //List<Byte> fullyEnc = RE5.EncryptData.WithValidation(test33, anian, true).result;
 
-            
+            //Write("\n\tInitial: ");
+            //for (var j = 0; j < test33.Count; j++) Write(test33[j] + " ");
+            //Write("\n\tEncrypted: ");
+            //for (var j = 0; j < fullyEnc.Count; j++) Write(fullyEnc[j] + " ");
+
+            //RE5.DecryptionLeftover leftover = new();
+
+            //List<Byte> decrypt = RE5.DecryptData.Fast(fullyEnc[0..2], anian, ref leftover);
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+
+            //decrypt.AddRange(RE5.DecryptData.Fast(fullyEnc[2..8], anian, ref leftover));
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+
+            //decrypt.AddRange(RE5.DecryptData.Fast(fullyEnc[8..], anian, ref leftover));
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+
+            //Write("\n\tDecrypted: ");
+            //foreach (var b in decrypt) Write(b + " ");
+
+            //ReadKey();
 
 
 
@@ -37,57 +58,57 @@ namespace JabrTestField
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
 
-            List<Byte> eennenc = RE5.EncryptData.WithValidation(
-                lolinit, binKey, ref attemptCount, true).result;
+            //List<Byte> eennenc = RE5.EncryptData.WithValidation(
+            //    lolinit, binKey, true).result;
 
-            Stopwatch timer111 = new();
-            Write("\n\t(Base 256) Starting the export & compressed export test...\n");
-
-
-            timer111.Start();
-            Byte[] byEx = binKey.ExportAsBinary();
-            timer111.Stop();
-
-            string resultExportString = string.Join("_", byEx);
-            Write($"\n\tBytExport time: {timer111.ElapsedMilliseconds} ms, exportL: {resultExportString.Length}\n\t");
-            ForegroundColor = ConsoleColor.DarkRed;
-            Write(resultExportString);
-            ForegroundColor = ConsoleColor.Gray;
+            //Stopwatch timer111 = new();
+            //Write("\n\t(Base 256) Starting the export & compressed export test...\n");
 
 
-            timer111.Restart();
-            string ex = binKey.ExportAsString();
-            timer111.Stop();
+            //timer111.Start();
+            //Byte[] byEx = binKey.ExportAsBinary;
+            //timer111.Stop();
 
-            Write($"\n\n\t(COMPRESSED) StrExport time: {timer111.ElapsedMilliseconds} ms, exportL: {ex.Length}\n\t");
-            ForegroundColor = ConsoleColor.DarkGreen;
-            Write($"{ex}");
-            ForegroundColor = ConsoleColor.Gray;
-
-
-            List<Byte> reConverting = Numsys.FromDecimalBigInteger<Byte>(
-                Numsys.ToDecimalFromCustomBigInteger(ex, JabrAPI.DEFAULT.KEY_EXPORT_CHARSET), 256);
-
-            resultExportString = string.Join("_", reConverting);
-            Write($"\n\n\t(DECOMPRESSED) ReConvertation exportL: {resultExportString.Length}\n\t");
-            ForegroundColor = ConsoleColor.DarkGray;
-            Write(resultExportString + "\n\n\n");
-            ForegroundColor = ConsoleColor.Gray;
-
-            RE5.ReKey binKeyab = new(false);
-            binKeyab.ImportFromString(binKey.ExportAsString());
-
-            resultExportString = string.Join("_", byEx);
-            Write($"\n\tOriginalEX: {resultExportString}\n");
+            //string resultExportString = string.Join("_", byEx);
+            //Write($"\n\tBytExport time: {timer111.ElapsedMilliseconds} ms, exportL: {resultExportString.Length}\n\t");
+            //ForegroundColor = ConsoleColor.DarkRed;
+            //Write(resultExportString);
+            //ForegroundColor = ConsoleColor.Gray;
 
 
-            resultExportString = string.Join("_", binKeyab.ExportAsBinary());
-            Write($"\n\tNew Import: {resultExportString}");
+            //timer111.Restart();
+            //string ex = binKey.ExportAsString();
+            //timer111.Stop();
+
+            //Write($"\n\n\t(COMPRESSED) StrExport time: {timer111.ElapsedMilliseconds} ms, exportL: {ex.Length}\n\t");
+            //ForegroundColor = ConsoleColor.DarkGreen;
+            //Write($"{ex}");
+            //ForegroundColor = ConsoleColor.Gray;
 
 
-            binKey.Noisifier.settings.DynamicOutputIntervals
-                = Noise.SettingsAutoPresets.DynamicOutputIntervals(MasqueradePreset.HTTPS_DNS);
-            ReadKey();
+            //List<Byte> reConverting = Numsys.FromDecimalBigInteger<Byte>(
+            //    Numsys.ToDecimalFromCustomBigInteger(ex, JabrAPI.DEFAULT.KEY_EXPORT_CHARSET), 256);
+
+            //resultExportString = string.Join("_", reConverting);
+            //Write($"\n\n\t(DECOMPRESSED) ReConvertation exportL: {resultExportString.Length}\n\t");
+            //ForegroundColor = ConsoleColor.DarkGray;
+            //Write(resultExportString + "\n\n\n");
+            //ForegroundColor = ConsoleColor.Gray;
+
+            //RE5.ReKey binKeyab = new(false);
+            //binKeyab.ImportFromString(binKey.ExportAsString());
+
+            //resultExportString = string.Join("_", byEx);
+            //Write($"\n\tOriginalEX: {resultExportString}\n");
+
+
+            //resultExportString = string.Join("_", binKeyab.ExportAsBinary);
+            //Write($"\n\tNew Import: {resultExportString}");
+
+
+            //binKey.Noisifier.settings.DynamicOutputIntervals
+            //    = Noise.SettingsAutoPresets.DynamicOutputIntervals(MasqueradePreset.HTTPS_DNS);
+            //ReadKey();
 
 
             
@@ -100,12 +121,13 @@ namespace JabrTestField
                 List<Byte> bincrypted = RE5.EncryptData.WithValidation(lolinit, binKey, true).result;
 
                 Write("\n\tInitial: ");
-                for (var j = 0; j < bincrypted.Count; j++)
-                    Write(bincrypted[j] + " ");
+                for (var j = 0; j < lolinit.Count; j++)
+                    Write(lolinit[j] + " ");
                 Write("\n\tAdding noise to data..");
 
                 List<Byte> binoised = JabrAPI.Noise.AddTo.Data(bincrypted, binKey, true);
                 List<Byte> bindenoised = JabrAPI.Noise.RemoveFrom.Data(binoised, binKey, true);
+                List<Byte> bindecrypted = RE5.DecryptData.WithValidation(bindenoised, binKey, true).result;
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
@@ -188,9 +210,9 @@ namespace JabrTestField
                     Write(temp[j] + " ");
 
                 ForegroundColor = ConsoleColor.Gray;
-                Write("\n\tInitial: ");
-                for (var j = 0; j < bincrypted.Count; j++)
-                    Write(bincrypted[j] + " ");
+                Write("\n\tDecrypted: ");
+                for (var j = 0; j < bindecrypted.Count; j++)
+                    Write(bindecrypted[j] + " ");
 
 
                 Write($"\n\tNonEntropy: {thisMaxNonEntropy}(" +
@@ -212,7 +234,7 @@ namespace JabrTestField
                     $"\n\n\tEnter new EXTEND length: ");
 
 
-                binKey.GenerateNew();
+                binKey.ReGenerate();
 
                 ReadKey(true);
                 Clear();
@@ -230,20 +252,20 @@ namespace JabrTestField
 
             #region BENCHMARK: Import & Export
             List<Int64> ms1 = [], ms2 = [];
-            const Int64 totalAttempts = 10, iterationsPerAttempt = 3_000_000;
+            const Int64 totalAttempts = 10, iterationsPerAttempt = 10_000_000;
             Write($"\n\n\n\t\t[i]  - Starting benchmark of {totalAttempts * iterationsPerAttempt / 1_000_000}m Key Export & Import");
 
             for (var attempt = 0; attempt < totalAttempts; attempt++)
             {
                 if (attempt % 2 == 0)
                 {
-                    initial.GenerateNew();
+                    initial.ReGenerate();
 
                     Write("\n\t\t\tEXPORT     - ");
                     timer.Start();
 
                     for (var i = 0; i < iterationsPerAttempt; i++)
-                        exportBuffer = initial.ExportAsBinary();
+                        exportBuffer = initial.ExportAsBinary;
 
                     timer.Stop();
                     ms1.Add(timer.ElapsedMilliseconds);
@@ -269,7 +291,7 @@ namespace JabrTestField
                 {
                     Write("\n\t\t\tVALIDATING - ");
 
-                    Byte[] import = copy.ExportAsBinary();
+                    Byte[] import = copy.ExportAsBinary;
 
                     if (import.Length != exportBuffer.Length)
                     {

@@ -46,7 +46,7 @@ namespace JabrAPI
             public ReKey(bool autoGenerate = true)
             {
                 if (autoGenerate) ReGenerate();
-                else Set!.DefaultLengths();
+                else Set!.AlphabetLengths();
             }
             public ReKey(Byte[] exportData)
             {

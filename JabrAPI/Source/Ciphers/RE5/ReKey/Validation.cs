@@ -11,6 +11,7 @@ namespace JabrAPI
         {
             public class ReKeyUtil_IsValid
             {
+                internal ReKeyUtil_IsValid() { throw new InvalidOperationException("You are not supposed to use this"); }
                 internal ReKeyUtil_IsValid(ReKey thisKey) { _thisKey = thisKey; }
                 private readonly ReKey _thisKey;
 
@@ -24,6 +25,7 @@ namespace JabrAPI
 
                 public class ReKeyUtil_PartiallyValid
                 {
+                    internal ReKeyUtil_PartiallyValid() { throw new InvalidOperationException("You are not supposed to use this"); }
                     internal ReKeyUtil_PartiallyValid(ReKey thisKey) { _thisKey = thisKey; }
                     private readonly ReKey _thisKey;
 
