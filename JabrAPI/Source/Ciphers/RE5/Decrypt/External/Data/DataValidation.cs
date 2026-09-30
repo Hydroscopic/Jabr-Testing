@@ -22,7 +22,7 @@ namespace JabrAPI
                 }
                 return ([], false);
             }
-            static public (List<Byte> result, bool didSucceed) WithValidation(List<Byte> encrypted, ReKey reKey, DecryptionLeftover leftover, bool throwExceptions = false)
+            static public (List<Byte> result, bool didSucceed) WithValidation(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover, bool throwExceptions = false)
             {
                 if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
                     reKey.IsValid.ForDecryption(encrypted, throwExceptions))
@@ -41,8 +41,12 @@ namespace JabrAPI
             static public (List<Byte> result, bool didSucceed) WithValidationAndDeNoising(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
             {
                 List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
-                return denoised == null || denoised.Count < 1 ? ([], false)
-                        : RE5.DecryptData.WithValidation(denoised, reKey, throwExceptions);
+                return denoised == null || denoised.Count < 1 ? ([], false) : RE5.DecryptData.WithValidation(denoised, reKey, throwExceptions);
+            }
+            static public (List<Byte> result, bool didSucceed) WithValidationAndDeNoising(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover, bool throwExceptions = false)
+            {
+                List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, ref leftover.ignoringIsActive, throwExceptions);
+                return denoised == null || denoised.Count < 1 ? ([], false) : RE5.DecryptData.WithValidation(denoised, reKey, ref leftover, throwExceptions);
             }
         }
     }

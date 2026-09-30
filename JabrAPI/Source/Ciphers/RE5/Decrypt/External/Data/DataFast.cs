@@ -87,10 +87,10 @@ namespace JabrAPI
 
                 return result;
             }
-            static public List<Byte> Fast(List<Byte> encrypted, ReKey reKey, ref DecryptionLeftover leftover)
+            static public List<Byte> Fast(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover)
             {
                 Int32 exLength = reKey.ExLength, shCount = reKey.ShCount,
-                     encLength = encrypted.Count + leftover._unsanitized.Count;
+                     encLength = encrypted.Count + leftover._encrypted.Count;
                 List<Byte> prAlphabet = reKey.PrAlphabet, shifts,
                     exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts;
 
@@ -124,7 +124,7 @@ namespace JabrAPI
                 List<Byte> result = new(encLength / leftover._maxEncodingLength);  // Real message length
 
 
-                encrypted.InsertRange(0, leftover._unsanitized);
+                encrypted.InsertRange(0, leftover._encrypted);
                 for (var chunk = 0; chunk < chunkCount; chunk++)
                 {
                     thisRoundLength =
@@ -166,7 +166,7 @@ namespace JabrAPI
                     }
                 }
 
-                leftover._unsanitized = encrypted[(result.Count * leftover._maxEncodingLength)..];
+                leftover._encrypted = encrypted[(result.Count * leftover._maxEncodingLength)..];
                 return result;
             }
 
@@ -174,9 +174,13 @@ namespace JabrAPI
 
             static public List<Byte> FastWithDeNoising(List<Byte> encrypted, ReKey reKey)
             {
-                List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey.Noisifier);
-                return denoised == null || denoised.Count < 1 ? []
-                    : RE5.DecryptData.Fast(denoised, reKey);
+                List<Byte> denoised = Noise.RemoveFrom.FastData(encrypted, reKey.Noisifier);
+                return denoised == null || denoised.Count < 1 ? [] : RE5.DecryptData.Fast(denoised, reKey);
+            }
+            static public List<Byte> FastWithDeNoising(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover)
+            {
+                List<Byte> denoised = Noise.RemoveFrom.FastData(encrypted, reKey.Noisifier, ref leftover.ignoringIsActive);
+                return denoised == null || denoised.Count < 1 ? [] : RE5.DecryptData.Fast(denoised, reKey, ref leftover);
             }
         }
     }

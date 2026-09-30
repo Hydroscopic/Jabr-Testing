@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 
 
@@ -16,24 +15,21 @@ namespace JabrAPI
         {
             static public List<Byte> FastData(List<Byte> message, Noisifier noisifier)
             {
-                Int32 chunkSize  = (Int32)noisifier.settings.ChunkSize,
-                      chunkCount = (Int32)Math.Ceiling((double)message.Count / chunkSize);
-
-                if (chunkSize < 1)
-                    throw new ArgumentException
-                    (
-                        $"Impossible to split data into chunks of size: {chunkSize}",
-                        nameof(noisifier.settings)
-                    );
-
-                Byte[][] finalisedChunks = new Byte[chunkCount][];
                 bool ignoringIsActive = false;
+                return FastData(message, noisifier, ref ignoringIsActive);
+            }
+            static public List<Byte> FastData(List<Byte> message, Noisifier noisifier, ref bool ignoringIsActive)
+            {
+                Int32 chunkSize  = (Int32)noisifier.settings.ChunkSize, usedPtr = 0, resultLength,
+                      chunkCount = (Int32)Math.Ceiling((double)message.Count / chunkSize);
+                chunkSize = chunkSize < 1 ? 1 : chunkSize;
+
+                Byte[] finalised = new Byte[message.Count];
                 List<Byte> primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
 
                 for (var chunk = 0; chunk < chunkCount; chunk++)
                 {
-                    finalisedChunks[chunk] =
-                        RemovalRound
+                    Byte[] denoised = RemovalRound
                         (
                             message.GetRange
                             (
@@ -48,9 +44,16 @@ namespace JabrAPI
                             primary,
                             complex
                         );
+
+                    resultLength = denoised.Length;
+                    if (resultLength > 0)
+                    {
+                        Array.Copy(denoised, 0, finalised, usedPtr, resultLength);
+                        usedPtr += resultLength;
+                    }
                 }
 
-                return [.. finalisedChunks.SelectMany(c => c)];
+                return [.. finalised[0..usedPtr]];
             }
 
 

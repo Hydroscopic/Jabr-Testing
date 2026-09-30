@@ -26,6 +26,20 @@ namespace JabrAPI
                 }
                 return [];
             }
+            static public List<Byte> Data(List<Byte> noised, IReKey reKey, ref bool ignoringIsActive, bool throwExceptions = false)
+            {
+                if (IsMessageAndReKeyAndNoisifierValid(noised, reKey, throwExceptions) &&
+                    reKey.Noisifier.IsValid.ForReKey(reKey, throwExceptions))
+                {
+                    try
+                    {
+                        return Noise.RemoveFrom.FastData(noised, reKey.Noisifier, ref ignoringIsActive);
+                    }
+                    catch { throw; }
+                }
+                return [];
+            }
+            
             static public List<Byte> Data(List<Byte> noised, Noisifier noisifier, bool throwExceptions = false)
             {
                 if (IsMessageAndNoisifierValid(noised, noisifier, throwExceptions))
@@ -33,6 +47,18 @@ namespace JabrAPI
                     try
                     {
                         return Noise.RemoveFrom.FastData(noised, noisifier);
+                    }
+                    catch { throw; }
+                }
+                return [];
+            }
+            static public List<Byte> Data(List<Byte> noised, Noisifier noisifier, ref bool ignoringIsActive, bool throwExceptions = false)
+            {
+                if (IsMessageAndNoisifierValid(noised, noisifier, throwExceptions))
+                {
+                    try
+                    {
+                        return Noise.RemoveFrom.FastData(noised, noisifier, ref ignoringIsActive);
                     }
                     catch { throw; }
                 }
