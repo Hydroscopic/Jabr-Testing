@@ -87,7 +87,7 @@ namespace JabrAPI
 
                 return result;
             }
-            static public List<Byte> Fast(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover)
+            static public List<Byte> Fast(List<Byte> encrypted, ReKey reKey, ref DecryptLeftover leftover)
             {
                 Int32 exLength = reKey.ExLength, shCount = reKey.ShCount,
                      encLength = encrypted.Count + leftover._encrypted.Count;
@@ -177,7 +177,7 @@ namespace JabrAPI
                 List<Byte> denoised = Noise.RemoveFrom.FastData(encrypted, reKey.Noisifier);
                 return denoised == null || denoised.Count < 1 ? [] : RE5.DecryptData.Fast(denoised, reKey);
             }
-            static public List<Byte> FastWithDeNoising(List<Byte> encrypted, ReKey reKey, ref CryptLeftover leftover)
+            static public List<Byte> FastWithDeNoising(List<Byte> encrypted, ReKey reKey, ref DecryptLeftover leftover)
             {
                 List<Byte> denoised = Noise.RemoveFrom.FastData(encrypted, reKey.Noisifier, ref leftover.ignoringIsActive);
                 return denoised == null || denoised.Count < 1 ? [] : RE5.DecryptData.Fast(denoised, reKey, ref leftover);

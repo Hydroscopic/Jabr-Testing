@@ -17,6 +17,42 @@ namespace JabrTestField
     {
         static void Main()
         {
+
+            RE5.ReKey smKey = new();
+            smKey.ReGenerate();
+            DecryptLeftover dl = new();
+            EncryptLeftover el = new();
+
+            List<Byte> c1 = [0, 1, 2, 3, 4];
+            List<Byte> c2 = [5, 6, 7, 8, 9];
+            List<Byte> c3 = [10, 11, 12, 13, 14];
+
+            List<byte> single = [], multi = [];
+
+            single.AddRange(RE5.EncryptData.Fast([.. c1, .. c2, .. c3], smKey));
+
+            multi.AddRange(RE5.EncryptData.Fast(c1, smKey, ref el));
+            multi.AddRange(RE5.EncryptData.Fast(c2, smKey, ref el));
+            multi.AddRange(RE5.EncryptData.Fast(c3, smKey, ref el));
+
+            Write("\n\tS: ");
+            foreach (var b in single) Write(b + "    "[..^b.ToString().Length]);
+            Write("\n\tM: ");
+            foreach (var b in multi)  Write(b + "    "[..^b.ToString().Length]);
+
+            ReadKey();
+
+
+
+
+
+
+
+
+
+
+
+
             RE5.ReKey anian = new(false);
             anian.Set.ExLength(1);
             anian.ReGenerate();
@@ -30,7 +66,7 @@ namespace JabrTestField
             Write("\n\tEncrypted: ");
             for (var j = 0; j < fullyEnc.Count; j++) Write(fullyEnc[j] + " ");
 
-            CryptLeftover leftover = new();
+            DecryptLeftover leftover = new();
 
             List<Byte> decrypt = RE5.DecryptData.WithValidationAndDeNoising(fullyEnc[0..2], anian, ref leftover).result;
             //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");

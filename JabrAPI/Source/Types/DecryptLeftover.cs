@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JabrAPI
 {
-    public class CryptLeftover
+    public class DecryptLeftover
     {
         internal List<Byte> _encrypted = [];
         internal Int32 _decodedId = 0;

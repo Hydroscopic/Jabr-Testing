@@ -22,7 +22,7 @@ namespace JabrAPI
 
 
                 static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message,
-                    ReKey reKey, ref Int32 prevId, bool throwExceptions = false)
+                    ReKey reKey, ref EncryptLeftover prevId, bool throwExceptions = false)
                 {
                     return mode switch
                     {
@@ -40,8 +40,8 @@ namespace JabrAPI
                 }
                 static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
                 {
-                    Int32 prevId = 0;
-                    return Data(mode, message, reKey, ref prevId, throwExceptions);
+                    EncryptLeftover leftover = new();
+                    return Data(mode, message, reKey, ref leftover, throwExceptions);
                 }
 
 
