@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Runtime.InteropServices;
 
 using JabrAPI.Template;
 
@@ -32,21 +32,18 @@ namespace JabrAPI
 
 
 
-            private List<Byte> GenerateRandomAlphabet(Int32 length)
+            private void GenerateRandomAlphabet(Span<byte> alphabet)
             {
-                List<Byte> remainingChoices = [.. DEFAULT.BYTES];
-                List<Byte> resultAlphabet = [];
+                Span<byte> deck = stackalloc byte[256];
+                DEFAULT.BYTES.CopyTo(deck);
 
-                for (var remaining = 0; remaining < length; remaining++)
+                for (var slot = 0; slot < alphabet.Length; slot++)
                 {
-                    Byte maxValueInclusive = (Byte)Math.Min(255, remainingChoices.Count - 1);
-                    var chosen = _random.Next(maxValueInclusive);
-                    var chosenId = _random.Next(resultAlphabet.Count);
-
-                    resultAlphabet.Insert(chosenId, remainingChoices[chosen]);
-                    remainingChoices.RemoveAt(chosen);
+                    Int32 picked = _random.Next(slot, 256);
+                    (deck[slot], deck[picked]) = (deck[picked], deck[slot]);
                 }
-                return resultAlphabet;
+
+                deck[..alphabet.Length].CopyTo(alphabet);
             }
 
 
@@ -61,17 +58,17 @@ namespace JabrAPI
                     );
 
                 _isExportUpToDate = false;
-                _prAlphabet.Clear();
-                _prAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
+
+                CollectionsMarshal.SetCount(_prAlphabet, compactedLength_willBeIncreasedByOne + 1);
+                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_prAlphabet));
             }
             public void ReGeneratePrAlphabet()
             {
                 _isExportUpToDate = false;
-                _prAlphabet.Clear();
+                var length = _densePrMaxLength > 0 ? _densePrMaxLength + 1 : 255;
 
-                _prAlphabet.AddRange(_densePrMaxLength > 0
-                    ? GenerateRandomAlphabet(_densePrMaxLength + 1)
-                    : GenerateRandomAlphabet(255));
+                CollectionsMarshal.SetCount(_prAlphabet, length);
+                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_prAlphabet));
             }
 
             public void ReGenerateExAlphabet(Byte compactedLength_willBeIncreasedByOne = 255)
@@ -85,17 +82,17 @@ namespace JabrAPI
                     );
 
                 _isExportUpToDate = false;
-                _exAlphabet.Clear();
-                _exAlphabet.AddRange(GenerateRandomAlphabet(compactedLength_willBeIncreasedByOne + 1));
+
+                CollectionsMarshal.SetCount(_exAlphabet, compactedLength_willBeIncreasedByOne + 1);
+                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_exAlphabet));
             }
             public void ReGenerateExAlphabet()
             {
                 _isExportUpToDate = false;
-                _exAlphabet.Clear();
+                var length = _denseExMaxLength > 0 ? _denseExMaxLength + 1 : 8;
 
-                _exAlphabet.AddRange(_denseExMaxLength > 0
-                    ? GenerateRandomAlphabet(_denseExMaxLength + 1)
-                    : GenerateRandomAlphabet(8));
+                CollectionsMarshal.SetCount(_exAlphabet, length);
+                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_exAlphabet));
             }
 
 

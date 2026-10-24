@@ -28,12 +28,12 @@ namespace JabrAPI
                         DataDecryptionMode.FAST
                             => (RE5.DecryptData.Fast(encrypted, reKey), true),
                         DataDecryptionMode.WITH_VALIDATION
-                            =>  RE5.DecryptData.WithValidation(encrypted, reKey, throwExceptions),
+                            =>  RE5.DecryptData.Safe(encrypted, reKey, throwExceptions),
 
                         DataDecryptionMode.FAST_WITH_DENOISING
                             => (RE5.DecryptData.FastWithDeNoising(encrypted, reKey), true),
                         DataDecryptionMode.WITH_VALIDATITON_AND_DENOISING
-                            =>  RE5.DecryptData.WithValidationAndDeNoising(encrypted, reKey, throwExceptions),
+                            =>  RE5.DecryptData.SafeWithDeNoising(encrypted, reKey, throwExceptions),
                         _   => ([], false)
                     };
                 }

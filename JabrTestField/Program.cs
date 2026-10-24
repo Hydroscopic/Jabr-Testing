@@ -59,7 +59,7 @@ namespace JabrTestField
 
             List<Byte> test33 = [0, 1, 2, 3, 4, 5, 6];
 
-            List<Byte> fullyEnc = RE5.EncryptData.WithValidationAndNoising(test33, anian, true).result;
+            List<Byte> fullyEnc = RE5.EncryptData.SafeWithNoising(test33, anian, true).result;
 
             Write("\n\tInitial: ");
             for (var j = 0; j < test33.Count; j++) Write(test33[j] + " ");
@@ -68,13 +68,13 @@ namespace JabrTestField
 
             DecryptLeftover leftover = new();
 
-            List<Byte> decrypt = RE5.DecryptData.WithValidationAndDeNoising(fullyEnc[0..2], anian, ref leftover).result;
+            List<Byte> decrypt = RE5.DecryptData.SafeWithDeNoising(fullyEnc[0..2], anian, ref leftover).result;
             //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
 
-            decrypt.AddRange(RE5.DecryptData.WithValidationAndDeNoising(fullyEnc[2..8], anian, ref leftover).result);
+            decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[2..8], anian, ref leftover).result);
             //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
 
-            decrypt.AddRange(RE5.DecryptData.WithValidationAndDeNoising(fullyEnc[8..], anian, ref leftover).result);
+            decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[8..], anian, ref leftover).result);
             //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
 
             Write("\n\tDecrypted: ");
@@ -152,19 +152,24 @@ namespace JabrTestField
 
 
             Int32 maxNonEntropy = 0;
-            for (var i = 0; i < 1_0; i++)
+            for (var i = 0; i < 1_000000; i++)
             {
-                Write("\n\tAttempt: " + ++attemptCount);
-                List<Byte> bincrypted = RE5.EncryptData.WithValidation(lolinit, binKey, true).result;
+                Write("\n\n\tExAlphabet: ");
+                foreach (var b in binKey.PrAlphabet) Write(b + " ");
+                //if (binKey.PrAlphabet[0] == 255) ReadLine();
+
+
+                Write("\n\n\n\tAttempt: " + ++attemptCount);
+                List<Byte> bincrypted = RE5.EncryptData.Safe(lolinit, binKey, true).result;
 
                 Write("\n\tInitial: ");
                 for (var j = 0; j < lolinit.Count; j++)
                     Write(lolinit[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                List<Byte> binoised = JabrAPI.Noise.AddTo.Data(bincrypted, binKey, true);
-                List<Byte> bindenoised = JabrAPI.Noise.RemoveFrom.Data(binoised, binKey, true);
-                List<Byte> bindecrypted = RE5.DecryptData.WithValidation(bindenoised, binKey, true).result;
+                List<Byte> binoised     = Noise.AddTo.Data(bincrypted, binKey, true);
+                List<Byte> bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
+                List<Byte> bindecrypted = RE5.DecryptData.Safe(bindenoised, binKey, true).result;
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
