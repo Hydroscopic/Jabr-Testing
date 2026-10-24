@@ -12,10 +12,16 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            private readonly List<Byte> _prAlphabet = [];  // primary
-            private readonly List<Byte> _exAlphabet = [];  // external
+            static private readonly Byte DEFAULT_PR_ALPHABET_LENGTH = 255;
+            static private readonly Byte DEFAULT_EX_ALPHABET_LENGTH = 16;
+
+
+            private readonly HT_Alphabet _prAlphabet = new();  // primary
+            private readonly HT_Alphabet _exAlphabet = new();  // external
 
             private Byte _densePrMaxLength = 255, _denseExMaxLength = 32;
+
+
             public ReKeyUtil_IsValid IsValid
             {
                 get => field ??= new ReKeyUtil_IsValid(this);
@@ -29,7 +35,7 @@ namespace JabrAPI
 
 
 
-            public ReKey(List<Byte> primary, List<Byte> external, List<Byte> shifts)
+            public ReKey(Byte[] primary, Byte[] external, List<Byte> shifts)
             {
                 Set!.Sensitive.PrAlphabet(primary);
                 Set!.Sensitive.ExAlphabet(external);

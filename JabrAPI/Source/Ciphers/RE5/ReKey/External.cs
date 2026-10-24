@@ -12,13 +12,13 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            public List<Byte> PrAlphabet => _prAlphabet;
-            public Int32 PrLength => _prAlphabet == null ? -1 : _prAlphabet.Count;
+            internal HT_Alphabet PrAlphabet => _prAlphabet;
+            public Int32 PrLength => _prAlphabet == null ? -1 : _prAlphabet.Length;
 
-            public List<Byte> ExAlphabet => _exAlphabet;
-            public Int32 ExLength => _exAlphabet == null ? -1 : _exAlphabet.Count;
+            internal HT_Alphabet ExAlphabet => _exAlphabet;
+            public Int32 ExLength => _exAlphabet == null ? -1 : _exAlphabet.Length;
 
-            override public List<Byte> FinalAlphabet => _exAlphabet;
+            override internal HT_Alphabet FinalAlphabet => _exAlphabet;
         }
     }
 }

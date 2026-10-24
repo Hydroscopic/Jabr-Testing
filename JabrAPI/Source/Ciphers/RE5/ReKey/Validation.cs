@@ -31,9 +31,11 @@ namespace JabrAPI
 
                     public bool PrAlphabet(bool throwExceptions = false)
                         => PrALphabet(_thisKey.PrAlphabet, throwExceptions);
-                    static public bool PrALphabet(List<Byte> primary, bool throwExceptions = false)
+                    static public bool PrALphabet(HT_Alphabet primary, bool throwExceptions = false)
                     {
-                        if (primary == null || primary.Count < 2 || primary.Count > 256)
+                        Byte[] ww = primary.ExportDirect;  // working with
+
+                        if (ww.Length < 2 || ww.Length > 256)
                         {
                             if (!throwExceptions) return false;
                             throw new ArgumentException
@@ -42,17 +44,17 @@ namespace JabrAPI
                                 nameof(primary)
                             );
                         }
-                        for (var curId = 0; curId < primary.Count; curId++)
+                        for (var curId = 0; curId < ww.Length; curId++)
                         {
-                            for (var id2 = curId + 1; id2 < primary.Count; id2++)
+                            for (var id2 = curId + 1; id2 < ww.Length; id2++)
                             {
-                                if (primary[curId] == primary[id2])
+                                if (ww[curId] == ww[id2])
                                 {
                                     if (!throwExceptions) return false;
                                     throw new ArgumentException
                                     (
                                         $"Primary alphabet contains duplicates characters" +
-                                        $"\nDuplicate byte: {primary[curId]}",
+                                        $"\nDuplicate byte: {ww[curId]}",
                                         nameof(primary)
                                     );
                                 }
@@ -65,9 +67,11 @@ namespace JabrAPI
 
                     public bool ExAlphabet(bool throwExceptions = false)
                         => ExAlphabet(_thisKey.ExAlphabet, throwExceptions);
-                    static public bool ExAlphabet(List<Byte> external, bool throwExceptions = false)
+                    static public bool ExAlphabet(HT_Alphabet external, bool throwExceptions = false)
                     {
-                        if (external == null || external.Count < 2 || external.Count > 256)
+                        Byte[] ww = external.ExportDirect;  // working with
+
+                        if (ww.Length < 2 || ww.Length > 256)
                         {
                             if (!throwExceptions) return false;
                             throw new ArgumentException
@@ -76,17 +80,17 @@ namespace JabrAPI
                                 nameof(external)
                             );
                         }
-                        for (var curId = 0; curId < external.Count; curId++)
+                        for (var curId = 0; curId < ww.Length; curId++)
                         {
-                            for (var id2 = curId + 1; id2 < external.Count; id2++)
+                            for (var id2 = curId + 1; id2 < ww.Length; id2++)
                             {
-                                if (external[curId] == external[id2])
+                                if (ww[curId] == ww[id2])
                                 {
                                     if (!throwExceptions) return false;
                                     throw new ArgumentException
                                     (
                                         "External alphabet contains duplicates characters" +
-                                        $"Duplicate byte: {external[curId]}",
+                                        $"Duplicate byte: {ww[curId]}",
                                         nameof(external)
                                     );
                                 }
@@ -113,13 +117,13 @@ namespace JabrAPI
 
                 public bool PrAlphabet(List<Byte> message, bool throwExceptions = false)
                     => PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
-                static public bool PrAlphabet(List<Byte> message, List<Byte> primary, bool throwExceptions = false)
+                static public bool PrAlphabet(List<Byte> message, HT_Alphabet primary, bool throwExceptions = false)
                 {
                     if (!ReKeyUtil_PartiallyValid.PrALphabet(primary, throwExceptions)) return false;
 
                     foreach (Byte b in message)
                     {
-                        if (!primary.Contains(b))
+                        if (!primary.ExportDirect.Contains(b))
                         {
                             if (!throwExceptions) return false;
                             throw new ArgumentException
@@ -136,13 +140,13 @@ namespace JabrAPI
                 
                 public bool ExAlphabet(List<Byte> encrypted, bool throwExceptions = false)
                     => ExAlphabet(encrypted, _thisKey.ExAlphabet, throwExceptions);
-                static public bool ExAlphabet(List<Byte> encrypted, List<Byte> external, bool throwExceptions = false)
+                static public bool ExAlphabet(List<Byte> encrypted, HT_Alphabet external, bool throwExceptions = false)
                 {
                     if (!ReKeyUtil_PartiallyValid.ExAlphabet(external, throwExceptions)) return false;
 
                     foreach (Byte b in encrypted)
                     {
-                        if (!external.Contains(b))
+                        if (!external.ExportDirect.Contains(b))
                         {
                             if (throwExceptions) return false;
                             throw new ArgumentException

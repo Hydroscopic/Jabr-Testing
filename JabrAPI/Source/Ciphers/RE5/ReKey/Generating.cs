@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using JabrAPI.Template;
 
@@ -20,7 +18,7 @@ namespace JabrAPI
                     ReGenerateExAlphabet();
                     GenerateRandomShifts();
 
-                    _noisifier.Set.Banned(ExAlphabet);
+                    _noisifier.Set.Banned([.. ExAlphabet.ExportDirect]);
                     _noisifier.Next(false);
                     return true;
                 }
@@ -32,74 +30,31 @@ namespace JabrAPI
 
 
 
-            private void GenerateRandomAlphabet(Span<byte> alphabet)
+            public void ReGeneratePrAlphabet(byte compactedLength = 255)
             {
-                Span<byte> deck = stackalloc byte[256];
-                DEFAULT.BYTES.CopyTo(deck);
-
-                for (var slot = 0; slot < alphabet.Length; slot++)
-                {
-                    Int32 picked = _random.Next(slot, 256);
-                    (deck[slot], deck[picked]) = (deck[picked], deck[slot]);
-                }
-
-                deck[..alphabet.Length].CopyTo(alphabet);
-            }
-
-
-            public void ReGeneratePrAlphabet(Byte compactedLength_willBeIncreasedByOne = 255)
-            {
-                if (compactedLength_willBeIncreasedByOne < 1)
-                    throw new ArgumentOutOfRangeException
-                    (
-                        "Provided PrimaryAlphabet length must be in 1-255 range" +
-                        "\nIt will later be converted from a 1-255 range to a 2-256",
-                        nameof(compactedLength_willBeIncreasedByOne)
-                    );
-
+                ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
-
-                CollectionsMarshal.SetCount(_prAlphabet, compactedLength_willBeIncreasedByOne + 1);
-                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_prAlphabet));
+                _prAlphabet.Regenerate(compactedLength, _random);
             }
+
             public void ReGeneratePrAlphabet()
-            {
-                _isExportUpToDate = false;
-                var length = _densePrMaxLength > 0 ? _densePrMaxLength + 1 : 255;
+                => ReGeneratePrAlphabet(_densePrMaxLength > 0 ? _densePrMaxLength : DEFAULT_PR_ALPHABET_LENGTH);
 
-                CollectionsMarshal.SetCount(_prAlphabet, length);
-                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_prAlphabet));
+            public void ReGenerateExAlphabet(byte compactedLength = 255)
+            {
+                ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
+                _isExportUpToDate = false;
+                _exAlphabet.Regenerate(compactedLength, _random);
             }
 
-            public void ReGenerateExAlphabet(Byte compactedLength_willBeIncreasedByOne = 255)
-            {
-                if (compactedLength_willBeIncreasedByOne < 1)
-                    throw new ArgumentOutOfRangeException
-                    (
-                        "Provided PrimaryAlphabet length must be in 1-255 range" +
-                        "\nIt will later be converted from a 1-255 range to a 2-256",
-                        nameof(compactedLength_willBeIncreasedByOne)
-                    );
-
-                _isExportUpToDate = false;
-
-                CollectionsMarshal.SetCount(_exAlphabet, compactedLength_willBeIncreasedByOne + 1);
-                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_exAlphabet));
-            }
             public void ReGenerateExAlphabet()
-            {
-                _isExportUpToDate = false;
-                var length = _denseExMaxLength > 0 ? _denseExMaxLength + 1 : 8;
-
-                CollectionsMarshal.SetCount(_exAlphabet, length);
-                GenerateRandomAlphabet(CollectionsMarshal.AsSpan(_exAlphabet));
-            }
+                => ReGenerateExAlphabet(_denseExMaxLength > 0 ? _denseExMaxLength : DEFAULT_EX_ALPHABET_LENGTH);
 
 
 
             public void GenerateRandomShifts(Int32 count)
             {
-                if (_exAlphabet == null || _exAlphabet.Count < 2)
+                if (_exAlphabet == null || _exAlphabet.Length < 2)
                 {
                     throw new ArgumentException
                     (
@@ -109,7 +64,7 @@ namespace JabrAPI
                 }
 
                 _isExportUpToDate = false;
-                GenerateRandomShifts(count, 0, (Byte)(_exAlphabet.Count - 1));
+                GenerateRandomShifts(count, 0, (Byte)(_exAlphabet.Length - 1));
             }
             public void GenerateRandomShifts() => GenerateRandomShifts(_targetShCount);
         }

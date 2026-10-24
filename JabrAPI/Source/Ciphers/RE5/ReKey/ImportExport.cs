@@ -119,8 +119,7 @@ namespace JabrAPI
                         return false;
                     }
 
-                    _prAlphabet.Clear();
-                    _prAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 5)..(parsedShiftCount + 5 + parsedLengthGuide)]);
+                    _prAlphabet.CopyFrom(onlyReKeyData[(parsedShiftCount + 5)..(parsedShiftCount + 5 + parsedLengthGuide)]);
 
 
                     //  reusing parsedShiftCount as a offset for what we have already read
@@ -153,8 +152,7 @@ namespace JabrAPI
                         return false;
                     }
 
-                    _exAlphabet.Clear();
-                    _exAlphabet.AddRange(onlyReKeyData[(parsedShiftCount + 2)..(parsedShiftCount + 2 + parsedLengthGuide)]);
+                    _exAlphabet.CopyFrom(onlyReKeyData[(parsedShiftCount + 2)..(parsedShiftCount + 2 + parsedLengthGuide)]);
                 }
                 catch (Exception)
                 {
@@ -181,9 +179,9 @@ namespace JabrAPI
                     .. _shifts,
 
                     (Byte)(PrLength - 1),
-                    .. _prAlphabet,
+                    .. _prAlphabet.ExportDirect,
                     (Byte)(ExLength - 1),
-                    .. _exAlphabet
+                    .. _exAlphabet.ExportDirect
                 ];
             }
         }

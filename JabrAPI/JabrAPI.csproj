@@ -9,7 +9,7 @@
     <PublishAot>False</PublishAot>
     <SignAssembly>True</SignAssembly>
     <Title>JabrAPI</Title>
-    <Version>5.6.9</Version>
+    <Version>5.7-alpha</Version>
     <Authors>Gyroscopic</Authors>
     <Description>Cryptography API for RE ciphers from the Jabr family</Description>
     <PackageProjectUrl>https://github.com/Gyroscopic-why/Jabr</PackageProjectUrl>
@@ -18,14 +18,6 @@
     <PackageTags>jabr;jabrapi;cryptography;ciphers;encryptor;encryption;decryption;re;re5;re4;noise;noisification;noisify;denoisify;noised</PackageTags>
     <DelaySign>False</DelaySign>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Source\Types\HT_Alphabet.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Source\Types\HT_Alphabet.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="AVcontrol">

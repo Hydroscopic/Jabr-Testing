@@ -35,32 +35,28 @@ namespace JabrAPI
 
 
 
-                    public void PrAlphabet(List<Byte> prAlphabet)
+                    public void PrAlphabet(Byte[] prAlphabet)
                     {
-                        _thisKey._prAlphabet.Clear();
-                        _thisKey._prAlphabet.AddRange(prAlphabet);
+                        _thisKey._prAlphabet.CopyFrom(prAlphabet);
                         _thisKey._isExportUpToDate = false;
                     }
-                    public bool SafePrAlphabet(List<Byte> prAlphabet)
+                    public bool SafePrAlphabet(Byte[] prAlphabet)
                     {
-                        if (!_thisKey.IsValid.PrAlphabet(prAlphabet)) return false;
-                        _thisKey._prAlphabet.Clear();
-                        _thisKey._prAlphabet.AddRange(prAlphabet);
+                        if (!_thisKey.IsValid.Partially.PrAlphabet()) return false;
+                        _thisKey._prAlphabet.CopyFrom(prAlphabet);
                         _thisKey._isExportUpToDate = false;
                         return true;
                     }
 
-                    public void ExAlphabet(List<Byte> exAlphabet)
+                    public void ExAlphabet(Byte[] exAlphabet)
                     {
-                        _thisKey._exAlphabet.Clear();
-                        _thisKey._exAlphabet.AddRange(exAlphabet);
+                        _thisKey._exAlphabet.CopyFrom(exAlphabet);
                         _thisKey._isExportUpToDate = false;
                     }
-                    public bool SafeExAlphabet(List<Byte> exAlphabet)
+                    public bool SafeExAlphabet(Byte[] exAlphabet)
                     {
-                        if (!_thisKey.IsValid.ExAlphabet(exAlphabet)) return false;
-                        _thisKey._exAlphabet.Clear();
-                        _thisKey._exAlphabet.AddRange(exAlphabet);
+                        if (!_thisKey.IsValid.ExAlphabet([.. exAlphabet])) return false;
+                        _thisKey._exAlphabet.CopyFrom(exAlphabet);
                         _thisKey._isExportUpToDate = false;
                         return true;
                     }

@@ -16,7 +16,8 @@ namespace JabrAPI
             static public List<Byte> Fast(List<Byte> encrypted, ReKey reKey)
             {
                 Int32 exLength = reKey.ExLength, shCount = reKey.ShCount, encLength = encrypted.Count;
-                List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+                Byte[] prLogicMap = reKey.PrAlphabet.ExportDirect, exLogicMap = reKey.ExAlphabet;
+                List<Byte> allShifts = reKey.Shifts, shifts;
 
 
                 Int32 helper = (Int32)Math.Ceiling

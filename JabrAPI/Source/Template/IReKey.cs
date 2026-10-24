@@ -28,7 +28,7 @@ namespace JabrAPI.Template
         public List<Byte> Shifts => _shifts;
         public Int32 ShCount => _shifts == null ? -1 : _shifts.Count;
 
-        abstract public List<Byte> FinalAlphabet { get; }
+        abstract internal HT_Alphabet FinalAlphabet { get; }
 
         public void UpdateRandomReseedInterval(UInt64 afterGeneratedBytes = 128)
             => _random.UpdateReseedInterval(afterGeneratedBytes);

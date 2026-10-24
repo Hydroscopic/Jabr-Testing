@@ -27,16 +27,13 @@ namespace JabrAPI
             }
 
 
-            private void CopyFrom(List<Byte> primary, List<Byte> external, List<Byte> shifts)
+            private void CopyFrom(HT_Alphabet primary, HT_Alphabet external, List<Byte> shifts)
             {
-                _prAlphabet.Clear();
-                _prAlphabet.AddRange(primary);
-
-                _exAlphabet.Clear();
-                _exAlphabet.AddRange(external);
+                _prAlphabet.CopyFrom(primary);
+                _exAlphabet.CopyFrom(external);
 
                 _shifts.Clear();
-                if (shifts == null || shifts.Count == 0) _shifts.Add(0);
+                if (shifts.Count == 0) _shifts.Add(0);
                 else _shifts.AddRange(shifts.GetRange(0, Math.Max(shifts.Count, 255)));
             }
         }
