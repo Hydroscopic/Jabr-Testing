@@ -15,7 +15,7 @@ namespace JabrAPI
         {
             static public List<Byte> Fast(List<Byte> message, ReKey reKey, ref EncryptLeftover leftover)
             {
-                List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+                List<Byte> prAlphabet = [.. reKey.PrAlphabet.ExportDirect], exAlphabet = [.. reKey.ExAlphabet.ExportDirect], allShifts = reKey.Shifts, shifts;
                 Int32 exLength = reKey.ExLength, messageLength = message.Count, shCount = reKey.ShCount;
 
 

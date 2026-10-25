@@ -21,14 +21,14 @@ namespace JabrAPI
 
 
 
-                static public (List<Byte> result, bool didSucceed) Data(DataDecryptionMode mode, List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+                static public (Byte[] result, bool didSucceed) Data(DataDecryptionMode mode, List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
                 {
                     return mode switch
                     {
                         DataDecryptionMode.FAST
-                            => (RE5.DecryptData.Fast(encrypted, reKey), true),
+                            => (RE5.DecryptData.Fast([.. encrypted], reKey), true),
                         DataDecryptionMode.WITH_VALIDATION
-                            =>  RE5.DecryptData.Safe(encrypted, reKey, throwExceptions),
+                            =>  RE5.DecryptData.Safe([.. encrypted], reKey, throwExceptions),
 
                         DataDecryptionMode.FAST_WITH_DENOISING
                             => (RE5.DecryptData.FastWithDeNoising(encrypted, reKey), true),

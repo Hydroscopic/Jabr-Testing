@@ -12,53 +12,47 @@ namespace JabrAPI
     {
         static internal partial class Internal
         {
-            static internal List<Byte> DecryptionRound(
-                List<Byte> encryptedChunk,
-                List<Byte> prAlphabet, List<Byte> exAlphabet,
-                List<Byte> shifts,
-                Int32 exLength,
-                Int32 maxEncodingLength,
-                Int32 realMessageLength,
-                ref Int32 decodedId)
+            static internal Byte[] DecryptionRound(Byte[] encrypted,
+                Byte[] prLogicMap, Byte[] exLogicMap, Byte[] allShifts,
+                Int32 exLength, Int32 maxEncodingLength, Int32 realMessageLength)
             {
-                Int32 shCount = shifts.Count, encCurId = 0;
-                Int32 parsedEncoding = (Int32)Numsys.ToDecimalFromCustom128
-                (
-                    encryptedChunk[1..maxEncodingLength],
-                    exAlphabet,
-                    exLength
-                );
+                Int32 shCount = allShifts.Length, shIdx = 0, encCurId = 0, decodedId;
 
+                Int32 parsedEncoding = (Int32)Numsys.FastToDecimalFromCustom128
+                    (
+                        encrypted.AsSpan()[1..maxEncodingLength],
+                        exLogicMap,
+                        exLength
+                    );
 
-                decodedId = exAlphabet.IndexOf(encryptedChunk[0])
-                    - decodedId
-                    - shifts[0]
-                    + parsedEncoding * exLength;
+                decodedId = exLogicMap[encrypted[0]]
+                          - allShifts[0]
+                          + parsedEncoding * exLength;
 
-
-                List<Byte> decrypted = new(realMessageLength);
-                decrypted.AddRange(prAlphabet[decodedId]);
-
+                Byte[] result = new Byte[realMessageLength];
+                result[0] = prLogicMap[decodedId];
 
                 for (var curId = 1; curId < realMessageLength; curId++)
                 {
                     encCurId += maxEncodingLength;
-                    decodedId = exAlphabet.IndexOf(encryptedChunk[encCurId])
-                        - decodedId
-                        - shifts[curId % shCount];
+                    if (++shIdx == shCount) shIdx = 0;
 
-                    parsedEncoding = (Int32)Numsys.ToDecimalFromCustom128
+                    decodedId = exLogicMap[encrypted[encCurId]]
+                              - decodedId
+                              - allShifts[shIdx];
+
+                    parsedEncoding = (Int32)Numsys.FastToDecimalFromCustom128
                     (
-                        encryptedChunk[(encCurId + 1)..(encCurId + maxEncodingLength)],
-                        exAlphabet,
+                        encrypted.AsSpan()[(encCurId + 1)..(encCurId + maxEncodingLength)],
+                        exLogicMap,
                         exLength
                     );
 
                     decodedId += parsedEncoding * exLength;
-                    decrypted.AddRange(prAlphabet[decodedId]);
+                    result[curId] = prLogicMap[decodedId];
                 }
 
-                return decrypted;
+                return result;
             }
 
 

@@ -17,83 +17,84 @@ namespace JabrAPI
             static public string Fast(string absoluteInputDirectory, string fileName,
                     string absoluteOutputDirectory, ReKey reKey)
             {
-                Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
-                List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+                //Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
+                //List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
 
 
-                Int32 helper = (Int32)Math.Ceiling
-                    (
-                        (double)
-                        (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
-                            reKey.PrLength * 2 + allShifts.Max() - 4
-                        ) / exLength
-                    );
-                Int32 maxEncodingLength = exLength == 10 ?
-                    Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
-                  : Numsys.AsListBigInteger<Int32>
-                    (
-                        helper.ToString(),
-                        10,
-                        exLength
-                    ).Count;
+                //Int32 helper = (Int32)Math.Ceiling
+                //    (
+                //        (double)
+                //        (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
+                //            reKey.PrLength * 2 + allShifts.Max() - 4
+                //        ) / exLength
+                //    );
+                //Int32 maxEncodingLength = exLength == 10 ?
+                //    Utils.DigitCount(helper) + 1  // Optimisation for base 10 encoding
+                //  : Numsys.AsListBigInteger<Int32>
+                //    (
+                //        helper.ToString(),
+                //        10,
+                //        exLength
+                //    ).Count;
 
-                helper = (Int32)reKey.ChunkSize;
-                Int32 chunkSize = maxEncodingLength == 0 || helper < maxEncodingLength ? ++maxEncodingLength
-                      : (helper / maxEncodingLength) * ++maxEncodingLength;
-                //  ++1 is to account for EncodingLength and the character it belongs to
+                //helper = (Int32)reKey.ChunkSize;
+                //Int32 chunkSize = maxEncodingLength == 0 || helper < maxEncodingLength ? ++maxEncodingLength
+                //      : (helper / maxEncodingLength) * ++maxEncodingLength;
+                ////  ++1 is to account for EncodingLength and the character it belongs to
 
-                string finalFileName;
-                if (!reKey.KeepOriginalFileExtension)
-                {
-                    finalFileName = Path.ChangeExtension(fileName, "dec-re5");
-                    for (var i = 1; System.IO.File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
-                        finalFileName = Path.ChangeExtension(fileName, $"dec{i}-re5");
-                }
-                else finalFileName = Path.ChangeExtension(fileName, null);
+                //string finalFileName;
+                //if (!reKey.KeepOriginalFileExtension)
+                //{
+                //    finalFileName = Path.ChangeExtension(fileName, "dec-re5");
+                //    for (var i = 1; System.IO.File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
+                //        finalFileName = Path.ChangeExtension(fileName, $"dec{i}-re5");
+                //}
+                //else finalFileName = Path.ChangeExtension(fileName, null);
 
-                using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory,  fileName),      FileMode.Open, FileAccess.Read);
-                using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
+                //using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory,  fileName),      FileMode.Open, FileAccess.Read);
+                //using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
 
-                using BinaryReader reader = new(inputStream);
-                using BinaryWriter writer = new(outputStream);
-
-
-                Byte[] messageChunk = new Byte[chunkSize];
-                Int32 offset = 0, decodedId = 0, shiftStartId = 0;
-                Int32 realMessageLength, shDelta, bytesRead;
-
-                while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
-                {
-                    realMessageLength = bytesRead / maxEncodingLength;
-                    shDelta = shiftStartId + realMessageLength;
-
-                    shifts = shDelta > shCount ?
-                        [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
-                         .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
-                          : allShifts.GetRange(shiftStartId, realMessageLength);
-                    shiftStartId = shDelta % shCount;
+                //using BinaryReader reader = new(inputStream);
+                //using BinaryWriter writer = new(outputStream);
 
 
-                    writer.Write
-                    (
-                        [..
-                            Internal.DecryptionRound
-                            (
-                                new List<Byte>(messageChunk).GetRange(0, bytesRead),
-                                prAlphabet,
-                                exAlphabet,
-                                shifts,
-                                exLength,
-                                maxEncodingLength,
-                                realMessageLength,
-                                ref decodedId
-                            )
-                        ]
-                    );
+                //Byte[] messageChunk = new Byte[chunkSize];
+                //Int32 offset = 0, decodedId = 0, shiftStartId = 0;
+                //Int32 realMessageLength, shDelta, bytesRead;
 
-                    offset += bytesRead;
-                }
-                return finalFileName;
+                //while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
+                //{
+                //    realMessageLength = bytesRead / maxEncodingLength;
+                //    shDelta = shiftStartId + realMessageLength;
+
+                //    shifts = shDelta > shCount ?
+                //        [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
+                //         .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
+                //          : allShifts.GetRange(shiftStartId, realMessageLength);
+                //    shiftStartId = shDelta % shCount;
+
+
+                //    writer.Write
+                //    (
+                //        [..
+                //            Internal.DecryptionRound
+                //            (
+                //                new List<Byte>(messageChunk).GetRange(0, bytesRead),
+                //                prAlphabet,
+                //                exAlphabet,
+                //                shifts,
+                //                exLength,
+                //                maxEncodingLength,
+                //                realMessageLength,
+                //                ref decodedId
+                //            )
+                //        ]
+                //    );
+
+                //    offset += bytesRead;
+                //}
+                //return finalFileName;
+                return "";
             }
 
 

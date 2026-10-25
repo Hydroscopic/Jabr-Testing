@@ -17,79 +17,80 @@ namespace JabrAPI
             static public string Fast(string absoluteInputDirectory, string fileName,
                 string absoluteOutputDirectory, ReKey reKey, ref Int32 prevId)
             {
-                List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
-                Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
+                //List<Byte> prAlphabet = reKey.PrAlphabet, exAlphabet = reKey.ExAlphabet, allShifts = reKey.Shifts, shifts;
+                //Int32 exLength = reKey.ExLength, shCount = reKey.ShCount;
 
 
-                Int32 helper = (Int32)Math.Ceiling
-                    (
-                        (double)
-                        (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
-                            reKey.PrLength * 2 + reKey.Shifts.Max() - 4
-                        ) / exLength
-                    );
-                Int32 encodingLength = exLength == 10 ?
-                    Utils.DigitCount(helper)  //  Optimisation for base 10 encoding
-                  : Numsys.AsListBigInteger<Int32>
-                    (
-                        helper.ToString(),
-                        10,
-                        exLength
-                    ).Count;
+                //Int32 helper = (Int32)Math.Ceiling
+                //    (
+                //        (double)
+                //        (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
+                //            reKey.PrLength * 2 + reKey.Shifts.Max() - 4
+                //        ) / exLength
+                //    );
+                //Int32 encodingLength = exLength == 10 ?
+                //    Utils.DigitCount(helper)  //  Optimisation for base 10 encoding
+                //  : Numsys.AsListBigInteger<Int32>
+                //    (
+                //        helper.ToString(),
+                //        10,
+                //        exLength
+                //    ).Count;
 
-                helper = (Int32)reKey.ChunkSize;
-                Int32 chunkSize = encodingLength == 0 || helper < encodingLength ? encodingLength
-                      : (helper / encodingLength) * (encodingLength + 1);
-
-
-                string finalFileName;
-                if (!reKey.KeepOriginalFileExtension)
-                {
-                    finalFileName = Path.ChangeExtension(fileName, "enc-re5");
-                    for (var i = 1; System.IO.File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
-                        finalFileName = Path.ChangeExtension(fileName, $"enc{i}-re5");
-                }
-                else finalFileName = fileName + ".re5";
-
-                using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory,  fileName),      FileMode.Open,   FileAccess.Read);
-                using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
-
-                using BinaryReader reader = new(inputStream);
-                using BinaryWriter writer = new(outputStream);
+                //helper = (Int32)reKey.ChunkSize;
+                //Int32 chunkSize = encodingLength == 0 || helper < encodingLength ? encodingLength
+                //      : (helper / encodingLength) * (encodingLength + 1);
 
 
-                Byte[] messageChunk = new Byte[chunkSize];
-                Int32 offset = 0, shiftStartId = 0, shDelta, bytesRead;
+                //string finalFileName;
+                //if (!reKey.KeepOriginalFileExtension)
+                //{
+                //    finalFileName = Path.ChangeExtension(fileName, "enc-re5");
+                //    for (var i = 1; System.IO.File.Exists(Path.Combine(absoluteOutputDirectory, finalFileName)); i++)
+                //        finalFileName = Path.ChangeExtension(fileName, $"enc{i}-re5");
+                //}
+                //else finalFileName = fileName + ".re5";
 
-                while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
-                {
-                    shDelta = shiftStartId + bytesRead;
+                //using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory,  fileName),      FileMode.Open,   FileAccess.Read);
+                //using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
 
-                    shifts = shDelta > shCount ?
-                        [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
-                         .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
-                          : allShifts.GetRange(shiftStartId, bytesRead);
-                    shiftStartId = shDelta % shCount;
+                //using BinaryReader reader = new(inputStream);
+                //using BinaryWriter writer = new(outputStream);
 
-                    writer.Write
-                    (
-                        [..
-                            Internal.EncryptionRound
-                            (
-                                new List<Byte>(messageChunk).GetRange(0, bytesRead),
-                                prAlphabet,
-                                exAlphabet,
-                                shifts,
-                                exLength,
-                                encodingLength,
-                                ref prevId
-                            )
-                        ]
-                    );
 
-                    offset += bytesRead;
-                }
-                return finalFileName;
+                //Byte[] messageChunk = new Byte[chunkSize];
+                //Int32 offset = 0, shiftStartId = 0, shDelta, bytesRead;
+
+                //while ((bytesRead = reader.Read(messageChunk, 0, chunkSize)) > 0)
+                //{
+                //    shDelta = shiftStartId + bytesRead;
+
+                //    shifts = shDelta > shCount ?
+                //        [.. allShifts.GetRange(shiftStartId, shCount - shiftStartId),
+                //         .. allShifts.GetRange(0, Math.Min(shiftStartId, shDelta - shCount))]
+                //          : allShifts.GetRange(shiftStartId, bytesRead);
+                //    shiftStartId = shDelta % shCount;
+
+                //    writer.Write
+                //    (
+                //        [..
+                //            Internal.EncryptionRound
+                //            (
+                //                new List<Byte>(messageChunk).GetRange(0, bytesRead),
+                //                prAlphabet,
+                //                exAlphabet,
+                //                shifts,
+                //                exLength,
+                //                encodingLength,
+                //                ref prevId
+                //            )
+                //        ]
+                //    );
+
+                //    offset += bytesRead;
+                //}
+                //return finalFileName;
+                return "";
             }
             static public string Fast(string absoluteInputDirectory, string fileName,
                 string absoluteOutputDirectory, ReKey reKey)

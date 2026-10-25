@@ -12,41 +12,35 @@ namespace JabrAPI
         private Byte[] _reverseAlphabet = [];
 
 
-
         public Int32 Length => _directAlphabet.Length;
 
-        public Byte Direct (Byte id) => _directAlphabet[id];
-        public Byte Reverse(Byte id) => _reverseAlphabet[id];
 
         public Byte[] ExportDirect  => _directAlphabet;
         public Byte[] ExportReverse => _reverseAlphabet;
 
 
 
-        public void Regenerate(Int32 decompressedLength, SecureRandom random)
+        public void Regenerate(Int32 length, SecureRandom random)
         {
-            _directAlphabet  = new Byte[decompressedLength];
-            _reverseAlphabet = new Byte[decompressedLength];
+            _directAlphabet  = new Byte[length];
+            _reverseAlphabet = new Byte[256];
             
             Span<Byte> deck = stackalloc Byte[256];
             DEFAULT.BYTES.CopyTo(deck);
 
-            var direct  = _directAlphabet;
-            var reverse = _reverseAlphabet;
-
-            for (var slot = 0; slot < decompressedLength; slot++)
+            for (var slot = 0; slot < length; slot++)
             {
                 Int32 picked = random.Next(slot, 256);
                 (deck[slot], deck[picked]) = (deck[picked], deck[slot]);
 
                 Byte value = deck[slot];
-                direct [slot]  = value;
-                reverse[value] = (Byte)slot;
+                _directAlphabet [slot] = value;
+                _reverseAlphabet[value] = (Byte)slot;
             }
         }
 
 
-        public void CopyFrom(ReadOnlySpan<Byte> compressed)
+        public void CopyFrom(Byte[] compressed)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(compressed.Length, 2);
             ArgumentOutOfRangeException.ThrowIfGreaterThan(compressed.Length, 256);

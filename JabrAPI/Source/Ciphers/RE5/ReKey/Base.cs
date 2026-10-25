@@ -13,13 +13,18 @@ namespace JabrAPI
         public partial class ReKey : IReKey
         {
             static private readonly Byte DEFAULT_PR_ALPHABET_LENGTH = 255;
-            static private readonly Byte DEFAULT_EX_ALPHABET_LENGTH = 16;
+            static private readonly Byte DEFAULT_EX_ALPHABET_LENGTH = 15;
 
 
-            private readonly HT_Alphabet _prAlphabet = new();  // primary
-            private readonly HT_Alphabet _exAlphabet = new();  // external
+            public readonly HT_Alphabet PrAlphabet = new();
+            public readonly HT_Alphabet ExAlphabet = new();
+            override internal HT_Alphabet FinalAlphabet => ExAlphabet;
+
+            public Int32 PrLength => PrAlphabet == null ? -1 : PrAlphabet.Length;
+            public Int32 ExLength => ExAlphabet == null ? -1 : ExAlphabet.Length;
 
             private Byte _densePrMaxLength = 255, _denseExMaxLength = 32;
+
 
 
             public ReKeyUtil_IsValid IsValid

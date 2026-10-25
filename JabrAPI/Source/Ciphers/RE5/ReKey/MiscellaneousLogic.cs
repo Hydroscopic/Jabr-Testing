@@ -29,8 +29,8 @@ namespace JabrAPI
 
             private void CopyFrom(HT_Alphabet primary, HT_Alphabet external, List<Byte> shifts)
             {
-                _prAlphabet.CopyFrom(primary);
-                _exAlphabet.CopyFrom(external);
+                PrAlphabet.CopyFrom(primary);
+                ExAlphabet.CopyFrom(external);
 
                 _shifts.Clear();
                 if (shifts.Count == 0) _shifts.Add(0);

@@ -39,7 +39,7 @@ namespace JabrAPI
 
 
             static public bool PrimaryForReKey(IReKey reKey, List<Byte> primaryNoise, out Exception? exception)
-                => PrimaryForReKey(reKey.FinalAlphabet, primaryNoise, out exception);
+                => PrimaryForReKey([.. reKey.FinalAlphabet.ExportDirect], primaryNoise, out exception);
             static public bool PrimaryForReKey(List<Byte> exAlphabet, List<Byte> primaryNoise, out Exception? exception)
             {
                 return IsNoiseValid
@@ -71,7 +71,7 @@ namespace JabrAPI
 
 
             public bool PrimaryForReKey(IReKey reKey, out Exception? exception)
-                => PrimaryForReKey(reKey.FinalAlphabet, _noisifier._primaryNoise, out exception);
+                => PrimaryForReKey([.. reKey.FinalAlphabet.ExportDirect], _noisifier._primaryNoise, out exception);
             public bool PrimaryForReKey(List<Byte> exAlphabet, out Exception? exception)
                 => PrimaryForReKey(exAlphabet, _noisifier._primaryNoise, out exception);
             public bool PrimaryForMessage(List<Byte>  message, out Exception? exception)
@@ -80,7 +80,7 @@ namespace JabrAPI
 
 
             static public bool ComplexForReKey(IReKey reKey, List<Byte> complexNoise, out Exception? exception)
-                => ComplexForReKey(reKey.FinalAlphabet, complexNoise, out exception);
+                => ComplexForReKey([.. reKey.FinalAlphabet.ExportDirect], complexNoise, out exception);
             static public bool ComplexForReKey(List<Byte> exAlphabet, List<Byte> complexNoise, out Exception? exception)
             {
                 return IsNoiseValid
@@ -111,7 +111,7 @@ namespace JabrAPI
             }
 
             public bool ComplexForReKey(IReKey reKey, out Exception? exception)
-                => ComplexForReKey(reKey.FinalAlphabet, _noisifier._complexNoise, out exception);
+                => ComplexForReKey([.. reKey.FinalAlphabet.ExportDirect], _noisifier._complexNoise, out exception);
             public bool ComplexForReKey(List<Byte> exAlphabet, out Exception? exception)
                 => ComplexForReKey(exAlphabet, _noisifier._complexNoise, out exception);
             public bool ComplexForMessage(List<Byte>  message, out Exception? exception)

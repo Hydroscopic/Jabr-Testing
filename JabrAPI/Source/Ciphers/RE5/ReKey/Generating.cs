@@ -34,7 +34,7 @@ namespace JabrAPI
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
-                _prAlphabet.Regenerate(compactedLength, _random);
+                PrAlphabet.Regenerate(compactedLength + 1, _random);
             }
 
             public void ReGeneratePrAlphabet()
@@ -44,7 +44,7 @@ namespace JabrAPI
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
-                _exAlphabet.Regenerate(compactedLength, _random);
+                ExAlphabet.Regenerate(compactedLength + 1, _random);
             }
 
             public void ReGenerateExAlphabet()
@@ -54,17 +54,17 @@ namespace JabrAPI
 
             public void GenerateRandomShifts(Int32 count)
             {
-                if (_exAlphabet == null || _exAlphabet.Length < 2)
+                if (ExAlphabet == null || ExAlphabet.Length < 2)
                 {
                     throw new ArgumentException
                     (
                         "Unable to generate shifts, external alphabet is undefined",
-                        nameof(_exAlphabet)
+                        nameof(ExAlphabet)
                     );
                 }
 
                 _isExportUpToDate = false;
-                GenerateRandomShifts(count, 0, (Byte)(_exAlphabet.Length - 1));
+                GenerateRandomShifts(count, 0, (Byte)(ExAlphabet.Length - 1));
             }
             public void GenerateRandomShifts() => GenerateRandomShifts(_targetShCount);
         }

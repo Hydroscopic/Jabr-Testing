@@ -37,26 +37,26 @@ namespace JabrAPI
 
                     public void PrAlphabet(Byte[] prAlphabet)
                     {
-                        _thisKey._prAlphabet.CopyFrom(prAlphabet);
+                        _thisKey.PrAlphabet.CopyFrom(prAlphabet);
                         _thisKey._isExportUpToDate = false;
                     }
                     public bool SafePrAlphabet(Byte[] prAlphabet)
                     {
                         if (!_thisKey.IsValid.Partially.PrAlphabet()) return false;
-                        _thisKey._prAlphabet.CopyFrom(prAlphabet);
+                        _thisKey.PrAlphabet.CopyFrom(prAlphabet);
                         _thisKey._isExportUpToDate = false;
                         return true;
                     }
 
                     public void ExAlphabet(Byte[] exAlphabet)
                     {
-                        _thisKey._exAlphabet.CopyFrom(exAlphabet);
+                        _thisKey.ExAlphabet.CopyFrom(exAlphabet);
                         _thisKey._isExportUpToDate = false;
                     }
                     public bool SafeExAlphabet(Byte[] exAlphabet)
                     {
                         if (!_thisKey.IsValid.ExAlphabet([.. exAlphabet])) return false;
-                        _thisKey._exAlphabet.CopyFrom(exAlphabet);
+                        _thisKey.ExAlphabet.CopyFrom(exAlphabet);
                         _thisKey._isExportUpToDate = false;
                         return true;
                     }

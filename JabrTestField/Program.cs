@@ -18,31 +18,29 @@ namespace JabrTestField
         static void Main()
         {
 
-            RE5.ReKey smKey = new();
-            smKey.ReGenerate();
-            DecryptLeftover dl = new();
-            EncryptLeftover el = new();
+            //RE5.ReKey smKey = new();
+            //smKey.ReGenerate();
+            //DecryptLeftover dl = new();
+            //EncryptLeftover el = new();
 
-            List<Byte> c1 = [0, 1, 2, 3, 4];
-            List<Byte> c2 = [5, 6, 7, 8, 9];
-            List<Byte> c3 = [10, 11, 12, 13, 14];
+            //List<Byte> c1 = [0, 1, 2, 3, 4];
+            //List<Byte> c2 = [5, 6, 7, 8, 9];
+            //List<Byte> c3 = [10, 11, 12, 13, 14];
 
-            List<byte> single = [], multi = [];
+            //List<byte> single = [], multi = [];
 
-            single.AddRange(RE5.EncryptData.Fast([.. c1, .. c2, .. c3], smKey));
+            //single.AddRange(RE5.EncryptData.Fast([.. c1, .. c2, .. c3], smKey));
 
-            multi.AddRange(RE5.EncryptData.Fast(c1, smKey, ref el));
-            multi.AddRange(RE5.EncryptData.Fast(c2, smKey, ref el));
-            multi.AddRange(RE5.EncryptData.Fast(c3, smKey, ref el));
+            //multi.AddRange(RE5.EncryptData.Fast(c1, smKey, ref el));
+            //multi.AddRange(RE5.EncryptData.Fast(c2, smKey, ref el));
+            //multi.AddRange(RE5.EncryptData.Fast(c3, smKey, ref el));
 
-            Write("\n\tS: ");
-            foreach (var b in single) Write(b + "    "[..^b.ToString().Length]);
-            Write("\n\tM: ");
-            foreach (var b in multi)  Write(b + "    "[..^b.ToString().Length]);
+            //Write("\n\tS: ");
+            //foreach (var b in single) Write(b + "    "[..^b.ToString().Length]);
+            //Write("\n\tM: ");
+            //foreach (var b in multi)  Write(b + "    "[..^b.ToString().Length]);
 
-            ReadKey();
-
-
+            //ReadKey();
 
 
 
@@ -53,34 +51,36 @@ namespace JabrTestField
 
 
 
-            RE5.ReKey anian = new(false);
-            anian.Set.ExLength(1);
-            anian.ReGenerate();
 
-            List<Byte> test33 = [0, 1, 2, 3, 4, 5, 6];
 
-            List<Byte> fullyEnc = RE5.EncryptData.SafeWithNoising(test33, anian, true).result;
+            //RE5.ReKey anian = new(false);
+            //anian.Set.ExLength(1);
+            //anian.ReGenerate();
 
-            Write("\n\tInitial: ");
-            for (var j = 0; j < test33.Count; j++) Write(test33[j] + " ");
-            Write("\n\tEncrypted: ");
-            for (var j = 0; j < fullyEnc.Count; j++) Write(fullyEnc[j] + " ");
+            //List<Byte> test33 = [0, 1, 2, 3, 4, 5, 6];
 
-            DecryptLeftover leftover = new();
+            //List<Byte> fullyEnc = RE5.EncryptData.SafeWithNoising(test33, anian, true).result;
 
-            List<Byte> decrypt = RE5.DecryptData.SafeWithDeNoising(fullyEnc[0..2], anian, ref leftover).result;
-            //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+            //Write("\n\tInitial: ");
+            //for (var j = 0; j < test33.Count; j++) Write(test33[j] + " ");
+            //Write("\n\tEncrypted: ");
+            //for (var j = 0; j < fullyEnc.Count; j++) Write(fullyEnc[j] + " ");
 
-            decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[2..8], anian, ref leftover).result);
-            //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+            //DecryptLeftover leftover = new();
 
-            decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[8..], anian, ref leftover).result);
-            //Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+            //List<Byte> decrypt = [.. RE5.DecryptData.SafeWithDeNoising(fullyEnc[0..2], anian, ref leftover, true).result];
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
 
-            Write("\n\tDecrypted: ");
-            foreach (var b in decrypt) Write(b + " ");
+            //decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[2..8], anian, ref leftover, true).result);
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
 
-            ReadKey();
+            //decrypt.AddRange(RE5.DecryptData.SafeWithDeNoising(fullyEnc[8..], anian, ref leftover, true).result);
+            ////Write("\n\tLeftover: "); foreach (var b in leftover._unsanitized) Write(b + " ");
+
+            //Write("\n\tDecrypted: ");
+            //foreach (var b in decrypt) Write(b + " ");
+
+            //ReadKey();
 
 
 
@@ -154,9 +154,8 @@ namespace JabrTestField
             Int32 maxNonEntropy = 0;
             for (var i = 0; i < 1_000000; i++)
             {
-                Write("\n\n\tExAlphabet: ");
-                foreach (var b in binKey.PrAlphabet) Write(b + " ");
-                //if (binKey.PrAlphabet[0] == 255) ReadLine();
+                //Write("\n\n\tExAlphabet: ");
+                //foreach (var b in binKey.PrAlphabet.ExportDirect) Write(b + " ");
 
 
                 Write("\n\n\n\tAttempt: " + ++attemptCount);
@@ -169,7 +168,7 @@ namespace JabrTestField
 
                 List<Byte> binoised     = Noise.AddTo.Data(bincrypted, binKey, true);
                 List<Byte> bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
-                List<Byte> bindecrypted = RE5.DecryptData.Safe(bindenoised, binKey, true).result;
+                List<Byte> bindecrypted = [.. RE5.DecryptData.Safe(bindenoised, binKey, true).result];
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;

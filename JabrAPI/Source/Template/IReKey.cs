@@ -61,7 +61,7 @@ namespace JabrAPI.Template
         }
         public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET)
             => Numsys.FromDecimalToCustomBigInteger(
-                    Numsys.ToDecimalBigInteger([.. ExportAsBinary], 256),
+                    Numsys.ToDecimalBigInteger(ExportAsBinary, 256),
                     charsetForExport);
 
 
