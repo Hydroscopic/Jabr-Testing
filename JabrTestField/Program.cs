@@ -90,7 +90,7 @@ namespace JabrTestField
             RE5.ReKey binKey = new(true);
             binKey.Noisifier.settings.InitFromPreset(MasqueradePreset.HTTP_2_gRPC);
             string aboba = "aboba baobab";
-            List<Byte> lolinit = [0, 1, 2, 3, 3, 3, 2, 1, 0];
+            Byte[] lolinit = [0, 1, 2, 3, 3, 3, 2, 1, 0];
 
             Int32 EXTEND = 128, attemptCount = 0;
             double valueBias = 1.4, powerBias = 1.33;
@@ -152,6 +152,7 @@ namespace JabrTestField
 
 
             Int32 maxNonEntropy = 0;
+            binKey.Set.ExLength(10);
             for (var i = 0; i < 1_000000; i++)
             {
                 //Write("\n\n\tExAlphabet: ");
@@ -159,23 +160,23 @@ namespace JabrTestField
 
 
                 Write("\n\n\n\tAttempt: " + ++attemptCount);
-                List<Byte> bincrypted = RE5.EncryptData.Safe(lolinit, binKey, true).result;
+                Byte[] bincrypted = RE5.EncryptData.Safe(lolinit, binKey, true).result;
 
                 Write("\n\tInitial: ");
-                for (var j = 0; j < lolinit.Count; j++)
+                for (var j = 0; j < lolinit.Length; j++)
                     Write(lolinit[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                List<Byte> binoised     = Noise.AddTo.Data(bincrypted, binKey, true);
-                List<Byte> bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
-                List<Byte> bindecrypted = [.. RE5.DecryptData.Safe(bindenoised, binKey, true).result];
+                Byte[] binoised     = Noise.AddTo.Data(bincrypted, binKey, true);
+                Byte[] bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
+                Byte[] bindecrypted = RE5.DecryptData.Safe(bindenoised, binKey, true).result;
 
                 Write("\n\tNoised:  ");
                 Int32 count = 0, nonEntropy = 0, thisMaxNonEntropy = 0;
                 bool newWorst = false, noiseAtTheEnd = false;
 
 
-                for (var j = 0; j < binoised.Count; j++)
+                for (var j = 0; j < binoised.Length; j++)
                 {
                     if (j % (Int32)binKey.Noisifier.settings.ChunkSize == 0)
                         BackgroundColor = ConsoleColor.Blue;
@@ -185,7 +186,7 @@ namespace JabrTestField
                         ForegroundColor = ConsoleColor.Green;
                         count++;
 
-                        if (count >= bincrypted.Count)
+                        if (count >= bincrypted.Length)
                             noiseAtTheEnd = true;
 
                         nonEntropy++;
@@ -210,12 +211,12 @@ namespace JabrTestField
 
 
                 Write("\n\tDnoised: ");
-                for (var j = 0; j < bindenoised.Count; j++)
+                for (var j = 0; j < bindenoised.Length; j++)
                     Write(bindenoised[j] + " ");
 
 
                 Write("\n\tMatches: ");
-                for (var j = 0; j < Math.Min(bindenoised.Count, bincrypted.Count); j++)
+                for (var j = 0; j < Math.Min(bindenoised.Length, bincrypted.Length); j++)
                 {
                     if (bindenoised[j] == bincrypted[j])
                         ForegroundColor = ConsoleColor.Green;
@@ -225,34 +226,31 @@ namespace JabrTestField
                 }
                 ForegroundColor = ConsoleColor.Red;
 
-                List<Byte> temp = bindenoised.GetRange(
-                        Math.Min(bindenoised.Count, bincrypted.Count),
-                        Math.Min
-                        (
-                            0,
-                             bindenoised.Count - Math.Min
-                            (bindenoised.Count, bincrypted.Count)
-                        )
-                    );
-                for (var j = 0; j < temp.Count; j++)
+                var tempMinlengthHelper = Math.Min(bindenoised.Length, bincrypted.Length);
+                Byte[] temp = bindenoised
+                    [
+                        tempMinlengthHelper
+                        ..
+                        (Math.Min(0, bindenoised.Length - tempMinlengthHelper)
+                        + tempMinlengthHelper)
+                    ];
+                for (var j = 0; j < temp.Length; j++)
                     Write(temp[j]);
 
-                temp = bincrypted.GetRange(
-                        Math.Min(binoised.Count, bincrypted.Count),
-                        Math.Min
-                        (
-                            0,
-                             bincrypted.Count - Math.Min
-                            (binoised.Count, bincrypted.Count)
-                        )
-                    );
+                tempMinlengthHelper = Math.Min(binoised.Length, bincrypted.Length);
+                temp = bincrypted
+                    [
+                        tempMinlengthHelper..
+                        (Math.Min(0, bincrypted.Length - tempMinlengthHelper)
+                        + tempMinlengthHelper)
+                    ];
 
-                for (var j = 0; j < temp.Count; j++)
+                for (var j = 0; j < temp.Length; j++)
                     Write(temp[j] + " ");
 
                 ForegroundColor = ConsoleColor.Gray;
                 Write("\n\tDecrypted: ");
-                for (var j = 0; j < bindecrypted.Count; j++)
+                for (var j = 0; j < bindecrypted.Length; j++)
                     Write(bindecrypted[j] + " ");
 
 
@@ -261,17 +259,17 @@ namespace JabrTestField
                         (
                             Math.Pow
                             (
-                                bincrypted.Count * valueBias /
+                                bincrypted.Length * valueBias /
                                 (
-                                    EXTEND - bincrypted.Count + 1
+                                    EXTEND - bincrypted.Length + 1
                                 ),
                                 powerBias
                             )
                         )}), MaxNon: {maxNonEntropy}" +
-                    $"\n\tInitial: {bincrypted.Count}, extended: {binoised.Count}({EXTEND})" +
-                    $"\n\tAvgRatio: {(double)EXTEND / bincrypted.Count}, " +
-                    $"value: {(double)bincrypted.Count / (EXTEND - bincrypted.Count + 1)}" +
-                    $"\n\tBiased ({valueBias}; {powerBias}) value: {bincrypted.Count * powerBias / (EXTEND - bincrypted.Count + 1)}" +
+                    $"\n\tInitial: {bincrypted.Length}, extended: {binoised.Length}({EXTEND})" +
+                    $"\n\tAvgRatio: {(double)EXTEND / bincrypted.Length}, " +
+                    $"value: {(double)bincrypted.Length / (EXTEND - bincrypted.Length + 1)}" +
+                    $"\n\tBiased ({valueBias}; {powerBias}) value: {bincrypted.Length * powerBias / (EXTEND - bincrypted.Length + 1)}" +
                     $"\n\n\tEnter new EXTEND length: ");
 
 

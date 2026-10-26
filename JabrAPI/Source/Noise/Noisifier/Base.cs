@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using AVcontrol;
@@ -16,21 +15,22 @@ namespace JabrAPI
         private readonly SetHelper _setHelper;
         private readonly ValidateHelper _validateHelper;
 
-        private readonly List<Byte> _primaryNoise = [];
-        private readonly List<Byte> _complexNoise = [];
+        private Byte[] _primaryNoise = [];
+        private Byte[] _complexNoise = [];
 
-        private readonly List<Byte> _banned = [];
+        private Byte[] _banned = [];
         private Byte _primaryCount = 8;
         private Byte _complexCount = 16;
 
 
 
-        public Noisifier(List<Byte> primaryNoise, List<Byte> complexNoise)
+        public Noisifier(Byte[] primaryNoise, Byte[] complexNoise)
         {
             _setHelper = new(this);
             _validateHelper = new(this);
 
-            CopyFrom(primaryNoise, complexNoise);
+            _primaryNoise = primaryNoise;
+            _complexNoise = complexNoise;
         }
         public Noisifier(Noisifier otherNoisifier, bool fullCopy = true)
         {
@@ -40,7 +40,7 @@ namespace JabrAPI
             CopyFrom(otherNoisifier, fullCopy);
         }
 
-        public Noisifier(bool autoGenerate, List<Byte> banned)
+        public Noisifier(bool autoGenerate, Byte[] banned)
         {
             _setHelper = new(this);
             _validateHelper = new(this);
@@ -49,7 +49,7 @@ namespace JabrAPI
             else Set.Banned(banned);
         }
 
-        public Noisifier(List<Byte> binaryExportData, bool throwExceptions = false)
+        public Noisifier(Byte[] binaryExportData, bool throwExceptions = false)
         {
             _setHelper = new(this);
             _validateHelper = new(this);

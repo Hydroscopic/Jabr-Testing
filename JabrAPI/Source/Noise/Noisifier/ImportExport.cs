@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 
@@ -7,8 +6,6 @@ namespace JabrAPI
 {
     public partial class Noisifier
     {
-        public bool ImportFromBinary(List<Byte> exportData, bool throwExceptions = false)
-            => ImportFromBinary(exportData.ToArray(), throwExceptions);
         public bool ImportFromBinary(Byte[] exportData, bool throwExceptions = false)
         {
             try
@@ -26,8 +23,7 @@ namespace JabrAPI
                     return false;
                 }
 
-                _primaryNoise.Clear();
-                _primaryNoise.AddRange(exportData[1..(primaryCount + 1)]);
+                _primaryNoise = exportData[1..(primaryCount + 1)];
 
 
                 Byte complexCount = exportData[primaryCount + 1];
@@ -43,8 +39,7 @@ namespace JabrAPI
                     return false;
                 }
 
-                _complexNoise.Clear();
-                _complexNoise.AddRange(exportData[(primaryCount + 2)..(complexCount + primaryCount + 2)]);
+                _complexNoise = exportData[(primaryCount + 2)..(complexCount + primaryCount + 2)];
             }
             catch
             {
@@ -56,26 +51,12 @@ namespace JabrAPI
 
 
         public Byte[] ExportAsBinary()
-        {
-            return
-            [
-                (Byte)_primaryNoise.Count,
+            => [
+                (Byte)_primaryNoise.Length,
                 .. _primaryNoise,
 
-                (Byte)_complexNoise.Count,
+                (Byte)_complexNoise.Length,
                 .. _complexNoise
             ];
-        }
-        public List<Byte> ExportAsBinaryList()
-        {
-            return
-            [
-                (Byte)_primaryNoise.Count,
-                .. _primaryNoise,
-
-                (Byte)_complexNoise.Count,
-                .. _complexNoise
-            ];
-        }
     }
 }

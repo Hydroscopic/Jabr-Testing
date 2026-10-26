@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using JabrAPI.Template;
@@ -40,29 +39,20 @@ namespace JabrAPI
 
 
 
-            public ReKey(Byte[] primary, Byte[] external, List<Byte> shifts)
+            public ReKey(Byte[] primary, Byte[] external, Byte[] shifts)
             {
                 Set!.Sensitive.PrAlphabet(primary);
                 Set!.Sensitive.ExAlphabet(external);
                 Set!.Sensitive.Shifts(shifts);
-            }
-            public ReKey(Int32 shiftCount)
-            {
-                Set!.TargetShCount(shiftCount);
-            }
-            public ReKey(ReKey otherKey, bool fullCopy = true)
-            {
-                CopyFrom(otherKey, fullCopy);
             }
             public ReKey(bool autoGenerate = true)
             {
                 if (autoGenerate) ReGenerate();
                 else Set!.AlphabetLengths();
             }
-            public ReKey(Byte[] exportData)
-            {
-                ImportFromBinary(exportData);
-            }
+            public ReKey(Int32 shiftCount) => Set!.TargetShCount(shiftCount);
+            public ReKey(ReKey otherKey, bool fullCopy = true) => CopyFrom(otherKey, fullCopy);
+            public ReKey(Byte[] exportData) => ImportFromBinary(exportData);
         }
     }
 }

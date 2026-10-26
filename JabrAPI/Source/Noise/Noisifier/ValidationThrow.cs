@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using JabrAPI.Template;
@@ -12,21 +11,21 @@ namespace JabrAPI
     {
         public partial class ValidateHelper
         {
-            public bool ForMessage(List<Byte> message, bool throwExceptions = false)
+            public bool ForMessage(Byte[] message, bool throwExceptions = false)
                      => ComplexForMessage(message, throwExceptions)
                      && PrimaryForMessage(message, throwExceptions);
             public bool ForReKey(IReKey reKey, bool throwExceptions = false)
                      => ComplexForReKey(reKey, throwExceptions)
                      && PrimaryForReKey(reKey, throwExceptions);
-            public bool ForMessageAndReKey(IReKey reKey, List<Byte> message, bool throwExceptions = false)
+            public bool ForMessageAndReKey(IReKey reKey, Byte[] message, bool throwExceptions = false)
                      => ForMessage(message, throwExceptions)
                      && ForReKey(reKey, throwExceptions);
 
 
 
-            static public bool PrimaryForReKey(IReKey reKey, List<Byte> primaryNoise, bool throwExceptions = false)
-                => PrimaryForReKey([.. reKey.FinalAlphabet.ExportDirect], primaryNoise, throwExceptions);
-            static public bool PrimaryForReKey(List<Byte> exAlphabet, List<Byte> primaryNoise, bool throwExceptions = false)
+            static public bool PrimaryForReKey(IReKey reKey, Byte[] primaryNoise, bool throwExceptions = false)
+                => PrimaryForReKey(reKey.FinalAlphabet.ExportDirect, primaryNoise, throwExceptions);
+            static public bool PrimaryForReKey(Byte[] exAlphabet, Byte[] primaryNoise, bool throwExceptions = false)
             {
                 return IsNoiseValid
                 (
@@ -40,7 +39,7 @@ namespace JabrAPI
                     throwExceptions
                 );
             }
-            static public bool PrimaryForMessage(List<Byte>  message, List<Byte> primaryNoise, bool throwExceptions = false)
+            static public bool PrimaryForMessage(Byte[] message, Byte[] primaryNoise, bool throwExceptions = false)
             {
                 return IsNoiseValid
                 (
@@ -57,17 +56,14 @@ namespace JabrAPI
 
 
             public bool PrimaryForReKey(IReKey reKey, bool throwExceptions = false)
-                => PrimaryForReKey([.. reKey.FinalAlphabet.ExportDirect], _noisifier._primaryNoise, throwExceptions);
-            public bool PrimaryForReKey(List<Byte> exAlphabet, bool throwExceptions = false)
-                => PrimaryForReKey(exAlphabet, _noisifier._primaryNoise, throwExceptions);
-            public bool PrimaryForMessage(List<Byte>  message, bool throwExceptions = false)
+                => PrimaryForReKey(reKey.FinalAlphabet.ExportDirect, _noisifier._primaryNoise, throwExceptions);
+            public bool PrimaryForMessage(Byte[] message, bool throwExceptions = false)
                 => PrimaryForMessage(message, _noisifier._primaryNoise, throwExceptions);
 
 
-
-            static public bool ComplexForReKey(IReKey reKey, List<Byte> complexNoise, bool throwExceptions = false)
-                => ComplexForReKey([.. reKey.FinalAlphabet.ExportDirect], complexNoise, throwExceptions);
-            static public bool ComplexForReKey(List<Byte> exAlphabet, List<Byte> complexNoise, bool throwExceptions = false)
+            static public bool ComplexForReKey(IReKey reKey, Byte[] complexNoise, bool throwExceptions = false)
+                => ComplexForReKey(reKey.FinalAlphabet.ExportDirect, complexNoise, throwExceptions);
+            static public bool ComplexForReKey(Byte[] exAlphabet, Byte[] complexNoise, bool throwExceptions = false)
             {
                 return IsNoiseValid
                 (
@@ -81,7 +77,7 @@ namespace JabrAPI
                     throwExceptions
                 );
             }
-            static public bool ComplexForMessage(List<Byte>  message, List<Byte> complexNoise, bool throwExceptions = false)
+            static public bool ComplexForMessage(Byte[] message, Byte[] complexNoise, bool throwExceptions = false)
             {
                 return IsNoiseValid
                 (
@@ -98,15 +94,13 @@ namespace JabrAPI
 
 
             public bool ComplexForReKey(IReKey reKey, bool throwExceptions = false)
-                => ComplexForReKey([.. reKey.FinalAlphabet.ExportDirect], _noisifier._complexNoise, throwExceptions);
-            public bool ComplexForReKey(List<Byte> exAlphabet, bool throwExceptions = false)
-                => ComplexForReKey(exAlphabet, _noisifier._complexNoise, throwExceptions);
-            public bool ComplexForMessage(List<Byte>  message, bool throwExceptions = false)
+                => ComplexForReKey(reKey.FinalAlphabet.ExportDirect, _noisifier._complexNoise, throwExceptions);
+            public bool ComplexForMessage(Byte[] message, bool throwExceptions = false)
                 => ComplexForMessage(message, _noisifier._complexNoise, throwExceptions);
 
 
 
-            static private bool IsNoiseValid(List<Byte> exAlphabet_or_message, List<Byte> primaryNoise_or_complexNoise,
+            static private bool IsNoiseValid(Byte[] exAlphabet_or_message, Byte[] primaryNoise_or_complexNoise,
                 ArgumentException errorMessage, bool throwExceptions = false)
             {
                 foreach (Byte noiseByte in primaryNoise_or_complexNoise)
@@ -116,7 +110,7 @@ namespace JabrAPI
                         if (throwExceptions) throw new ArgumentException
                             (
                                 errorMessage.Message +
-                                $"\nDuplicate byte: {noiseByte}",
+                                $"\nDuplicate Byte: {noiseByte}",
                                 errorMessage.ParamName
                             );
                         return false;

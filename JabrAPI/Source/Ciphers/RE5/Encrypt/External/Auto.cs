@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 
@@ -21,7 +20,7 @@ namespace JabrAPI
 
 
 
-                static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message,
+                static public (Byte[] result, bool didSucceed) Data(DataEncryptionMode mode, Byte[] message,
                     ReKey reKey, ref EncryptLeftover prevId, bool throwExceptions = false)
                 {
                     return mode switch
@@ -38,7 +37,7 @@ namespace JabrAPI
                         _   => ([], false)
                     };
                 }
-                static public (List<Byte> result, bool didSucceed) Data(DataEncryptionMode mode, List<Byte> message, ReKey reKey, bool throwExceptions = false)
+                static public (Byte[] result, bool didSucceed) Data(DataEncryptionMode mode, Byte[] message, ReKey reKey, bool throwExceptions = false)
                 {
                     EncryptLeftover leftover = new();
                     return Data(mode, message, reKey, ref leftover, throwExceptions);

@@ -104,7 +104,7 @@ namespace JabrAPI
                 MasqueradePreset = masqueradePreset;
                 KeepOriginalFileExtension = keepOriginalFileExtension;
 
-                DynamicOutputIntervals = [.. dynamicOutputIntervals ?? []];
+                DynamicOutputIntervals = dynamicOutputIntervals ?? [];
                 IntervalChoiceSetting = intervalChoiceSetting ?? new();
                 LengthChoiceSetting = lengthChoiceSetting;
 

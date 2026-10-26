@@ -17,10 +17,10 @@ namespace JabrAPI
         /// </summary>
         static public partial class AddTo
         {
-            static public List<Byte> FastData(List<Byte> message, Noisifier noisifier, List<Byte> fakeSelection)
+            static public Byte[] FastData(Byte[] message, Noisifier noisifier, Byte[] fakeSelection)
             {
                 SecureRandom random = new(noisifier.RandomReseedInterval);
-                Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = message.Count,
+                Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = message.Length,
                   hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
                 if (chunkSize < 2)  chunkSize = 2;
                 if (hardChunkSize < chunkSize) hardChunkSize = chunkSize;
@@ -47,7 +47,7 @@ namespace JabrAPI
                 double avgNoisePerCharInRound = (double)initialLength / outputLength;
 
                 List<Byte> result = new(outputLength);
-                fakeSelection = fakeSelection.Count < 1 ? noisifier.PrimaryNoise : fakeSelection;
+                fakeSelection = fakeSelection.Length < 1 ? noisifier.PrimaryNoise : fakeSelection;
                 Int32 prevFinalUnnoised = 0, maxRoundLength, offset = 0, messageChunk;
 
                 for (var curOptimalSize = chunkSize; result.Count + initialLength - offset < outputLength; curOptimalSize += chunkSize)
@@ -81,12 +81,7 @@ namespace JabrAPI
                     (
                         AdditionRound
                         (
-                            [.. message.GetRange
-                            (
-                                offset,
-                                messageChunk
-                            )
-                            ],
+                            [.. message[offset..(offset + messageChunk)]],
                             fakeSelection,
                             noisifier,
                             random,
@@ -100,7 +95,7 @@ namespace JabrAPI
                     offset += messageChunk;
                 }
 
-                return result;
+                return [..result];
             }
 
             static public void FastFile(string absoluteInputDirectory,
@@ -123,7 +118,7 @@ namespace JabrAPI
 
 
                 using FileStream lengthStream = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
-                using FileStream inputStream = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
+                using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
                 using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
 
                 using (BinaryReader lengthReader = new(lengthStream))
@@ -167,7 +162,7 @@ namespace JabrAPI
                 using BinaryReader reader = new(inputStream);
                 using BinaryWriter writer = new(outputStream);
 
-                List<Byte> parsedChars = [];
+                Byte[] parsedChars = [];
                 bool isFileEnd = false;
                 Int32 prevFinalUnnoised = 0, offset = 0, processedCount = 0, maxRoundLength, messageChunk;
 
@@ -211,7 +206,7 @@ namespace JabrAPI
                             Byte[] readBuffer = new Byte[messageChunk];
                             var actuallyRead = reader.Read(readBuffer, 0, messageChunk);
 
-                            parsedChars = new List<Byte>(readBuffer).GetRange(0, actuallyRead);
+                            parsedChars = readBuffer[0..actuallyRead];
                             isFileEnd = actuallyRead == 0;
                         }
                     }
@@ -224,7 +219,7 @@ namespace JabrAPI
 
                     parsedChars = AdditionRound
                     (
-                        parsedChars,
+                        [.. parsedChars],
                         noisifier.PrimaryNoise,  //  Fake selection is not supported in file noise.Addition
                         noisifier,
                         random,
@@ -235,8 +230,8 @@ namespace JabrAPI
                     );
 
                     offset += messageChunk;
-                    processedCount += parsedChars.Count;
-                    writer.Write([.. parsedChars]);
+                    processedCount += parsedChars.Length;
+                    writer.Write(parsedChars);
                 }
             }
         }

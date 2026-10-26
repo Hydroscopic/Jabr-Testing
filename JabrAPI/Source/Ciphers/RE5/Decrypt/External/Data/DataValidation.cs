@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 
@@ -9,28 +8,22 @@ namespace JabrAPI
     {
         static public partial class DecryptData
         {
-            static public (Byte[] result, bool didSucceed) Safe(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Safe(Byte[] encrypted, ReKey reKey, bool throwExceptions = false)
             {
                 if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
                     reKey.IsValid.ForDecryption(encrypted, throwExceptions))
                 {
-                    try
-                    {
-                        return (RE5.DecryptData.Fast([.. encrypted], reKey), true);
-                    }
+                    try { return (RE5.DecryptData.Fast(encrypted, reKey), true); }
                     catch { if (throwExceptions) throw; }
                 }
                 return ([], false);
             }
-            static public (Byte[] result, bool didSucceed) Safe(List<Byte> encrypted, ReKey reKey, ref DecryptLeftover leftover, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Safe(Byte[] encrypted, ReKey reKey, ref DecryptLeftover leftover, bool throwExceptions = false)
             {
                 if (Miscellaneous.IsMessageAndReKeyValid(encrypted, reKey, throwExceptions) &&
                     reKey.IsValid.ForDecryption(encrypted, throwExceptions))
                 {
-                    try
-                    {
-                        return (RE5.DecryptData.Fast(encrypted, reKey, ref leftover), true);
-                    }
+                    try { return (RE5.DecryptData.Fast(encrypted, reKey, ref leftover), true); }
                     catch { if (throwExceptions) throw; }
                 }
                 return ([], false);
@@ -38,15 +31,15 @@ namespace JabrAPI
 
 
 
-            static public (Byte[] result, bool didSucceed) SafeWithDeNoising(List<Byte> encrypted, ReKey reKey, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) SafeWithDeNoising(Byte[] encrypted, ReKey reKey, bool throwExceptions = false)
             {
-                List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
-                return denoised == null || denoised.Count < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, throwExceptions);
+                Byte[] denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
+                return denoised == null || denoised.Length < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, throwExceptions);
             }
-            static public (Byte[] result, bool didSucceed) SafeWithDeNoising(List<Byte> encrypted, ReKey reKey, ref DecryptLeftover leftover, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) SafeWithDeNoising(Byte[] encrypted, ReKey reKey, ref DecryptLeftover leftover, bool throwExceptions = false)
             {
-                List<Byte> denoised = Noise.RemoveFrom.Data(encrypted, reKey, ref leftover.ignoringIsActive, throwExceptions);
-                return denoised == null || denoised.Count < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, ref leftover, throwExceptions);
+                Byte[] denoised = Noise.RemoveFrom.Data(encrypted, reKey, ref leftover.ignoringIsActive, throwExceptions);
+                return denoised == null || denoised.Length < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, ref leftover, throwExceptions);
             }
         }
     }

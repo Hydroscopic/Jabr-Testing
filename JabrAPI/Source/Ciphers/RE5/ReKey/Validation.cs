@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 
@@ -11,8 +10,8 @@ namespace JabrAPI
         {
             public class ReKeyUtil_IsValid
             {
-                internal ReKeyUtil_IsValid() { throw new InvalidOperationException("You are not supposed to use this"); }
-                internal ReKeyUtil_IsValid(ReKey thisKey) { _thisKey = thisKey; }
+                internal ReKeyUtil_IsValid() => throw new InvalidOperationException("You are not supposed to use this");
+                internal ReKeyUtil_IsValid(ReKey thisKey) => _thisKey = thisKey;
                 private readonly ReKey _thisKey;
 
 
@@ -25,12 +24,13 @@ namespace JabrAPI
 
                 public class ReKeyUtil_PartiallyValid
                 {
-                    internal ReKeyUtil_PartiallyValid() { throw new InvalidOperationException("You are not supposed to use this"); }
-                    internal ReKeyUtil_PartiallyValid(ReKey thisKey) { _thisKey = thisKey; }
+                    internal ReKeyUtil_PartiallyValid() => throw new InvalidOperationException("You are not supposed to use this");
+                    internal ReKeyUtil_PartiallyValid(ReKey thisKey) => _thisKey = thisKey;
                     private readonly ReKey _thisKey;
 
-                    public bool PrAlphabet(bool throwExceptions = false)
-                        => PrALphabet(_thisKey.PrAlphabet, throwExceptions);
+                    public bool PrAlphabet(bool throwExceptions = false) => PrALphabet(_thisKey.PrAlphabet, throwExceptions);
+                    public bool ExAlphabet(bool throwExceptions = false) => ExAlphabet(_thisKey.ExAlphabet, throwExceptions);
+
                     static public bool PrALphabet(HT_Alphabet primary, bool throwExceptions = false)
                     {
                         Byte[] ww = primary.ExportDirect;  // working with
@@ -54,7 +54,7 @@ namespace JabrAPI
                                     throw new ArgumentException
                                     (
                                         $"Primary alphabet contains duplicates characters" +
-                                        $"\nDuplicate byte: {ww[curId]}",
+                                        $"\nDuplicate Byte: {ww[curId]}",
                                         nameof(primary)
                                     );
                                 }
@@ -63,10 +63,6 @@ namespace JabrAPI
 
                         return true;
                     }
-
-
-                    public bool ExAlphabet(bool throwExceptions = false)
-                        => ExAlphabet(_thisKey.ExAlphabet, throwExceptions);
                     static public bool ExAlphabet(HT_Alphabet external, bool throwExceptions = false)
                     {
                         Byte[] ww = external.ExportDirect;  // working with
@@ -90,7 +86,7 @@ namespace JabrAPI
                                     throw new ArgumentException
                                     (
                                         "External alphabet contains duplicates characters" +
-                                        $"Duplicate byte: {ww[curId]}",
+                                        $"Duplicate Byte: {ww[curId]}",
                                         nameof(external)
                                     );
                                 }
@@ -102,22 +98,20 @@ namespace JabrAPI
                 }
 
 
-
-                public bool ForEncryption(List<Byte> message, bool throwExceptions = false)
-                {
-                    return ReKeyUtil_PartiallyValid.ExAlphabet(_thisKey.ExAlphabet, throwExceptions)
-                                && PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
-                }
-                public bool ForDecryption(List<Byte> message, bool throwExceptions = false)
-                {
-                    return ReKeyUtil_PartiallyValid.PrALphabet(_thisKey.PrAlphabet, throwExceptions)
-                                && ExAlphabet(message, _thisKey.ExAlphabet, throwExceptions);
-                }
+                public bool ForEncryption(Byte[] message, bool throwExceptions = false)
+                    => ReKeyUtil_PartiallyValid.ExAlphabet(_thisKey.ExAlphabet, throwExceptions)
+                                             && PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
+                public bool ForDecryption(Byte[] message, bool throwExceptions = false)
+                    => ReKeyUtil_PartiallyValid.PrALphabet(_thisKey.PrAlphabet, throwExceptions)
+                                             && ExAlphabet(message, _thisKey.ExAlphabet, throwExceptions);
 
 
-                public bool PrAlphabet(List<Byte> message, bool throwExceptions = false)
+                public bool PrAlphabet(Byte[] message,   bool throwExceptions = false)
                     => PrAlphabet(message, _thisKey.PrAlphabet, throwExceptions);
-                static public bool PrAlphabet(List<Byte> message, HT_Alphabet primary, bool throwExceptions = false)
+                public bool ExAlphabet(Byte[] encrypted, bool throwExceptions = false)
+                    => ExAlphabet(encrypted, _thisKey.ExAlphabet, throwExceptions);
+
+                static public bool PrAlphabet(Byte[] message,   HT_Alphabet primary, bool throwExceptions = false)
                 {
                     if (!ReKeyUtil_PartiallyValid.PrALphabet(primary, throwExceptions)) return false;
 
@@ -129,18 +123,14 @@ namespace JabrAPI
                             throw new ArgumentException
                             (
                                 $"Message contains bytes not present in the primary alphabet" +
-                                $"\nMissing byte: {b}",
+                                $"\nMissing Byte: {b}",
                                 nameof(primary)
                             );
                         }
                     }
                     return true;
                 }
-
-                
-                public bool ExAlphabet(List<Byte> encrypted, bool throwExceptions = false)
-                    => ExAlphabet(encrypted, _thisKey.ExAlphabet, throwExceptions);
-                static public bool ExAlphabet(List<Byte> encrypted, HT_Alphabet external, bool throwExceptions = false)
+                static public bool ExAlphabet(Byte[] encrypted, HT_Alphabet external, bool throwExceptions = false)
                 {
                     if (!ReKeyUtil_PartiallyValid.ExAlphabet(external, throwExceptions)) return false;
 
@@ -152,7 +142,7 @@ namespace JabrAPI
                             throw new ArgumentException
                             (
                                 $"Message contains bytes not present in the external alphabet" +
-                                $"\nMissing byte: {b}",
+                                $"\nMissing Byte: {b}",
                                 nameof(external)
                             );
                         }

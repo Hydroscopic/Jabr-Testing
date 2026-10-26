@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using JabrAPI.Template;
@@ -27,14 +26,13 @@ namespace JabrAPI
             }
 
 
-            private void CopyFrom(HT_Alphabet primary, HT_Alphabet external, List<Byte> shifts)
+            private void CopyFrom(HT_Alphabet primary, HT_Alphabet external, Byte[] shifts)
             {
                 PrAlphabet.CopyFrom(primary);
                 ExAlphabet.CopyFrom(external);
 
-                _shifts.Clear();
-                if (shifts.Count == 0) _shifts.Add(0);
-                else _shifts.AddRange(shifts.GetRange(0, Math.Max(shifts.Count, 255)));
+                if (shifts.Length == 0) _shifts = [0];
+                else _shifts = shifts[0..Math.Max(shifts.Length, 255)];
             }
         }
     }

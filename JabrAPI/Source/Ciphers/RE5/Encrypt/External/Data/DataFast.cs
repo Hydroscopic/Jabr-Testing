@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 
 using AVcontrol;
@@ -13,10 +12,11 @@ namespace JabrAPI
     {
         static public partial class EncryptData
         {
-            static public List<Byte> Fast(List<Byte> message, ReKey reKey, ref EncryptLeftover leftover)
+            static public Byte[] Fast(Byte[] message, ReKey reKey, ref EncryptLeftover leftover)
             {
-                List<Byte> prAlphabet = [.. reKey.PrAlphabet.ExportDirect], exAlphabet = [.. reKey.ExAlphabet.ExportDirect], allShifts = reKey.Shifts, shifts;
-                Int32 exLength = reKey.ExLength, messageLength = message.Count, shCount = reKey.ShCount;
+                Byte[] prAlphabet = reKey.PrAlphabet.ExportDirect, allShifts = reKey.Shifts,
+                       exAlphabet = reKey.ExAlphabet.ExportDirect, shifts;
+                Int32 exLength = reKey.ExLength, messageLength = message.Length, shCount = reKey.ShCount;
 
 
                 Int32 helper = (Int32)Math.Ceiling
@@ -41,7 +41,7 @@ namespace JabrAPI
 
                 Int32 chunkCount = (Int32)Math.Ceiling((double)messageLength / chunkSize);
                 Int32 thisRoundLength, shDelta;
-                List<Byte> result = new(messageLength * (encodingLength + 1));
+                Byte[] result = new byte[messageLength * (encodingLength + 1)];
 
 
                 for (var chunk = 0; chunk < chunkCount; chunk++)
@@ -56,34 +56,28 @@ namespace JabrAPI
                     shDelta = leftover._shiftStartId + thisRoundLength;
 
                     shifts = shDelta > shCount ?
-                        [.. allShifts.GetRange(leftover._shiftStartId, shCount - leftover._shiftStartId),
-                         .. allShifts.GetRange(0, Math.Min(leftover._shiftStartId, shDelta - shCount))]
-                          : allShifts.GetRange(leftover._shiftStartId, thisRoundLength);
+                        [.. allShifts[leftover._shiftStartId..shCount],
+                         .. allShifts[0..Math.Min(leftover._shiftStartId, shDelta - shCount)]]
+                          : allShifts[leftover._shiftStartId..(leftover._shiftStartId + thisRoundLength)];
                     leftover._shiftStartId = shDelta % shCount;
 
 
-                    result.AddRange
-                    (
-                        Internal.EncryptionRound
+                    var roundResult = Internal.EncryptionRound
                         (
-                            message.GetRange
-                            (
-                                chunk * chunkSize,
-                                thisRoundLength
-                            ),
+                            message[(chunk * chunkSize)..(chunk * chunkSize + thisRoundLength)],
                             prAlphabet,
                             exAlphabet,
                             shifts,
                             exLength,
                             encodingLength,
                             ref leftover._prevId
-                        )
-                    );
+                        );
+                    Array.Copy(roundResult, 0, result, chunk * (encodingLength + 1) * chunkSize, roundResult.Length);
                 }
 
                 return result;
             }
-            static public List<Byte> Fast(List<Byte> message, ReKey reKey)
+            static public Byte[] Fast(Byte[] message, ReKey reKey)
             {
                 EncryptLeftover leftover = new();
                 return Fast(message, reKey, ref leftover);
@@ -91,16 +85,16 @@ namespace JabrAPI
 
 
 
-            static public List<Byte> FastWithNoising(List<Byte> message, ReKey reKey, ref EncryptLeftover prevId)
+            static public Byte[] FastWithNoising(Byte[] message, ReKey reKey, ref EncryptLeftover prevId)
             {
-                List<Byte> result = RE5.EncryptData.Fast(message, reKey, ref prevId);
-                return result == null || result.Count < 1 ? []
+                Byte[] result = RE5.EncryptData.Fast(message, reKey, ref prevId);
+                return result == null || result.Length < 1 ? []
                         : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
             }
-            static public List<Byte> FastWithNoising(List<Byte> message, ReKey reKey)
+            static public Byte[] FastWithNoising(Byte[] message, ReKey reKey)
             {
-                List<Byte> result = RE5.EncryptData.Fast(message, reKey);
-                return result == null || result.Count < 1 ? []
+                Byte[] result = RE5.EncryptData.Fast(message, reKey);
+                return result == null || result.Length < 1 ? []
                         : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
             }
         }

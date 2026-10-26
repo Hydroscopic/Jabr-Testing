@@ -87,9 +87,8 @@ namespace JabrAPI
                         return false;
                     }
 
-                    _shifts.Clear();
-                    if (parsedShiftCount > 0) _shifts.AddRange(onlyReKeyData[4..(4 + parsedShiftCount)]);
-                    else _shifts.Add(0);
+                    if (parsedShiftCount > 0) _shifts = onlyReKeyData[4..(4 + parsedShiftCount)];
+                    else _shifts = [0];
 
 
                     // +1 is transforming our length range back from 1-255 to 2-256

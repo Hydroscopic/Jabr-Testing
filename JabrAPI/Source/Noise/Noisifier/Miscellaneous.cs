@@ -7,9 +7,10 @@ namespace JabrAPI
 {
     public partial class Noisifier
     {
-        public  void CopyFrom(Noisifier otherNoisifier, bool fullCopy = true)
+        public void CopyFrom(Noisifier otherNoisifier, bool fullCopy = true)
         {
-            CopyFrom(otherNoisifier.PrimaryNoise, otherNoisifier.ComplexNoise);
+            _primaryNoise = otherNoisifier.PrimaryNoise;
+            _complexNoise = otherNoisifier.ComplexNoise;
 
             if (fullCopy)
                 Set.Default
@@ -19,37 +20,24 @@ namespace JabrAPI
                     otherNoisifier._complexCount
                 );
         }
-        private void CopyFrom(List<Byte> primaryNoise, List<Byte> complexNoise)
+
+
+        private List<Byte> GetRemainingAllowed(Byte[] banned, Int32 targetCount, bool banAlreadyUsed)
         {
-            _primaryNoise.Clear();
-            _primaryNoise.AddRange(primaryNoise);
+            List<Byte> result = [.. DEFAULT.BYTES];
 
-            _complexNoise.Clear();
-            _complexNoise.AddRange(complexNoise);
-        }
-
-
-
-        private void ReconfigureNoiseParametersCount(Int32 allowedTotal)
-        {
-            if (allowedTotal < _primaryCount + _complexCount)
+            Int32 allowedTotal = 256 - banned.Length;
+            if (!banAlreadyUsed && allowedTotal < _primaryCount + _complexCount)
             {
                 Byte compromiseLeft = (Byte)(allowedTotal / 3);
                 _primaryCount = compromiseLeft;
                 _complexCount = (Byte)(allowedTotal - compromiseLeft);
             }
-        }
-        private List<Byte> GetRemainingAllowed(List<Byte> banned, Int32 targetCount, bool banAlreadyUsed)
-        {
-            List<Byte> result = [.. DEFAULT.BYTES];
-
-            if (!banAlreadyUsed) ReconfigureNoiseParametersCount(256 - banned.Count);
-            else foreach (Byte bannedByte in _primaryNoise.Count == 0
-                    ? _complexNoise : _primaryNoise)
+            else foreach (Byte bannedByte in _primaryNoise.Length == 0
+                ? _complexNoise : _primaryNoise)
                     result.RemoveAll(c => c == bannedByte);
 
-            foreach (Byte bannedByte in banned)
-                result.RemoveAll(c => c == bannedByte);
+            foreach (Byte bannedByte in banned) result.RemoveAll(c => c == bannedByte);
 
 
             _random.Shuffle(ref result);

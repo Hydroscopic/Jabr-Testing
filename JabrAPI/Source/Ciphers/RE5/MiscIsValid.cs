@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using JabrAPI.Template;
@@ -10,114 +9,69 @@ namespace JabrAPI
 {
     static internal partial class Miscellaneous
     {
-        static internal bool IsMessageValid(List<Byte> message, out  Exception? exception)
+        static internal bool IsMessageValid(Byte[] message, bool throwExceptions = false)
         {
-            if (message  == null || message.Count < 1)
+            if (message == null || message.Length < 1)
             {
-                exception = new ArgumentException
-                (
-                    "Message is invalid - cannot be null or empty",
-                    nameof(message)
-                );
+                if (throwExceptions)
+                    throw new ArgumentException
+                    (
+                        "Message is invalid - cannot be null or empty",
+                        nameof(message)
+                    );
                 return false;
             }
-            exception = null;
-            return true;
-        }
-        static internal bool IsMessageValid(List<Byte> message, bool throwExceptions = false)
-        {
-            bool isValid = IsMessageValid(message, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
-            return isValid;
-        }
-
-        static internal bool IsNoisifierValid(Noisifier noisifier, out  Exception? exception)
-        {
-            if (noisifier == null)
-            {
-                exception = new ArgumentException
-                (
-                    "BinaryNoisifier is undefined (null)",
-                    nameof(noisifier)
-                );
-                return false;
-            }
-            exception = null;
             return true;
         }
         static internal bool IsNoisifierValid(Noisifier noisifier, bool throwExceptions = false)
         {
-            bool isValid = IsNoisifierValid(noisifier, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
-            return isValid;
-        }
-
-        static internal bool IsReKeyValid(IReKey reKey, out  Exception? exception)
-        {
-            if (reKey == null)
+            if (noisifier == null)
             {
-                exception = new ArgumentException
-                (
-                    "Encryption key is undefined (null)",
-                    nameof(reKey)
-                );
+                if (throwExceptions)
+                    throw new ArgumentException
+                    (
+                        "BinaryNoisifier is undefined (null)",
+                        nameof(noisifier)
+                    );
                 return false;
             }
-            exception = null;
             return true;
         }
         static internal bool IsReKeyValid(IReKey reKey, bool throwExceptions = false)
         {
-            bool isValid = IsReKeyValid(reKey, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
-            return isValid;
+            if (reKey == null)
+            {
+                if (throwExceptions)
+                    throw new ArgumentException
+                    (
+                        "Encryption key is undefined (null)",
+                        nameof(reKey)
+                    );
+                return false;
+            }
+            return true;
         }
 
 
         static internal bool IsMessageAndNoisifierValid(
-            List<Byte> message, Noisifier noisifier, out  Exception? exception)
+            Byte[] message, Noisifier noisifier, bool throwExceptions = false)
         {
-            bool isValid = IsMessageValid(message, out exception);
-            if (isValid) isValid = IsNoisifierValid(noisifier, out exception);
-            return isValid;
-        }
-        static internal bool IsMessageAndNoisifierValid(
-            List<Byte> message, Noisifier noisifier, bool throwExceptions = false)
-        {
-            bool isValid = IsMessageAndNoisifierValid(message, noisifier, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
-            return isValid;
-        }
-
-
-        static internal bool IsMessageAndReKeyValid(
-            List<Byte> message, IReKey binKey, out Exception? exception)
-        {
-            bool isValid = IsMessageValid(message, out exception);
-            if  (isValid) isValid = IsReKeyValid(binKey, out exception);
+            bool isValid = IsMessageValid(message, throwExceptions);
+            if (isValid) isValid = IsNoisifierValid(noisifier, throwExceptions);
             return isValid;
         }
         static internal bool IsMessageAndReKeyValid(
-            List<Byte> message, IReKey binKey, bool throwExceptions = false)
+            Byte[] message, IReKey binKey, bool throwExceptions = false)
         {
-            bool isValid = IsMessageAndReKeyValid(message, binKey, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
-            return isValid;
-        }
-
-
-        static internal bool IsMessageAndReKeyAndNoisifierValid(
-            List<Byte> message, IReKey reKey, out  Exception? exception)
-        {
-            bool isValid = IsReKeyValid(reKey, out exception);
-            if (isValid) isValid = IsMessageAndNoisifierValid(message, reKey.Noisifier, out exception);
+            bool isValid = IsMessageValid(message, throwExceptions);
+            if  (isValid) isValid = IsReKeyValid(binKey, throwExceptions);
             return isValid;
         }
         static internal bool IsMessageAndReKeyAndNoisifierValid(
-            List<Byte> message, IReKey reKey, bool throwExceptions = false)
+            Byte[] message, IReKey reKey, bool throwExceptions = false)
         {
-            bool isValid = IsMessageAndReKeyAndNoisifierValid(message, reKey, out Exception? exception);
-            if (!isValid && throwExceptions) throw exception!;
+            bool isValid = IsReKeyValid(reKey, throwExceptions);
+            if (isValid) isValid = IsMessageAndNoisifierValid(message, reKey.Noisifier, throwExceptions);
             return isValid;
         }
     }

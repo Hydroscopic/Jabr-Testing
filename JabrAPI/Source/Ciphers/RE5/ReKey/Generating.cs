@@ -18,7 +18,7 @@ namespace JabrAPI
                     ReGenerateExAlphabet();
                     GenerateRandomShifts();
 
-                    _noisifier.Set.Banned([.. ExAlphabet.ExportDirect]);
+                    _noisifier.Set.Banned(ExAlphabet.ExportDirect);
                     _noisifier.Next(false);
                     return true;
                 }
@@ -30,7 +30,7 @@ namespace JabrAPI
 
 
 
-            public void ReGeneratePrAlphabet(byte compactedLength = 255)
+            public void ReGeneratePrAlphabet(Byte compactedLength = 255)
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
@@ -40,7 +40,7 @@ namespace JabrAPI
             public void ReGeneratePrAlphabet()
                 => ReGeneratePrAlphabet(_densePrMaxLength > 0 ? _densePrMaxLength : DEFAULT_PR_ALPHABET_LENGTH);
 
-            public void ReGenerateExAlphabet(byte compactedLength = 255)
+            public void ReGenerateExAlphabet(Byte compactedLength = 255)
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;

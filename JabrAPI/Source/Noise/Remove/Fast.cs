@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 
 
 
@@ -13,33 +12,24 @@ namespace JabrAPI
         /// </summary>
         static public partial class RemoveFrom
         {
-            static public List<Byte> FastData(List<Byte> message, Noisifier noisifier)
+            static public Byte[] FastData(Byte[] message, Noisifier noisifier)
             {
                 bool ignoringIsActive = false;
                 return FastData(message, noisifier, ref ignoringIsActive);
             }
-            static public List<Byte> FastData(List<Byte> message, Noisifier noisifier, ref bool ignoringIsActive)
+            static public Byte[] FastData(Byte[] message, Noisifier noisifier, ref bool ignoringIsActive)
             {
                 Int32 chunkSize  = (Int32)noisifier.settings.ChunkSize, usedPtr = 0, resultLength,
-                      chunkCount = (Int32)Math.Ceiling((double)message.Count / chunkSize);
+                      chunkCount = (Int32)Math.Ceiling((double)message.Length / chunkSize);
                 chunkSize = chunkSize < 1 ? 1 : chunkSize;
 
-                Byte[] finalised = new Byte[message.Count];
-                List<Byte> primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
+                Byte[] finalised = new Byte[message.Length], primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
 
                 for (var chunk = 0; chunk < chunkCount; chunk++)
                 {
                     Byte[] denoised = RemovalRound
                         (
-                            message.GetRange
-                            (
-                                chunk * chunkSize,
-                                Math.Min
-                                (
-                                    chunkSize,
-                                    message.Count - chunk * chunkSize
-                                )
-                            ),
+                            message[(chunk * chunkSize)..Math.Min(chunkSize, message.Length - chunk * chunkSize)],
                             ref ignoringIsActive,
                             primary,
                             complex
@@ -53,7 +43,7 @@ namespace JabrAPI
                     }
                 }
 
-                return [.. finalised[0..usedPtr]];
+                return finalised[0..usedPtr];
             }
 
 
@@ -61,7 +51,7 @@ namespace JabrAPI
             static public string FastFile(string absoluteInputDirectory,
                 string fileName, string absoluteOutputDirectory, Noisifier noisifier)
             {
-                List<Byte> primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
+                Byte[] primary = noisifier.PrimaryNoise, complex = noisifier.ComplexNoise;
                 string finalFileName;
 
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize;
@@ -94,7 +84,7 @@ namespace JabrAPI
                     (
                         RemovalRound
                         (
-                            [.. noisedChunk[0..bytesRead]],
+                            noisedChunk[0..bytesRead],
                             ref ignoringIsActive,
                             primary,
                             complex

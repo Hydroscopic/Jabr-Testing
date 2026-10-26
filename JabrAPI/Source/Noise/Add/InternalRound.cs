@@ -12,8 +12,8 @@ namespace JabrAPI
     {
         static public partial class AddTo
         {
-            static private List<Byte> AdditionRound(
-                List<Byte> message, List<Byte> fakeSelection,
+            static private Byte[] AdditionRound(
+                List<Byte> message, Byte[] fakeSelection,
                 Noisifier noisifier, SecureRandom random,
                 Int32 maxRoundLength, Int32 maxSyntropy,
                 double maxAvgNoiseCount,
@@ -24,7 +24,7 @@ namespace JabrAPI
                 if (initialLength >= maxRoundLength)
                 {
                     prevFinalUnnoised = initialLength;
-                    return message;
+                    return [.. message];
                 }
 
                 Int32 minNoiseCount = noisifier.settings.ForceOptimalEntropy
@@ -87,7 +87,7 @@ namespace JabrAPI
                                     1,
                                     fakeSelection
                                     [
-                                        random.Next(fakeSelection.Count)
+                                        random.Next(fakeSelection.Length)
                                     ]
                                 );
                         }
@@ -104,7 +104,7 @@ namespace JabrAPI
                 if (message.Count >= maxRoundLength)
                 {
                     prevFinalUnnoised = message.Count - chosenOffset + 1;
-                    return message;
+                    return [.. message];
                 }
 
 
@@ -175,7 +175,7 @@ namespace JabrAPI
                                         totalOffset + minOffsetStep,
                                         fakeSelection
                                         [
-                                            random.Next(fakeSelection.Count)
+                                            random.Next(fakeSelection.Length)
                                         ]
                                     );
                             }
@@ -192,14 +192,14 @@ namespace JabrAPI
                     if (message.Count >= maxRoundLength)
                     {
                         prevFinalUnnoised = message.Count - totalOffset + 1;
-                        return message;
+                        return [.. message];
                     }
 
                     prevFinalUnnoised++;
                 }
 
                 prevFinalUnnoised++;
-                return message;
+                return [.. message];
             }
         }
     }

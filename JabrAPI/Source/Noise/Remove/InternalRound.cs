@@ -13,13 +13,13 @@ namespace JabrAPI
         static public partial class RemoveFrom
         {
             static private Byte[] RemovalRound(
-                List<Byte> noised, ref bool ignoringIsActive,
-                List<Byte> primaryNoise, List<Byte> complexNoise)
+                Byte[] noised, ref bool ignoringIsActive,
+                Byte[] primaryNoise, Byte[] complexNoise)
             {
                 Int32 dataStartId = 0;
-                List<Byte> dynamicResult = new(noised.Count);
+                List<Byte> dynamicResult = new(noised.Length);
 
-                for (var i = 0; i < noised.Count; i++)
+                for (var i = 0; i < noised.Length; i++)
                 {
                     var curChar = noised[i];
 
@@ -46,7 +46,7 @@ namespace JabrAPI
 
                 if (!ignoringIsActive)
                     dynamicResult.AddRange(
-                        Utils.Interval(noised, dataStartId, noised.Count));
+                        Utils.Interval(noised, dataStartId, noised.Length));
 
                 return [.. dynamicResult];
             }
