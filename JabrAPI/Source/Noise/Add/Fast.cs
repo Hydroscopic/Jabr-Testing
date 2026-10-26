@@ -22,7 +22,7 @@ namespace JabrAPI
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = message.Length,
                   hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
-                if (chunkSize < 2)  chunkSize = 2;
+                if (chunkSize < 2) chunkSize = 2;
                 if (hardChunkSize < chunkSize) hardChunkSize = chunkSize;
 
 
@@ -46,11 +46,11 @@ namespace JabrAPI
                 double maxAvgNoiseCount = 2.0 * (outputLength - initialLength) / (initialLength + 1);
                 double avgNoisePerCharInRound = (double)initialLength / outputLength;
 
-                List<Byte> result = new(outputLength);
+                Byte[] result = new Byte[outputLength];
                 fakeSelection = fakeSelection.Length < 1 ? noisifier.PrimaryNoise : fakeSelection;
-                Int32 prevFinalUnnoised = 0, maxRoundLength, offset = 0, messageChunk;
+                Int32 prevFinalUnnoised = 0, maxRoundLength, offset = 0, messageChunk, curCount = 0;
 
-                for (var curOptimalSize = chunkSize; result.Count + initialLength - offset < outputLength; curOptimalSize += chunkSize)
+                for (var curOptimalSize = chunkSize; curCount + initialLength - offset < outputLength; curOptimalSize += chunkSize)
                 {
                     random.Reseed();
 
@@ -61,10 +61,10 @@ namespace JabrAPI
                             (
                                 outputLength,
                                 curOptimalSize
-                            ) - result.Count
+                            ) - curCount
                         );
 
-                    messageChunk = result.Count - outputLength + maxRoundLength >= 0
+                    messageChunk = curCount - outputLength + maxRoundLength >= 0
                         ? initialLength - offset
                         : Math.Min
                         (
@@ -72,14 +72,12 @@ namespace JabrAPI
                             Math.Max
                             (
                                 (Int32)(maxRoundLength * avgNoisePerCharInRound),
-                                (Int32)(result.Count * avgNoisePerCharInRound
-                                    + 0.75 - result.Count / outputLength) - offset  // 0.75 = ((outP / outP) + 0.5) / 2
+                                (Int32)(curCount * avgNoisePerCharInRound
+                                    + 0.75 - curCount / outputLength) - offset  // 0.75 = ((outP / outP) + 0.5) / 2
                             )
                         );
 
-                    result.AddRange
-                    (
-                        AdditionRound
+                    var buffer = AdditionRound
                         (
                             [.. message[offset..(offset + messageChunk)]],
                             fakeSelection,
@@ -89,13 +87,14 @@ namespace JabrAPI
                             maxSyntropy,
                             maxAvgNoiseCount,
                             ref prevFinalUnnoised
-                        )
-                    );
+                        );
+                    Array.Copy(buffer, 0, result, curCount, buffer.Length);
 
+                    curCount += buffer.Length;
                     offset += messageChunk;
                 }
 
-                return [..result];
+                return result;
             }
 
             static public void FastFile(string absoluteInputDirectory,
@@ -104,7 +103,7 @@ namespace JabrAPI
                 SecureRandom random = new(noisifier.RandomReseedInterval);
                 Int32 chunkSize = (Int32)noisifier.settings.ChunkSize, initialLength = 0,
                   hardChunkSize = (Int32)(chunkSize * noisifier.settings.HardChunkSizeToSoftCoefficient);
-                if (chunkSize < 2)  chunkSize = 2;
+                if (chunkSize < 2) chunkSize = 2;
                 if (hardChunkSize < chunkSize) hardChunkSize = chunkSize;
 
                 string finalFileName;
@@ -118,7 +117,7 @@ namespace JabrAPI
 
 
                 using FileStream lengthStream = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
-                using FileStream inputStream  = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
+                using FileStream inputStream = new(Path.Combine(absoluteInputDirectory, fileName), FileMode.Open, FileAccess.Read);
                 using FileStream outputStream = new(Path.Combine(absoluteOutputDirectory, finalFileName), FileMode.Create, FileAccess.Write);
 
                 using (BinaryReader lengthReader = new(lengthStream))

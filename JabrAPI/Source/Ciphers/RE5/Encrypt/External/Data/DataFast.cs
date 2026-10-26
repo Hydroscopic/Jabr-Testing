@@ -41,7 +41,7 @@ namespace JabrAPI
 
                 Int32 chunkCount = (Int32)Math.Ceiling((double)messageLength / chunkSize);
                 Int32 thisRoundLength, shDelta;
-                Byte[] result = new byte[messageLength * (encodingLength + 1)];
+                Byte[] result = new Byte[messageLength * (encodingLength + 1)];
 
 
                 for (var chunk = 0; chunk < chunkCount; chunk++)

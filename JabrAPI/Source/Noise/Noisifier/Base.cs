@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 
 using AVcontrol;
@@ -45,7 +46,8 @@ namespace JabrAPI
             _setHelper = new(this);
             _validateHelper = new(this);
 
-            if (autoGenerate) DefaultGenerate(banned);
+            Set.Banned(banned);
+            if (autoGenerate) ReGenerate(false);
             else Set.Banned(banned);
         }
 
@@ -61,5 +63,38 @@ namespace JabrAPI
             _setHelper = new(this);
             _validateHelper = new(this);
         }
+
+
+
+        public Byte[] PrimaryNoise => _primaryNoise;
+        public Byte[] ComplexNoise => _complexNoise;
+        public Byte[] Banned => _banned;
+
+        public UInt64 RandomReseedInterval
+        {
+            get;
+            set
+            {
+                field = value >= 128 ? value : 128;
+                _random.UpdateReseedInterval(field);
+            }
+        }
+
+
+        public Byte RandomPrimaryByte => _primaryNoise[_random.Next(_primaryNoise.Length)];
+        public Byte[] RandomPrimarySequence(Int32 count) =>
+            [..
+                Enumerable.Range(0, count).Select
+                (
+                    _ => _primaryNoise[_random.Next(_primaryNoise.Length)]
+                )
+            ];
+        public Byte[] RandomComplexSequence(Int32 count) =>
+            [..
+                Enumerable.Range(0, count).Select
+                (
+                    _ => _complexNoise[_random.Next(_complexNoise.Length)]
+                )
+            ];
     }
 }

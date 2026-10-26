@@ -152,7 +152,7 @@ namespace JabrTestField
 
 
             Int32 maxNonEntropy = 0;
-            binKey.Set.ExLength(10);
+            //binKey.Set.ExLength(9);
             for (var i = 0; i < 1_000000; i++)
             {
                 //Write("\n\n\tExAlphabet: ");

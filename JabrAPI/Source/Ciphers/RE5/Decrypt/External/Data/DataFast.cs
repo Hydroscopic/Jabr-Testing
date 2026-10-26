@@ -21,7 +21,7 @@ namespace JabrAPI
 
                 Int32 helper = (reKey.PrLength * 2 + allShifts.Max() - 4 + exLength - 1) / exLength;
                 Int32 maxEncodingLength = exLength == 10
-                    ? Utils.DigitCount(helper) + 2
+                    ? Utils.DigitCount(helper) + 1
                     : Numsys.AsList64<Int32>(helper.ToString(), 10, exLength).Count + 1;
                 // + 1 is to account for EncodingLength and the character it belongs to
 
@@ -41,7 +41,7 @@ namespace JabrAPI
                 {
                     Int32 helper = (reKey.PrLength * 2 + allShifts.Max() - 4 + exLength - 1) / exLength;
                     leftover._maxEncodingLength = exLength == 10
-                        ? Utils.DigitCount(helper) + 2
+                        ? Utils.DigitCount(helper) + 1
                         : Numsys.AsList64<Int32>(helper.ToString(), 10, exLength).Count + 1;
                 }
 

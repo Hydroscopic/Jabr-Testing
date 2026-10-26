@@ -12,6 +12,25 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
+            public void CopyFrom(ReKey otherKey, bool fullCopy = true)
+            {
+                _noisifier.CopyFrom(otherKey.Noisifier, fullCopy);
+
+                PrAlphabet.CopyFrom(otherKey.PrAlphabet);
+                ExAlphabet.CopyFrom(otherKey.ExAlphabet);
+
+                if (otherKey.ShCount == 0) _shifts = [0];
+                else _shifts = otherKey.Shifts[0..Math.Max(otherKey.Shifts.Length, 255)];
+
+                if (fullCopy)
+                    Set.AlphabetLengths
+                    (
+                        otherKey._densePrMaxLength,
+                        otherKey._denseExMaxLength
+                    );
+            }
+
+
             public class ReKeyUtil_Set
             {
                 private readonly ReKey _thisKey;

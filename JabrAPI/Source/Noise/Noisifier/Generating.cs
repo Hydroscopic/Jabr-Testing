@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 
@@ -7,88 +6,61 @@ namespace JabrAPI
 {
     public partial class Noisifier
     {
-        public void Next(bool throwExceptions = true)
+        public void ReGenerate(bool throwExceptions = true)
         {
-            try { GenerateAll(); }
+            try
+            {
+                GeneratePrimary(false);
+                GenerateComplex(true);
+            }
             catch { if (throwExceptions) throw; }
         }
-        public void Next(Byte[] bannedForFailsafeRegeneration,
-            bool resetSettingsToDefaultIfFailed = true, bool throwExceptions = true)
+
+
+        private Byte[] GenerateNoise(Byte targetCount, Byte[] banned, Byte[] otherNoise, bool banAlreadyUsed, bool isPrimary)
         {
-            try { GenerateAll(); }
-            catch
+            if (targetCount == 0) return [];
+            Int32 allowedCount = 256 - banned.Length;
+            Byte[] excluded = new Byte[256];
+
+            if (!banAlreadyUsed && allowedCount < _primaryCount + _complexCount)
             {
-                if (resetSettingsToDefaultIfFailed)
-                {
-                    try { DefaultGenerate(bannedForFailsafeRegeneration); }
-                    catch { if (throwExceptions) throw; }
-                }
-                else if (throwExceptions) throw;
+                Int32 compromiseLeft = allowedCount / 3;
+                targetCount = (Byte)(isPrimary ? compromiseLeft : allowedCount - compromiseLeft);
             }
-        }
-
-
-
-        private void GenerateAll()
-        {
-            GeneratePrimary(false);
-            GenerateComplex(true);
-        }
-        public void DefaultGenerate(Byte[] banned)
-        {
-            Set.Banned(banned);
-            GenerateAll();
-        }
-
-
-
-        public List<Byte> GenerateNoise(Byte count, List<Byte> allowed)
-        {
-            if (count <= 0) return [];
-            if (count > allowed.Count) throw new ArgumentOutOfRangeException
-                (
-                    $"Count is greater than max possible length: {allowed.Count}"
-                );
-
-            List<Byte> result = new(count);
-            Int32  totalCount = allowed.Count;
-
-            for (var lastUsedId = 0; lastUsedId < count; lastUsedId++)
+            else if (banAlreadyUsed)
             {
-                Int32 chosenUnused = _random.Next(lastUsedId, totalCount);
-
-                (allowed[chosenUnused], allowed[lastUsedId]) =
-                (allowed[lastUsedId], allowed[chosenUnused]);
-
-                result.Add(allowed[lastUsedId]);
+                allowedCount -= otherNoise.Length;
+                foreach (Byte b in otherNoise) excluded[b] = 1;
             }
 
-            return result;
-        }
+            if (targetCount > allowedCount)
+                throw new ArgumentOutOfRangeException(nameof(targetCount),
+                    $"Target count {targetCount} exceeds remaining allowed bytes: {allowedCount}");
 
+            Byte[] allowed = new Byte[allowedCount];
+            allowedCount = 0;
+
+            foreach (Byte b in banned) excluded[b] = 1;
+            for (var b = 0; b < 256; b++)
+                if (excluded[b] == 0) allowed[allowedCount++] = (Byte)b;
+
+            _random.Shuffle(ref allowed);
+            Array.Resize(ref allowed, targetCount);
+            return allowed;
+        }
 
 
         public void GeneratePrimary(Byte[] banned, bool banAlreadyUsedInComplex)
-        {
-            //  Important to get allowed separately from GenerateNoise
-            //  because _primaryCount can change here in default fail case
-            List<Byte> allowed = GetRemainingAllowed(banned, _primaryCount, banAlreadyUsedInComplex);
-
-            _primaryNoise = [.. GenerateNoise(_primaryCount, allowed)];
-        }
+            => _primaryNoise = GenerateNoise(_primaryCount, banned,
+                _complexNoise, banAlreadyUsedInComplex, isPrimary: true);
         public void GeneratePrimary(bool banAlreadyUsedInComplex)
-             => GeneratePrimary(_banned, banAlreadyUsedInComplex);
-
+            => GeneratePrimary( _banned, banAlreadyUsedInComplex);
 
         public void GenerateComplex(Byte[] banned, bool banAlreadyUsedInPrimary)
-        {
-            //  Important to get allowed separately from GenerateNoise
-            //  because _complexCount can change here in default fail case
-            List<Byte> allowed = GetRemainingAllowed(banned, _complexCount, banAlreadyUsedInPrimary);
-
-            _complexNoise = [.. GenerateNoise(_complexCount, allowed)];
-        }
+            => _complexNoise = GenerateNoise(_complexCount, banned,
+                _primaryNoise, banAlreadyUsedInPrimary, isPrimary: false);
         public void GenerateComplex(bool banAlreadyUsedInPrimary)
-             => GenerateComplex(_banned, banAlreadyUsedInPrimary);
+            => GenerateComplex( _banned, banAlreadyUsedInPrimary);
     }
 }

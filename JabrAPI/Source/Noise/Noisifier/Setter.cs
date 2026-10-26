@@ -9,6 +9,21 @@ namespace JabrAPI
 {
     public partial class Noisifier
     {
+        public void CopyFrom(Noisifier otherNoisifier, bool fullCopy = true)
+        {
+            _primaryNoise = otherNoisifier.PrimaryNoise;
+            _complexNoise = otherNoisifier.ComplexNoise;
+
+            if (fullCopy)
+                Set.Default
+                (
+                    otherNoisifier.Banned,
+                    otherNoisifier._primaryCount,
+                    otherNoisifier._complexCount
+                );
+        }
+
+
         public SetHelper Set => _setHelper;
 
 

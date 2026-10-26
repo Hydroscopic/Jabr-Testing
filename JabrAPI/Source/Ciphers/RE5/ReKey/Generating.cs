@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 using JabrAPI.Template;
 
 
@@ -19,7 +20,7 @@ namespace JabrAPI
                     GenerateRandomShifts();
 
                     _noisifier.Set.Banned(ExAlphabet.ExportDirect);
-                    _noisifier.Next(false);
+                    _noisifier.ReGenerate(false);
                     return true;
                 }
                 catch
@@ -29,17 +30,12 @@ namespace JabrAPI
             }
 
 
-
             public void ReGeneratePrAlphabet(Byte compactedLength = 255)
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
                 PrAlphabet.Regenerate(compactedLength + 1, _random);
             }
-
-            public void ReGeneratePrAlphabet()
-                => ReGeneratePrAlphabet(_densePrMaxLength > 0 ? _densePrMaxLength : DEFAULT_PR_ALPHABET_LENGTH);
-
             public void ReGenerateExAlphabet(Byte compactedLength = 255)
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
@@ -47,9 +43,10 @@ namespace JabrAPI
                 ExAlphabet.Regenerate(compactedLength + 1, _random);
             }
 
+            public void ReGeneratePrAlphabet()
+                => ReGeneratePrAlphabet(_densePrMaxLength > 0 ? _densePrMaxLength : DEFAULT_PR_ALPHABET_LENGTH);
             public void ReGenerateExAlphabet()
                 => ReGenerateExAlphabet(_denseExMaxLength > 0 ? _denseExMaxLength : DEFAULT_EX_ALPHABET_LENGTH);
-
 
 
             public void GenerateRandomShifts(Int32 count)
