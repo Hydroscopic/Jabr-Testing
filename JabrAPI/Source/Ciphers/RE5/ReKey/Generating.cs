@@ -34,13 +34,13 @@ namespace JabrAPI
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
-                PrAlphabet.Regenerate(compactedLength + 1, _random);
+                PrAlphabet.ReGenerate(compactedLength + 1, _random);
             }
             public void ReGenerateExAlphabet(Byte compactedLength = 255)
             {
                 ArgumentOutOfRangeException.ThrowIfZero(compactedLength);
                 _isExportUpToDate = false;
-                ExAlphabet.Regenerate(compactedLength + 1, _random);
+                ExAlphabet.ReGenerate(compactedLength + 1, _random);
             }
 
             public void ReGeneratePrAlphabet()

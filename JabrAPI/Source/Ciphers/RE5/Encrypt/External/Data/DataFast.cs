@@ -14,68 +14,20 @@ namespace JabrAPI
         {
             static public Byte[] Fast(Byte[] message, ReKey reKey, ref EncryptLeftover leftover)
             {
-                Byte[] prAlphabet = reKey.PrAlphabet.ExportDirect, allShifts = reKey.Shifts,
-                       exAlphabet = reKey.ExAlphabet.ExportDirect, shifts;
-                Int32 exLength = reKey.ExLength, messageLength = message.Length, shCount = reKey.ShCount;
+                Byte[] prLogicMap = reKey.PrAlphabet.ExportReverse, allShifts = reKey.Shifts,
+                       exLogicMap = reKey.ExAlphabet.ExportDirect;
 
+                Int32 exLength =  reKey.ExLength,
+                      helper   = (reKey.PrLength * 2 + allShifts.Max() - 4 + exLength - 1) / exLength;
+                Int32 encodingLength = exLength == 10
+                    ? Utils.DigitCount(helper)
+                    : Numsys.AsList64<Int32>(helper.ToString(), 10, exLength).Count;
+                //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
+                // + 1 is to account for EncodingLength and the character it belongs to
 
-                Int32 helper = (Int32)Math.Ceiling
-                    (
-                        (double)
-                        (   //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
-                            reKey.PrLength * 2 + allShifts.Max() - 4
-                        ) / exLength
-                    );
-                Int32 encodingLength = exLength == 10 ?
-                    Utils.DigitCount(helper)  //  Optimisation for base 10 encoding
-                  : Numsys.AsListBigInteger<Int32>
-                    (
-                        helper.ToString(),
-                        10,
-                        exLength
-                    ).Count;
-
-                helper = (Int32)reKey.ChunkSize;
-                Int32 chunkSize = encodingLength == 0 || helper < encodingLength ? encodingLength
-                      : (helper / encodingLength) * (encodingLength + 1);
-
-                Int32 chunkCount = (Int32)Math.Ceiling((double)messageLength / chunkSize);
-                Int32 thisRoundLength, shDelta;
-                Byte[] result = new Byte[messageLength * (encodingLength + 1)];
-
-
-                for (var chunk = 0; chunk < chunkCount; chunk++)
-                {
-                    thisRoundLength =
-                        Math.Min
-                        (
-                            messageLength - chunk * chunkSize,
-                            chunkSize
-                        );
-
-                    shDelta = leftover._shiftStartId + thisRoundLength;
-
-                    shifts = shDelta > shCount ?
-                        [.. allShifts[leftover._shiftStartId..shCount],
-                         .. allShifts[0..Math.Min(leftover._shiftStartId, shDelta - shCount)]]
-                          : allShifts[leftover._shiftStartId..(leftover._shiftStartId + thisRoundLength)];
-                    leftover._shiftStartId = shDelta % shCount;
-
-
-                    var roundResult = Internal.EncryptionRound
-                        (
-                            message[(chunk * chunkSize)..(chunk * chunkSize + thisRoundLength)],
-                            prAlphabet,
-                            exAlphabet,
-                            shifts,
-                            exLength,
-                            encodingLength,
-                            ref leftover._prevId
-                        );
-                    Array.Copy(roundResult, 0, result, chunk * (encodingLength + 1) * chunkSize, roundResult.Length);
-                }
-
-                return result;
+                return Internal.EncryptionRound(
+                    message, prLogicMap, exLogicMap, allShifts, new Byte[encodingLength],
+                    exLength, encodingLength, ref leftover);
             }
             static public Byte[] Fast(Byte[] message, ReKey reKey)
             {

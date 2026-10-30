@@ -1,5 +1,6 @@
 ﻿using System;
 
+
 using AVcontrol;
 
 
@@ -20,11 +21,18 @@ namespace JabrAPI
 
 
 
-        public void Regenerate(Int32 length, SecureRandom random)
+        public void ReGenerate(Int32 length, SecureRandom random)
         {
-            _directAlphabet  = new Byte[length];
-            _reverseAlphabet = new Byte[256];
-            
+            ArgumentOutOfRangeException.ThrowIfLessThan(length, 2);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(length, 256);
+            ArgumentNullException.ThrowIfNull(random);
+
+            if (_directAlphabet.Length != length || _reverseAlphabet.Length != 256)
+            {
+                _directAlphabet  = new Byte[length];
+                _reverseAlphabet = new Byte[256];
+            }
+
             Span<Byte> deck = stackalloc Byte[256];
             DEFAULT.BYTES.CopyTo(deck);
 
@@ -42,13 +50,14 @@ namespace JabrAPI
 
         public void CopyFrom(Byte[] compressed)
         {
+            ArgumentNullException.ThrowIfNull(compressed);
             ArgumentOutOfRangeException.ThrowIfLessThan(compressed.Length, 2);
             ArgumentOutOfRangeException.ThrowIfGreaterThan(compressed.Length, 256);
 
             if (_directAlphabet.Length != compressed.Length)
             {
                 _directAlphabet  = new Byte[compressed.Length];
-                _reverseAlphabet = new Byte[compressed.Length];
+                _reverseAlphabet = new Byte[256];
             }
 
             compressed.CopyTo(_directAlphabet);
@@ -57,6 +66,11 @@ namespace JabrAPI
         }
         public void CopyFrom(HT_Alphabet other)
         {
+            ArgumentNullException.ThrowIfNull(other);
+            if (ReferenceEquals(this, other)) return;
+
+            _directAlphabet  = new Byte[other._directAlphabet.Length];
+            _reverseAlphabet = new Byte[other._reverseAlphabet.Length];
             other. _directAlphabet.CopyTo(_directAlphabet);
             other._reverseAlphabet.CopyTo(_reverseAlphabet);
         }

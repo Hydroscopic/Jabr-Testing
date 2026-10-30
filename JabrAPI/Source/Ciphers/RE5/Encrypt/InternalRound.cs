@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 
 using AVcontrol;
@@ -12,46 +13,50 @@ namespace JabrAPI
         static internal partial class Internal
         {
             static internal Byte[] EncryptionRound(
-                Byte[] messageChunk,
-                Byte[] prAlphabet, Byte[] exAlphabet, Byte[] shifts,
-                Int32 exLength, Int32 encodingLength,
-                ref Int32 prevId)
+                Byte[] message, Byte[] prLogicMap, Byte[] exLogicMap, Byte[] allShifts, Byte[] maxPadding,
+                Int32 exLength, Int32 encodingLength, ref EncryptLeftover leftover)
             {
-                Int32 messageLength = messageChunk.Length, shCount = shifts.Length;
-                Int32 buffer = prAlphabet.IndexOf(messageChunk[0]), curFinal = prevId + buffer + shifts[0];
-                prevId = buffer;
+                Int32 messageLength = message.Length, shCount = allShifts.Length,
+                    shIdx = leftover._shiftStartId, buffer = prLogicMap[message[0]], offset = 1,
+                    curFinal = leftover._prevId + buffer + allShifts[shIdx];
 
-                Byte[] encoding = [.. Numsys.ToCustomAsBinaryBigInteger
-                (
-                    Split.BigEndian<Int32, Byte>(curFinal / exLength, 10),
-                    10,
-                    exLength,
-                    [.. exAlphabet],
-                    encodingLength
-                )];
+                leftover._prevId = buffer;
+                leftover._shiftStartId = (shIdx + message.Length) % shCount;
 
                 Byte[] encrypted = new Byte[messageLength * (encodingLength + 1)];
+                Array.Fill(maxPadding, exLogicMap[0]);
 
-                encrypted[0] = exAlphabet[curFinal % exLength];
-                Array.Copy(encoding, 0, encrypted, 1, encoding.Length);
+                List<Byte> encoding = Numsys.FromDecimalToCustomBigInteger
+                (
+                    curFinal / exLength,
+                    exLogicMap,
+                    exLength
+                );
+
+                encrypted[0] = exLogicMap[curFinal % exLength];
+                Array.Copy(maxPadding, 0, encrypted, 1, encodingLength);
+                encoding.CopyTo(encrypted, 1 + encodingLength - encoding.Count);
 
                 for (var curId = 1; curId < messageLength; curId++)
                 {
-                    buffer   = prAlphabet.IndexOf(messageChunk[curId]);
-                    curFinal = buffer + prevId + shifts[curId % shCount];
-                    prevId   = buffer;
+                    if (++shIdx == shCount) shIdx = 0;
 
-                    encoding = [.. Numsys.ToCustomAsBinaryBigInteger
+                    buffer   = prLogicMap[message[curId]];
+                    curFinal = buffer + leftover._prevId + allShifts[shIdx];
+                    leftover._prevId  = buffer;
+
+                    encoding = Numsys.FromDecimalToCustomBigInteger
                     (
-                        Split.BigEndian<Int32, Byte>(curFinal / exLength, 10),
-                        10,
-                        exLength,
-                        [.. exAlphabet],
-                        encodingLength
-                    )];
+                        curFinal / exLength,
+                        exLogicMap,
+                        exLength
+                    );
 
-                    encrypted[curId * (encodingLength + 1)] = exAlphabet[curFinal % exLength];
-                    Array.Copy(encoding, 0, encrypted, curId * (encodingLength + 1) + 1, encoding.Length);
+                    offset += encodingLength;
+
+                    encrypted[offset++] = exLogicMap[curFinal % exLength];
+                    Array.Copy(maxPadding, 0, encrypted, offset, encodingLength);
+                    encoding.CopyTo(encrypted, offset + encodingLength - encoding.Count);
                 }
 
                 return encrypted;

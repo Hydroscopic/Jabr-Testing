@@ -17,19 +17,17 @@ namespace JabrAPI
                 Byte[] prLogicMap = reKey.PrAlphabet.ExportDirect, allShifts = reKey.Shifts,
                        exLogicMap = reKey.ExAlphabet.ExportReverse;
 
-                Int32 exLength = reKey.ExLength, encLength = encrypted.Length;
-
-                Int32 helper = (reKey.PrLength * 2 + allShifts.Max() - 4 + exLength - 1) / exLength;
+                Int32 exLength =  reKey.ExLength,
+                      helper   = (reKey.PrLength * 2 + allShifts.Max() - 4 + exLength - 1) / exLength;
                 Int32 maxEncodingLength = exLength == 10
                     ? Utils.DigitCount(helper) + 1
                     : Numsys.AsList64<Int32>(helper.ToString(), 10, exLength).Count + 1;
+                //  -4 bcs: (alphabet ids start at zero & dont reach .Length value) x 2
                 // + 1 is to account for EncodingLength and the character it belongs to
-
-                Int32 realMessageLength = encLength / maxEncodingLength;
 
                 return Internal.DecryptionRound(
                     encrypted, prLogicMap, exLogicMap, allShifts,
-                    exLength, maxEncodingLength, realMessageLength);
+                    exLength, maxEncodingLength, encrypted.Length / maxEncodingLength);
             }
             static public Byte[] Fast(Byte[] encrypted, ReKey reKey, ref DecryptLeftover leftover)
             {

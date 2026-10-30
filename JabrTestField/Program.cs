@@ -153,7 +153,7 @@ namespace JabrTestField
 
             Int32 maxNonEntropy = 0;
             //binKey.Set.ExLength(9);
-            for (var i = 0; i < 1_000000; i++)
+            for (var i = 0; i < 1_000; i++)
             {
                 //Write("\n\n\tExAlphabet: ");
                 //foreach (var b in binKey.PrAlphabet.ExportDirect) Write(b + " ");
