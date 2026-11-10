@@ -150,7 +150,6 @@ namespace JabrTestField
 
             
 
-
             Int32 maxNonEntropy = 0;
             //binKey.Set.ExLength(9);
             for (var i = 0; i < 1_000; i++)
@@ -167,7 +166,7 @@ namespace JabrTestField
                     Write(lolinit[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                Byte[] binoised     = Noise.AddTo.Data(bincrypted, binKey, true);
+                Byte[] binoised     = Noise.AddToData.Safe(bincrypted, binKey, true);
                 Byte[] bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
                 Byte[] bindecrypted = RE5.DecryptData.Safe(bindenoised, binKey, true).result;
 

@@ -41,13 +41,13 @@ namespace JabrAPI
             {
                 Byte[] result = RE5.EncryptData.Fast(message, reKey, ref prevId);
                 return result == null || result.Length < 1 ? []
-                        : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
+                        : Noise.AddToData.Fast(result, reKey.Noisifier, [.. message.Distinct()]);
             }
             static public Byte[] FastWithNoising(Byte[] message, ReKey reKey)
             {
                 Byte[] result = RE5.EncryptData.Fast(message, reKey);
                 return result == null || result.Length < 1 ? []
-                        : Noise.AddTo.FastData(result, reKey.Noisifier, [.. message.Distinct()]);
+                        : Noise.AddToData.Fast(result, reKey.Noisifier, [.. message.Distinct()]);
             }
         }
     }

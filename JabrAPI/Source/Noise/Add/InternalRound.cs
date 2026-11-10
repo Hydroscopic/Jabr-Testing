@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 
 using AVcontrol;
@@ -10,24 +9,26 @@ namespace JabrAPI
 {
     static public partial class Noise
     {
-        static public partial class AddTo
+        static internal class Internal
         {
-            static private Byte[] AdditionRound(
-                List<Byte> message, Byte[] fakeSelection,
-                Noisifier noisifier, SecureRandom random,
+            static internal Int32 AdditionRound(
+                Byte[] message, Byte[] result, Int32 resultOffset,
+                Byte[] fakeSelection, Noisifier noisifier, SecureRandom random,
                 Int32 maxRoundLength, Int32 maxSyntropy,
                 double maxAvgNoiseCount,
                 ref Int32 prevFinalUnnoised)
             {
-                Int32 initialLength = message.Count, chosenOffset;
-
-                if (initialLength >= maxRoundLength)
+                Int32 initialLength = message.Length, position = resultOffset;
+                if (initialLength  >= maxRoundLength)
                 {
                     prevFinalUnnoised = initialLength;
-                    return [.. message];
+                    message.CopyTo(result.AsSpan(position));
+                    return initialLength;
                 }
 
-                Int32 minNoiseCount = noisifier.settings.ForceOptimalEntropy
+
+                Int32 curLength = initialLength, chosenOffset,
+                      minNoiseCount = noisifier.settings.ForceOptimalEntropy
                         && prevFinalUnnoised >= maxSyntropy ? 1 : 0;
 
                 double overflow = random.NextDouble
@@ -38,7 +39,7 @@ namespace JabrAPI
                         Math.Min
                         (
                             maxAvgNoiseCount,
-                            maxRoundLength - message.Count + 1
+                            maxRoundLength - initialLength + 1
                                 - initialLength / maxSyntropy
                         ),
                         1
@@ -47,73 +48,27 @@ namespace JabrAPI
                 chosenOffset = (Int32)Math.Floor(overflow);
                 overflow -= chosenOffset;
 
-
                 if (chosenOffset > 0)
                 {
                     prevFinalUnnoised = 1;
-
-                    if (chosenOffset >= 2 && random.NextBoolChance(
-                        noisifier.settings.ComplexNoiseIntervalBiasPercents))
-                    {
-                        message.InsertRange
-                        (
-                            0,
-                            noisifier.RandomComplexSequence(2)
-                        );
-
-                        for (var i = 1; i < chosenOffset - 1; i++)
-                        {
-                            if (i < chosenOffset - 2 &&
-                                random.NextBoolChance(
-                                    noisifier.settings.ComplexNoisePairBiasPercents))
-                            {
-                                message.InsertRange
-                                (
-                                    1,
-                                    noisifier.RandomComplexSequence(2)
-                                );
-
-                                i++;
-                            }
-                            else if (random.NextBoolChance(
-                                     noisifier.settings.PrimaryNoiseBiasPercents))
-                                message.Insert
-                                (
-                                    1,
-                                    noisifier.RandomPrimaryByte
-                                );
-                            else message.Insert
-                                (
-                                    1,
-                                    fakeSelection
-                                    [
-                                        random.Next(fakeSelection.Length)
-                                    ]
-                                );
-                        }
-                    }
-                    else message.InsertRange
-                        (
-                            0,
-                            noisifier.RandomPrimarySequence(chosenOffset)
-                        );
+                    WriteNoise(result, ref position, chosenOffset, fakeSelection, noisifier, random);
+                    curLength += chosenOffset;
                 }
                 else prevFinalUnnoised += 2;
 
-
-                if (message.Count >= maxRoundLength)
+                if (curLength >= maxRoundLength)
                 {
-                    prevFinalUnnoised = message.Count - chosenOffset + 1;
-                    return [.. message];
+                    prevFinalUnnoised = initialLength + 1;
+                    message.CopyTo(result.AsSpan(position));
+                    return curLength;
                 }
 
-
-                const Int32 minOffsetStep = 1;
-                Int32 totalOffset = minOffsetStep + chosenOffset;
 
 
                 for (var i = 1; i <= initialLength; i++)
                 {
+                    result[position++] = message[i - 1];
+
                     minNoiseCount = noisifier.settings.ForceOptimalEntropy
                             && prevFinalUnnoised >= maxSyntropy
                             && i < initialLength ? 1 : 0;
@@ -126,7 +81,7 @@ namespace JabrAPI
                             Math.Min
                             (
                                 maxAvgNoiseCount,
-                                maxRoundLength - message.Count
+                                maxRoundLength - curLength
                                     - (initialLength - i) / maxSyntropy
                             ),
                             minNoiseCount
@@ -135,71 +90,56 @@ namespace JabrAPI
                     chosenOffset = (Int32)Math.Floor(overflow);
                     overflow -= chosenOffset;
 
-
                     if (chosenOffset > 0)
                     {
                         prevFinalUnnoised = 0;
-
-                        if (chosenOffset >= 2 && random.NextBoolChance(
-                            noisifier.settings.ComplexNoiseIntervalBiasPercents))
-                        {
-                            message.InsertRange
-                            (
-                                totalOffset,
-                                noisifier.RandomComplexSequence(2)
-                            );
-
-                            for (var j = 1; j < chosenOffset - 1; j++)
-                            {
-                                if (j < chosenOffset - 2 &&
-                                random.NextBoolChance(
-                                    noisifier.settings.ComplexNoisePairBiasPercents))
-                                {
-                                    message.InsertRange
-                                    (
-                                        totalOffset + minOffsetStep,
-                                        noisifier.RandomComplexSequence(2)
-                                    );
-
-                                    j++;
-                                }
-                                else if (random.NextBoolChance(
-                                    noisifier.settings.PrimaryNoiseBiasPercents))
-                                    message.Insert
-                                    (
-                                        totalOffset + minOffsetStep,
-                                        noisifier.RandomPrimaryByte
-                                    );
-                                else message.Insert
-                                    (
-                                        totalOffset + minOffsetStep,
-                                        fakeSelection
-                                        [
-                                            random.Next(fakeSelection.Length)
-                                        ]
-                                    );
-                            }
-                        }
-                        else message.InsertRange
-                            (
-                                totalOffset,
-                                noisifier.RandomPrimarySequence(chosenOffset)
-                            );
+                        WriteNoise(result, ref position, chosenOffset, fakeSelection, noisifier, random);
+                        curLength += chosenOffset;
                     }
 
-                    totalOffset += chosenOffset + minOffsetStep;
-
-                    if (message.Count >= maxRoundLength)
+                    if (curLength >= maxRoundLength)
                     {
-                        prevFinalUnnoised = message.Count - totalOffset + 1;
-                        return [.. message];
+                        prevFinalUnnoised = initialLength - i;
+                        message[i..].CopyTo(result.AsSpan(position));
+                        return curLength;
                     }
 
                     prevFinalUnnoised++;
                 }
 
                 prevFinalUnnoised++;
-                return [.. message];
+                return curLength;
+            }
+
+            static private void WriteNoise(
+                Byte[] result, ref Int32 position, Int32 noiseCount,
+                Byte[] fakeSelection, Noisifier noisifier, SecureRandom random)
+            {
+                if (noiseCount >= 2 && random.NextBoolChance(
+                    noisifier.settings.ComplexNoiseIntervalBiasPercents))
+                {
+                    Byte[] edges = noisifier.RandomComplexSequence(2);
+                    result[position++] = edges[0];  //  start ignore
+
+                    for (var j = 1; j < noiseCount - 1; j++)
+                    {
+                        if (j < noiseCount - 2 && random.NextBoolChance(
+                            noisifier.settings.ComplexNoisePairBiasPercents))
+                        {
+                            Byte[] pair = noisifier.RandomComplexSequence(2);
+                            result[position++] = pair[0];
+                            result[position++] = pair[1];
+                            j++;
+                        }
+                        else if (random.NextBoolChance(noisifier.settings.PrimaryNoiseBiasPercents))
+                             result[position++] = noisifier.RandomPrimaryByte;
+                        else result[position++] = fakeSelection[random.Next(fakeSelection.Length)];
+                    }
+
+                    result[position++] = edges[1];  // stop ignoring
+                }
+                else for (var k = 0; k < noiseCount; k++)
+                    result[position++] = noisifier.RandomPrimaryByte;
             }
         }
     }
