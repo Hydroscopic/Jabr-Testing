@@ -12,7 +12,7 @@ namespace JabrAPI
     {
         public partial class ReKey : IReKey
         {
-            public override bool ImportFromBinary(Byte[] exportData, bool throwExceptions = false, bool doLegacy = true)
+            public override bool ImportFromBinary(Byte[] exportData, bool throwExceptions = false)
             {
                 try
                 {
@@ -56,48 +56,33 @@ namespace JabrAPI
 
 
                     _noisifier.ImportFromBinary(exportData[0..(noisifierBytesCount + 2)], throwExceptions);
-                    Byte[] onlyReKeyData = exportData[(noisifierBytesCount + 2)..];
+                    exportData = exportData[(noisifierBytesCount + 2)..];
 
 
-                    if (onlyReKeyData.Length < 10)
+                    // 10 = 1b: PrLength, 2b: MinPrAlphabet, 1b: ExLength, 2b: MinExAlphabet, 4b: ShCount
+                    if (exportData.Length < 10)
                     {
                         if (throwExceptions)
                             throw new ArgumentException
                             (
-                                $"Data length is insufficient even for an empty BinaryKey",
-                                nameof(onlyReKeyData)
+                                $"Data length is insufficient for a BinaryKey",
+                                nameof(exportData)
                             );
                         return false;
                     }
-                    Int32 parsedShiftCount = FromBinary.BigEndian<Int32>(onlyReKeyData[0..4]);
 
-
-                    //  6 is the lowest possible length of an exported key
-                    //  1x2 bytes reserved for PrLength and ExLength
-                    //  and 1x2x2 reserved for both smallest primary and external alphabets of 2 value
-                    if (onlyReKeyData.Length < parsedShiftCount + 6)
-                    {
-                        if (throwExceptions)
-                            throw new ArgumentException
-                            (
-                                $"Data length is insufficient for the specified shifts count" +
-                                $" {parsedShiftCount} from onlyReKeyData[0-4]",
-                                nameof(onlyReKeyData)
-                            );
-                        return false;
-                    }
 
                     // +1 is transforming our length range back from 1-255 to 2-256
-                    Int32 parsedLengthGuide = onlyReKeyData[parsedShiftCount + 4] + 1;
+                    Int32 parsedLengthGuide = exportData[0] + 1;
 
-                    if (onlyReKeyData.Length < parsedShiftCount + parsedLengthGuide + 3)
+                    if (exportData.Length < parsedLengthGuide + 7)
                     {
                         if (throwExceptions)
                             throw new ArgumentException
                             (
                                 $"Data length is insufficient for the specified primary alphabet length" +
-                                $" {parsedLengthGuide} from onlyReKeyData[{parsedShiftCount + 4}]",
-                                nameof(onlyReKeyData)
+                                $" {parsedLengthGuide} from onlyReKeyData[0]",
+                                nameof(exportData)
                             );
                         return false;
                     }
@@ -108,29 +93,29 @@ namespace JabrAPI
                             (
                                 $"Primary alphabet length cant be less than 2 (required)" +
                                 $"\nParsed length: {parsedLengthGuide} " +
-                                $"from onlyReKeyData[{parsedShiftCount + 4}]",
-                                nameof(onlyReKeyData)
+                                $"from onlyReKeyData[0]",
+                                nameof(exportData)
                             );
                         return false;
                     }
 
-                    PrAlphabet.CopyFrom(onlyReKeyData[(parsedShiftCount + 5)..(parsedShiftCount + 5 + parsedLengthGuide)]);
+                    PrAlphabet.CopyFrom(exportData[1..(1 + parsedLengthGuide)]);
 
 
                     //  reusing noisifierBytesCount as a offset for what we have already read
-                    noisifierBytesCount = parsedShiftCount + parsedLengthGuide + 4;
+                    noisifierBytesCount = parsedLengthGuide;
 
                     // +1 is transforming our length range back from 1-255 to 2-256
-                    parsedLengthGuide = onlyReKeyData[noisifierBytesCount + 1] + 1;
+                    parsedLengthGuide = exportData[noisifierBytesCount + 1] + 1;
 
-                    if (onlyReKeyData.Length < noisifierBytesCount + parsedLengthGuide)
+                    if (exportData.Length < noisifierBytesCount + parsedLengthGuide + 4)
                     {
                         if (throwExceptions)
                             throw new ArgumentException
                             (
                                 $"Data length is insufficient for the specified external alphabet length" +
                                 $" {parsedLengthGuide} from onlyReKeyData[{noisifierBytesCount + 1}]",
-                                nameof(onlyReKeyData)
+                                nameof(exportData)
                             );
                         return false;
                     }
@@ -142,22 +127,49 @@ namespace JabrAPI
                                 $"External alphabet length cant be less than 2 (required)" +
                                 $"\nParsed length: {parsedLengthGuide} " +
                                 $"from onlyReKeyData[{noisifierBytesCount + 1}]",
-                                nameof(onlyReKeyData)
+                                nameof(exportData)
                             );
                         return false;
                     }
 
-                    if (parsedShiftCount > 0)
+
+                    ExAlphabet.CopyFrom(exportData[(noisifierBytesCount + 2)..(noisifierBytesCount + 2 + parsedLengthGuide)]);
+                    Int32 parsedShiftCount = FromBinary.BigEndian<Int32>(exportData
+                            [  (
+                                    noisifierBytesCount + 2 + parsedLengthGuide
+                            )..(
+                                    noisifierBytesCount + 6 + parsedLengthGuide)
+                            ]  );
+
+                    if (exportData.Length < noisifierBytesCount + 6 + parsedLengthGuide + parsedShiftCount)
                     {
-                        if (doLegacy) _shifts = onlyReKeyData[4..(4 + parsedShiftCount)];
-                        else _shifts = [.. Numsys.FromDecimalBigInteger<Byte>
+                        if (throwExceptions)
+                            throw new ArgumentException
                             (
-                                Numsys.ToDecimalBigInteger<Byte>(onlyReKeyData[4..(4 + parsedShiftCount)], 256),
-                                parsedLengthGuide
-                        )   ];
+                                $"Data length is insufficient for the specified shifts count" +
+                                $" {parsedShiftCount} from onlyReKeyData[" +
+                                $"{noisifierBytesCount + 6 + parsedLengthGuide}-" +
+                                $"{noisifierBytesCount + 6 + parsedLengthGuide + parsedShiftCount}]",
+                                nameof(exportData)
+                            );
+                        return false;
                     }
-                    else _shifts = [0];
-                    ExAlphabet.CopyFrom(onlyReKeyData[(noisifierBytesCount + 2)..(noisifierBytesCount + 2 + parsedLengthGuide)]);
+
+                    _shifts = parsedShiftCount <= 0 ? [0] : [..
+                        Numsys.FromDecimalBigInteger<Byte>
+                        (
+                            Numsys.ToDecimalBigInteger<Byte>
+                            (
+                                exportData
+                                [  (
+                                        noisifierBytesCount + 6 + parsedLengthGuide
+                                )..(
+                                        noisifierBytesCount + 6 + parsedLengthGuide + parsedShiftCount
+                                )  ],
+                                256
+                            ),
+                            parsedLengthGuide
+                        )   ];
                 }
                 catch (Exception)
                 {
@@ -168,34 +180,35 @@ namespace JabrAPI
             }
 
 
-            public override Byte[] ExportAsBinary(bool doLegacy) => ReCalculateExport(doLegacy);
-            //{
-            //    get => _isExportUpToDate ?
-            //        field ??= ReCalculateExport(doLegacy)
-            //        : ReCalculateExport(doLegacy);
-            //} = null;
+            public override Byte[] ExportAsBinary
+            {
+                get => _isExportUpToDate ?
+                    field ??= ReCalculateExport()
+                    : ReCalculateExport();
+            } = null;
 
-            private Byte[] ReCalculateExport(bool doLegacy)
+            private Byte[] ReCalculateExport()
             {
                 _isExportUpToDate = true;
-                Byte[] compressedShifts = doLegacy ? _shifts :
-                    ExAlphabet.Length == 0
-                    ? [0] : [..
+                Byte[] compressedShifts = ExAlphabet.Length == 0
+                    ? [] : [..
                         Numsys.FromDecimalBigInteger<Byte>
                         (
                             Numsys.ToDecimalBigInteger<Byte>(_shifts, ExAlphabet.Length),
                             256
                     )   ];
 
-                return [
+                return
+                [
                     .. _noisifier.ExportAsBinary(),
-                    .. ToBinary.BigEndian(compressedShifts.Length),
-                    .. compressedShifts,
 
                     (Byte)(PrLength - 1),
                     .. PrAlphabet.ExportDirect,
                     (Byte)(ExLength - 1),
-                    .. ExAlphabet.ExportDirect
+                    .. ExAlphabet.ExportDirect,
+
+                    .. ToBinary.BigEndian(compressedShifts.Length),
+                    .. compressedShifts
                 ];
             }
         }

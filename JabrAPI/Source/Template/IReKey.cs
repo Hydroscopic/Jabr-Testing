@@ -38,9 +38,9 @@ namespace JabrAPI.Template
 
 
 
-        abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false, bool doLegacy = true);
-        virtual public Byte[] ExportAsBinary(bool doLegacy) => [];
-        public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false, bool doLegacy = true)
+        abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false);
+        virtual public Byte[] ExportAsBinary => [];
+        public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace JabrAPI.Template
                             Numsys.FromCustomAsListBigInteger<Byte>
                             (
                                 data, charsetForImport.Length, 256, charsetForImport
-                    )   ], throwExceptions, doLegacy);
+                    )   ],  throwExceptions);
             }
             catch
             {
@@ -59,10 +59,10 @@ namespace JabrAPI.Template
                 return false;
             }
         }
-        public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET, bool doLegacy = false)
+        public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET)
             => Numsys.FromDecimalToCustomBigInteger
             (
-                Numsys.ToDecimalBigInteger(ExportAsBinary(doLegacy), 256),
+                Numsys.ToDecimalBigInteger(ExportAsBinary, 256),
                 charsetForExport == null || charsetForExport.Length < 2
                     ? DEFAULT.KEY_EXPORT_CHARSET : charsetForExport
             );

@@ -17,31 +17,44 @@ namespace JabrTestField
     {
         static void Main()
         {
-            RE5.ReKey aob = new(false);
+            //RE5.ReKey aob = new(false);
             //Write(aob.ExportAsString());
             //ReadKey();
-            string importaaa = ReadLine()!;
+            //string importaaa = ReadLine()!;
+            //aob.ImportFromString(importaaa, "", true, true);
+            //aob.ReGenerate();
 
-            aob.ImportFromString(importaaa, "", true, true);
+            //Write("\n\n\n\n\tOld export: " + aob.ExportAsString("", true));
+            //Write("\n\n\tNew export: " + aob.ExportAsString("", false));
 
-            Write("\n\n\n\n\tOld export: " + aob.ExportAsString("", false));
-            Write("\n\n\tNew export: " + aob.ExportAsString("", true));
+            //Write("\n\n\tOld shByte count: " + aob.ShCount + ", compressed: " +
+            //        Numsys.FromDecimalBigInteger<Byte>
+            //        (
+            //            Numsys.ToDecimalBigInteger<Byte>(aob.Shifts, aob.ExAlphabet.Length),
+            //            256
+            //        ).Count
+            //     );
 
-            Write("\n\n\tOld shByte count: " + aob.ShCount + ", compressed: " +
-                        Numsys.FromDecimalBigInteger<Byte>
-                        (
-                            Numsys.ToDecimalBigInteger<Byte>(aob.Shifts, aob.ExAlphabet.Length),
-                            256
-                    ).Count);
+            //var сompExpOld = aob.ExportAsBinary(true);
+            //var compExpNew = aob.ExportAsBinary(false);
+            //Write("\n\n\tOld export length: " + сompExpOld.Length + ", new export length: " + compExpNew.Length + "\n\n\n");
+            //foreach (var b in сompExpOld) Write(b + " ");
+            //Write("\n\n");
+            //foreach (var b in compExpNew) Write(b + " ");
+            //Write("\n\n");
 
-            var сompExpOld = aob.ExportAsBinary(true);
-            var compExpNew = aob.ExportAsBinary(false);
-            Write("\n\n\tOld export length: " + сompExpOld.Length + ", new export length: " + compExpNew.Length + "\n\n\n");
-            foreach (var b in сompExpOld) Write(b + " ");
-            Write("\n\n");
-            foreach (var b in compExpNew) Write(b + " ");
-            Write("\n\n");
-            ReadKey();
+
+            //double nowSmallerCoef = 1;
+            //for (var i = 0; i < 10000; i++)
+            //{
+            //    aob.ReGenerate();
+            //    сompExpOld = aob.ExportAsBinary(true);
+            //    compExpNew = aob.ExportAsBinary(false);
+
+            //    nowSmallerCoef = (nowSmallerCoef * i + (double)compExpNew.Length / сompExpOld.Length) / (i + 1);
+            //}
+            //Write("\n\n\tAverage new/old export length ratio: " + nowSmallerCoef + "\n\n\n");
+            //ReadKey();
             
             //RE5.ReKey smKey = new();
             //smKey.ReGenerate();
@@ -310,7 +323,7 @@ namespace JabrTestField
             RE5.ReKey copy = new(false);
             Stopwatch timer = new();
 
-            Byte[] exportBuffer = [];
+            Byte[] exportBuffer;
 
 
             #region BENCHMARK: Import & Export
@@ -328,7 +341,7 @@ namespace JabrTestField
                     timer.Start();
 
                     for (var i = 0; i < iterationsPerAttempt; i++)
-                        //exportBuffer = initial.ExportAsBinary;
+                        exportBuffer = initial.ExportAsBinary;
 
                     timer.Stop();
                     ms1.Add(timer.ElapsedMilliseconds);
@@ -338,11 +351,9 @@ namespace JabrTestField
                     #region TRYVALIDATE
                     Write("\n\t\t\tVALID?     - ");
 
-                    exportBuffer = [];
-                        //initial.ExportAsBinary;
+                    exportBuffer = initial.ExportAsBinary;
                     copy.ImportFromBinary(exportBuffer, true);
-                    Byte[] import = [];
-                        //copy.ExportAsBinary;
+                    Byte[] import = copy.ExportAsBinary;
 
                     if (import.Length != exportBuffer.Length)
                     {
