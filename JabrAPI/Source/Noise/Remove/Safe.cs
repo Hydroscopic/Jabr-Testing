@@ -12,44 +12,44 @@ namespace JabrAPI
     {
         static public partial class RemoveFrom
         {
-            static public Byte[] Data(Byte[] noised, IReKey reKey, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Data(Byte[] noised, IReKey reKey, bool throwExceptions = false)
             {
                 if (IsMessageAndReKeyAndNoisifierValid(noised, reKey, throwExceptions) &&
                     reKey.Noisifier.IsValid.ForReKey(reKey, throwExceptions))
                 {
-                    try { return Noise.RemoveFrom.FastData(noised, reKey.Noisifier); }
+                    try { return (Noise.RemoveFrom.FastData(noised, reKey.Noisifier), true); }
                     catch { throw; }
                 }
-                return [];
+                return ([], false);
             }
-            static public Byte[] Data(Byte[] noised, IReKey reKey, ref bool ignoringIsActive, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Data(Byte[] noised, IReKey reKey, ref bool ignoringIsActive, bool throwExceptions = false)
             {
                 if (IsMessageAndReKeyAndNoisifierValid(noised, reKey, throwExceptions) &&
                     reKey.Noisifier.IsValid.ForReKey(reKey, throwExceptions))
                 {
-                    try { return Noise.RemoveFrom.FastData(noised, reKey.Noisifier, ref ignoringIsActive); }
+                    try { return (Noise.RemoveFrom.FastData(noised, reKey.Noisifier, ref ignoringIsActive), true); }
                     catch { throw; }
                 }
-                return [];
+                return ([], false);
             }
             
-            static public Byte[] Data(Byte[] noised, Noisifier noisifier, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Data(Byte[] noised, Noisifier noisifier, bool throwExceptions = false)
             {
                 if (IsMessageAndNoisifierValid(noised, noisifier, throwExceptions))
                 {
-                    try { return Noise.RemoveFrom.FastData(noised, noisifier); }
+                    try { return (Noise.RemoveFrom.FastData(noised, noisifier), true); }
                     catch { throw; }
                 }
-                return [];
+                return ([], false);
             }
-            static public Byte[] Data(Byte[] noised, Noisifier noisifier, ref bool ignoringIsActive, bool throwExceptions = false)
+            static public (Byte[] result, bool didSucceed) Data(Byte[] noised, Noisifier noisifier, ref bool ignoringIsActive, bool throwExceptions = false)
             {
                 if (IsMessageAndNoisifierValid(noised, noisifier, throwExceptions))
                 {
-                    try { return Noise.RemoveFrom.FastData(noised, noisifier, ref ignoringIsActive); }
+                    try { return (Noise.RemoveFrom.FastData(noised, noisifier, ref ignoringIsActive), true); }
                     catch { throw; }
                 }
-                return [];
+                return ([], false);
             }
 
 

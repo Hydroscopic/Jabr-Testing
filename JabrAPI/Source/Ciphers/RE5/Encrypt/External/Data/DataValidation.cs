@@ -28,14 +28,12 @@ namespace JabrAPI
             static public (Byte[] result, bool didSucceed) SafeWithNoising(Byte[] message, ReKey reKey, ref EncryptLeftover leftover, bool throwExceptions = false)
             {
                 var (result, didSucceed) = EncryptData.Safe(message, reKey, ref leftover, throwExceptions);
-                return !didSucceed ? ([], false) :
-                    (Noise.AddToData.Safe(result, reKey, throwExceptions), true);
+                return !didSucceed ? ([], false) : Noise.AddToData.Safe(result, reKey, throwExceptions);
             }
             static public (Byte[] result, bool didSucceed) SafeWithNoising(Byte[] message, ReKey reKey, bool throwExceptions = false)
             {
                 var (result, didSucceed) = EncryptData.Safe(message, reKey, throwExceptions);
-                return !didSucceed ? ([], false) :
-                    (Noise.AddToData.Safe(result, reKey, throwExceptions), true);
+                return !didSucceed ? ([], false) : Noise.AddToData.Safe(result, reKey, throwExceptions);
             }
         }
     }

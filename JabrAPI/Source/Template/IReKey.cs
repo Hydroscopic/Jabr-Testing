@@ -38,18 +38,20 @@ namespace JabrAPI.Template
 
 
 
-        abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false);
-        virtual public Byte[] ExportAsBinary => [];
-        public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false)
+        abstract public bool ImportFromBinary(Byte[] data, bool throwExceptions = false, bool doLegacy = true);
+        virtual public Byte[] ExportAsBinary(bool doLegacy) => [];
+        public bool ImportFromString(string data, string charsetForImport = DEFAULT.KEY_EXPORT_CHARSET, bool throwExceptions = false, bool doLegacy = true)
         {
             try
             {
+                charsetForImport = charsetForImport == null || charsetForImport.Length < 2
+                    ? DEFAULT.KEY_EXPORT_CHARSET : charsetForImport;
                 return ImportFromBinary
                     (   [..
                             Numsys.FromCustomAsListBigInteger<Byte>
                             (
                                 data, charsetForImport.Length, 256, charsetForImport
-                    )   ]   );
+                    )   ], throwExceptions, doLegacy);
             }
             catch
             {
@@ -57,10 +59,13 @@ namespace JabrAPI.Template
                 return false;
             }
         }
-        public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET)
-            => Numsys.FromDecimalToCustomBigInteger(
-                    Numsys.ToDecimalBigInteger(ExportAsBinary, 256),
-                    charsetForExport);
+        public string ExportAsString(string charsetForExport = DEFAULT.KEY_EXPORT_CHARSET, bool doLegacy = false)
+            => Numsys.FromDecimalToCustomBigInteger
+            (
+                Numsys.ToDecimalBigInteger(ExportAsBinary(doLegacy), 256),
+                charsetForExport == null || charsetForExport.Length < 2
+                    ? DEFAULT.KEY_EXPORT_CHARSET : charsetForExport
+            );
 
 
         public void GenerateRandomShifts(Int32 count, Byte minVal, Byte maxVal)

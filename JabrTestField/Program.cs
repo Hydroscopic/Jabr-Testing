@@ -17,7 +17,32 @@ namespace JabrTestField
     {
         static void Main()
         {
+            RE5.ReKey aob = new(false);
+            //Write(aob.ExportAsString());
+            //ReadKey();
+            string importaaa = ReadLine()!;
 
+            aob.ImportFromString(importaaa, "", true, true);
+
+            Write("\n\n\n\n\tOld export: " + aob.ExportAsString("", false));
+            Write("\n\n\tNew export: " + aob.ExportAsString("", true));
+
+            Write("\n\n\tOld shByte count: " + aob.ShCount + ", compressed: " +
+                        Numsys.FromDecimalBigInteger<Byte>
+                        (
+                            Numsys.ToDecimalBigInteger<Byte>(aob.Shifts, aob.ExAlphabet.Length),
+                            256
+                    ).Count);
+
+            var сompExpOld = aob.ExportAsBinary(true);
+            var compExpNew = aob.ExportAsBinary(false);
+            Write("\n\n\tOld export length: " + сompExpOld.Length + ", new export length: " + compExpNew.Length + "\n\n\n");
+            foreach (var b in сompExpOld) Write(b + " ");
+            Write("\n\n");
+            foreach (var b in compExpNew) Write(b + " ");
+            Write("\n\n");
+            ReadKey();
+            
             //RE5.ReKey smKey = new();
             //smKey.ReGenerate();
             //DecryptLeftover dl = new();
@@ -152,7 +177,7 @@ namespace JabrTestField
 
             Int32 maxNonEntropy = 0;
             //binKey.Set.ExLength(9);
-            for (var i = 0; i < 1_000; i++)
+            for (var i = 0; i < 1_0; i++)
             {
                 //Write("\n\n\tExAlphabet: ");
                 //foreach (var b in binKey.PrAlphabet.ExportDirect) Write(b + " ");
@@ -166,8 +191,8 @@ namespace JabrTestField
                     Write(lolinit[j] + " ");
                 Write("\n\tAdding noise to data..");
 
-                Byte[] binoised     = Noise.AddToData.Safe(bincrypted, binKey, true);
-                Byte[] bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true);
+                Byte[] binoised     = Noise.AddToData.Safe(bincrypted, binKey, true).result;
+                Byte[] bindenoised  = Noise.RemoveFrom.Data(binoised, binKey, true).result;
                 Byte[] bindecrypted = RE5.DecryptData.Safe(bindenoised, binKey, true).result;
 
                 Write("\n\tNoised:  ");
@@ -290,7 +315,7 @@ namespace JabrTestField
 
             #region BENCHMARK: Import & Export
             List<Int64> ms1 = [], ms2 = [];
-            const Int64 totalAttempts = 10, iterationsPerAttempt = 10_000_000;
+            const Int64 totalAttempts = 10, iterationsPerAttempt = 100_000;
             Write($"\n\n\n\t\t[i]  - Starting benchmark of {totalAttempts * iterationsPerAttempt / 1_000_000}m Key Export & Import");
 
             for (var attempt = 0; attempt < totalAttempts; attempt++)
@@ -303,33 +328,21 @@ namespace JabrTestField
                     timer.Start();
 
                     for (var i = 0; i < iterationsPerAttempt; i++)
-                        exportBuffer = initial.ExportAsBinary;
+                        //exportBuffer = initial.ExportAsBinary;
 
                     timer.Stop();
                     ms1.Add(timer.ElapsedMilliseconds);
                 }
                 else
                 {
-                    Write("\n\t\t\tIMPORT     - ");
-                    timer.Start();
+                    #region TRYVALIDATE
+                    Write("\n\t\t\tVALID?     - ");
 
-                    for (var i = 0; i < iterationsPerAttempt; i++)
-                        copy.ImportFromBinary(exportBuffer, true);
-
-                    timer.Stop();
-                    ms2.Add(timer.ElapsedMilliseconds);
-                }
-
-                string elapsed = ((double)timer.ElapsedMilliseconds / 1000).ToString().Replace(",", ".");
-                Write($"\tAttempt {attempt + 1})\t Exp & Imp     {iterationsPerAttempt / 1_000_000}m: {elapsed}");
-                timer.Reset();
-
-
-                if (attempt % 2 == 1)
-                {
-                    Write("\n\t\t\tVALIDATING - ");
-
-                    Byte[] import = copy.ExportAsBinary;
+                    exportBuffer = [];
+                        //initial.ExportAsBinary;
+                    copy.ImportFromBinary(exportBuffer, true);
+                    Byte[] import = [];
+                        //copy.ExportAsBinary;
 
                     if (import.Length != exportBuffer.Length)
                     {
@@ -380,7 +393,25 @@ namespace JabrTestField
                             ForegroundColor = ConsoleColor.Gray;
                         }
                     }
+                    #endregion
+
+
+
+                    Write("\n\t\t\tIMPORT     - ");
+                    timer.Start();
+
+                    for (var i = 0; i < iterationsPerAttempt; i++)
+                        copy.ImportFromBinary(exportBuffer, true);
+
+                    timer.Stop();
+                    ms2.Add(timer.ElapsedMilliseconds);
                 }
+
+                string elapsed = ((double)timer.ElapsedMilliseconds / 1000).ToString().Replace(",", ".");
+                Write($"\tAttempt {(attempt >> 1) + 1})\t Exp & Imp     {iterationsPerAttempt / 1_000_000}m: {elapsed}");
+                if (attempt % 2 == 1) Write('\n');
+                
+                timer.Reset();
             }
 
             double min1 = (double)ms1.Min() / 1000, max1 = (double)ms1.Max() / 1000;

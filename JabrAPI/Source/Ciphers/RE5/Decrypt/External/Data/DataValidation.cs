@@ -33,13 +33,15 @@ namespace JabrAPI
 
             static public (Byte[] result, bool didSucceed) SafeWithDeNoising(Byte[] encrypted, ReKey reKey, bool throwExceptions = false)
             {
-                Byte[] denoised = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
-                return denoised == null || denoised.Length < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, throwExceptions);
+                var (denoised, didSucceed) = Noise.RemoveFrom.Data(encrypted, reKey, throwExceptions);
+                return !didSucceed || denoised == null || denoised.Length < 1 ? ([], false)
+                    : RE5.DecryptData.Safe(denoised, reKey, throwExceptions);
             }
             static public (Byte[] result, bool didSucceed) SafeWithDeNoising(Byte[] encrypted, ReKey reKey, ref DecryptLeftover leftover, bool throwExceptions = false)
             {
-                Byte[] denoised = Noise.RemoveFrom.Data(encrypted, reKey, ref leftover.ignoringIsActive, throwExceptions);
-                return denoised == null || denoised.Length < 1 ? ([], false) : RE5.DecryptData.Safe(denoised, reKey, ref leftover, throwExceptions);
+                var (denoised, didSucceed) = Noise.RemoveFrom.Data(encrypted, reKey, ref leftover.ignoringIsActive, throwExceptions);
+                return !didSucceed || denoised == null || denoised.Length < 1 ? ([], false)
+                    : RE5.DecryptData.Safe(denoised, reKey, ref leftover, throwExceptions);
             }
         }
     }
